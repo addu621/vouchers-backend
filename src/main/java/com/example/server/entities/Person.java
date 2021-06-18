@@ -8,6 +8,9 @@ import javax.persistence.*;
 public class Person {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long person_id;
+
     @Column(name = "email",unique = true,nullable = false)
     private String email;
 
