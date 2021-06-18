@@ -6,15 +6,27 @@ import javax.persistence.*;
 @Entity
 @Table(name = "person")
 public class Person {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long person_id;
-    private String first_name;
-    private String middle_name;
-    private String last_name;
+    @Column(name = "email",unique = true,nullable = false)
     private String email;
+
+    @Column
+    private String first_name;
+
+    @Column
+    private String middle_name;
+
+    @Column
+    private String last_name;
+
+    @Column(name = "password",nullable = false)
     private String password;
+
+    @Column
     private String mobile;
+
+    @Column
     private String image_url;
 
     @OneToOne(mappedBy = "person", cascade = CascadeType.ALL)
@@ -29,8 +41,11 @@ public class Person {
     @PrimaryKeyJoinColumn
     private SellerProfile seller_profile;
 
-    public Person(Long person_id, String first_name, String middle_name, String last_name, String email, String password, String mobile, String image_url, Wallet wallet, BuyerProfile buyer_profile, SellerProfile seller_profile) {
-        this.person_id = person_id;
+    public Person() {
+
+    }
+
+    public Person(String first_name, String middle_name, String last_name, String email, String password, String mobile, String image_url, Wallet wallet, BuyerProfile buyer_profile, SellerProfile seller_profile) {
         this.first_name = first_name;
         this.middle_name = middle_name;
         this.last_name = last_name;
@@ -41,14 +56,6 @@ public class Person {
         this.wallet = wallet;
         this.buyer_profile = buyer_profile;
         this.seller_profile = seller_profile;
-    }
-
-    public Long getPerson_id() {
-        return person_id;
-    }
-
-    public void setPerson_id(Long person_id) {
-        this.person_id = person_id;
     }
 
     public String getFirst_name() {
@@ -129,5 +136,21 @@ public class Person {
 
     public void setSeller_profile(SellerProfile seller_profile) {
         this.seller_profile = seller_profile;
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "first_name=" + first_name +
+                ", middle_name='" + middle_name + '\'' +
+                ", last_name='" + last_name + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", mobile='" + mobile + '\'' +
+                ", image_url='" + image_url + '\'' +
+                ", wallet=" + wallet +
+                ", buyer_profile=" + buyer_profile +
+                ", seller_profile=" + seller_profile +
+                '}';
     }
 }

@@ -1,5 +1,6 @@
 package com.example.server.controllers;
 
+import com.example.server.entities.Person;
 import com.example.server.entities.User;
 import com.example.server.model.JwtResponse;
 import com.example.server.model.JwtUtil;
@@ -32,11 +33,11 @@ public class JwtController {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody User authenticationRequest) throws Exception {
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody Person authenticationRequest) throws Exception {
 
-        authenticate(authenticationRequest.getUserEmail(), authenticationRequest.getUserPassword());
+        authenticate(authenticationRequest.getEmail(), authenticationRequest.getPassword());
 
-        final UserDetails userDetails = userService.loadUserByUsername(authenticationRequest.getUserEmail());
+        final UserDetails userDetails = userService.loadUserByUsername(authenticationRequest.getEmail());
 
         final String token = jwtUtil.generateToken(userDetails);
 
@@ -44,8 +45,9 @@ public class JwtController {
     }
 
     @PostMapping("/signup")
-    public User signUp(@RequestBody User user){
-        return userService.save(user);
+    public Person signUp(@RequestBody Person person){
+        System.out.println(person);
+        return userService.save(person);
     }
 
     private void authenticate(String username, String password) throws Exception {
