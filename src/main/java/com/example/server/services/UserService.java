@@ -79,4 +79,16 @@ public class UserService implements UserDetailsService {
     {
         return voucherTypeRepo.findAll();
     }
+
+    public String addCompany(String company) {
+        VoucherCompany voucherCompany= voucherCompanyRepo.findByName(company);
+        if(voucherCompany!=null)
+        {
+            return "Company already exists";
+        }
+        VoucherCompany newCompany = new VoucherCompany();
+        newCompany.setName(company);
+        voucherCompanyRepo.save(newCompany);
+        return "Company: " + company + " added";
+    }
 }

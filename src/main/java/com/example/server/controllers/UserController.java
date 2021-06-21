@@ -5,12 +5,12 @@ import com.example.server.entities.VoucherCompany;
 import com.example.server.entities.VoucherType;
 import com.example.server.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@CrossOrigin("*")
 public class UserController {
 
     @Autowired
@@ -27,7 +27,12 @@ public class UserController {
     }
 
     @GetMapping("/getVoucherTypes")
-    public List<VoucherType> getVoucherTyoes() {
+    public List<VoucherType> getVoucherTypes() {
         return userService.getAllVoucherType();
+    }
+
+    @PostMapping("/addCompany")
+    public String addCompany(@RequestBody String company) {
+        return userService.addCompany(company);
     }
 }
