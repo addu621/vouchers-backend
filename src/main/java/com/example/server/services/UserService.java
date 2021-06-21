@@ -2,7 +2,6 @@ package com.example.server.services;
 
 import com.example.server.entities.Person;
 import com.example.server.repositories.PersonRepo;
-import com.example.server.repositories.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,9 +13,6 @@ import java.util.ArrayList;
 
 @Service
 public class UserService implements UserDetailsService {
-
-    @Autowired
-    private UserRepo userRepo;
 
     @Autowired
     private PersonRepo personRepo;

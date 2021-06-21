@@ -1,7 +1,6 @@
 package com.example.server.controllers;
 
 import com.example.server.entities.Person;
-import com.example.server.entities.User;
 import com.example.server.model.JwtResponse;
 import com.example.server.model.JwtUtil;
 import com.example.server.services.UserService;
