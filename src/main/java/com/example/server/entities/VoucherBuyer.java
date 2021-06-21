@@ -17,8 +17,4 @@ public class VoucherBuyer {
     @JoinColumn(name = "buyer_id")
     private BuyerProfile buyer_profile;
 
-    @OneToOne
-    @MapsId
-    @JoinColumn(name = "voucher_id")
-    private Voucher voucher;
 }

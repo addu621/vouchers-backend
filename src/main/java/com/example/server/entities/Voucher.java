@@ -1,41 +1,61 @@
 package com.example.server.entities;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "voucher")
+@Data
 public class Voucher {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long voucher_id;
-    private BigDecimal voucher_value;
-    private String voucher_code;
-    private BigDecimal selling_price;
-    private String created_on;
-    private String expiry_date;
-    private boolean is_negotiable;
-    private boolean is_verified;
+    @Column(name = "voucher_id")
+    private Long id;
+
+    @Column(name = "voucher_value")
+    private BigDecimal voucherValue;
+
+    @Column(name = "voucher_code")
+    private String voucherCode;
+
+    @Column(name = "selling_price")
+    private BigDecimal sellingPrice;
+
+    @Column(name = "created_on")
+    private String createdOn;
+
+    @Column(name = "expiry_date")
+    private String expiryDate;
+
+    @Column(name = "is_negotiable")
+    private boolean isNegotiable;
+
+    @Column(name = "is_verified")
+    private boolean isVerified;
+
+    @Column(name = "discount")
     private Integer discount;
+
+    @Column(name = "description")
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name="seller_id",referencedColumnName="seller_id", nullable=false)
-    private SellerProfile seller_profile;
+    @Column(name = "title")
+    private String title;
 
-    @OneToOne(mappedBy = "voucher", cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
-    private VoucherBuyer voucher_buyer;
+    @Column(name = "seller_profile")
+    private Long sellerId;
 
-    @OneToOne
-    @JoinColumn(name="voucher_type", nullable=false)
-    private VoucherType voucher_type;
+    @Column(name = "voucher_buyer")
+    private Long buyerId;
 
-    @OneToOne
-    @JoinColumn(name="voucher_company", nullable=false)
-    private VoucherCompany voucher_company;
+    @Column(name = "voucher_type")
+    private Long voucher_type;
 
-    @OneToOne
-    @JoinColumn(name="voucher_category", nullable=false)
-    private VoucherCategory voucher_category;
+    @Column(name = "voucher_company")
+    private Long companyId;
+
+    @Column(name = "voucher_category")
+    private Long categoryId;
 }

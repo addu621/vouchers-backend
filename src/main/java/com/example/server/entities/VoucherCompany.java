@@ -8,8 +8,4 @@ public class VoucherCompany {
     @Id
     private Long id;
     private String name;
-
-    @OneToOne(mappedBy = "voucher_type", cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
-    private Voucher voucher;
 }
