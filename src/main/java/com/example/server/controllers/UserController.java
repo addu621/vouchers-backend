@@ -1,0 +1,33 @@
+package com.example.server.controllers;
+
+import com.example.server.entities.VoucherCategory;
+import com.example.server.entities.VoucherCompany;
+import com.example.server.entities.VoucherType;
+import com.example.server.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@RestController
+public class UserController {
+
+    @Autowired
+    private UserService userService;
+
+    @GetMapping("/getVoucherCategories")
+    public List<VoucherCategory> getVoucherCategories() {
+        return userService.getAllVoucherCategory();
+    }
+
+    @GetMapping("/getVoucherCompanies")
+    public List<VoucherCompany> getVoucherCompanies() {
+        return userService.getAllVoucherCompany();
+    }
+
+    @GetMapping("/getVoucherTypes")
+    public List<VoucherType> getVoucherTyoes() {
+        return userService.getAllVoucherType();
+    }
+}
