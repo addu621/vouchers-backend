@@ -15,4 +15,5 @@ public class VoucherRequest {
     private String title;
     private Long categoryId;
     private Long companyId;
+
 }

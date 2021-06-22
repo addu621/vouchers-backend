@@ -1,5 +1,6 @@
 package com.example.server.dto.response;
 
+import com.example.server.enums.VoucherVerificationStatus;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -18,4 +19,5 @@ public class VoucherResponse {
     private Long categoryId;
     private Long companyId;
     private String createdOn;
+    private VoucherVerificationStatus verificationStatus;
 }
