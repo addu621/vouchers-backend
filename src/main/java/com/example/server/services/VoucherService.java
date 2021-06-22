@@ -10,11 +10,13 @@ import com.example.server.repositories.VoucherCompanyRepo;
 import com.example.server.repositories.VoucherRepository;
 import com.example.server.repositories.VoucherTypeRepo;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @AllArgsConstructor
 @Service
@@ -72,5 +74,22 @@ public class VoucherService {
         newCompany.setName(company);
         voucherCompanyRepo.save(newCompany);
         return "Company: " + company + " added";
+    }
+
+//    var val = cityService.findById(id2);
+//        if (val.isPresent()) {
+//        System.out.println(val.get());
+//    } else {
+//        System.out.printf("No city found with id %d%n", id2);
+//    }
+
+    public String acceptVoucher(Voucher voucher) {
+        voucher.setVerificationStatus(VoucherVerificationStatus.VERIFIED);
+        return "Voucher id: " + voucher.getId() + " is accepted";
+    }
+
+    public String rejectVoucher(Voucher voucher) {
+        voucher.setVerificationStatus(VoucherVerificationStatus.REJECTED);
+        return "Voucher id: " + voucher.getId() + " is rejected";
     }
 }
