@@ -1,5 +1,6 @@
 package com.example.server.entities;
 
+import com.example.server.enums.VoucherVerificationStatus;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -32,8 +33,8 @@ public class Voucher {
     @Column(name = "is_negotiable")
     private boolean isNegotiable;
 
-    @Column(name = "is_verified")
-    private boolean isVerified;
+    @Column(name = "verification_status")
+    private VoucherVerificationStatus verificationStatus;
 
     @Column(name = "description")
     private String description;
@@ -41,7 +42,7 @@ public class Voucher {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "seller_profile")
+    @Column(name = "seller_id")
     private Long sellerId;
 
     @Column(name = "voucher_buyer")
@@ -49,6 +50,9 @@ public class Voucher {
 
     @Column(name = "voucher_type")
     private Long voucher_type;
+
+    @Column(name = "image_url")
+    private String imageUrl;
 
     @Column(name = "voucher_company")
     private Long companyId;

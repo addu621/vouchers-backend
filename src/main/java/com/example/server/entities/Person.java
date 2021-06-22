@@ -12,19 +12,20 @@ public class Person {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long person_id;
+    @Column(name = "person_id")
+    private Long id;
 
     @Column(name = "email",unique = true,nullable = false)
     private String email;
 
-    @Column
-    private String first_name;
+    @Column(name = "first_name")
+    private String firstName;
 
-    @Column
-    private String middle_name;
+    @Column(name = "middle_name")
+    private String middleName;
 
-    @Column
-    private String last_name;
+    @Column(name = "last_name")
+    private String lastName;
 
     @Column(name = "password",nullable = false)
     private String password;
@@ -32,34 +33,38 @@ public class Person {
     @Column
     private String mobile;
 
-    @Column
-    private String image_url;
+    @Column(name = "image_url")
+    private String imageUrl;
+
+    @Column(name = "is_admin")
+    private Boolean isAdmin;
 
     public Person() {
 
     }
 
-    public Person(String first_name, String middle_name, String last_name, String email, String password, String mobile, String image_url, Wallet wallet, BuyerProfile buyer_profile, SellerProfile seller_profile) {
-        this.first_name = first_name;
-        this.middle_name = middle_name;
-        this.last_name = last_name;
+    public Person(Long id, String email, String firstName, String middleName, String lastName, String password, String mobile, String imageUrl, Boolean isAdmin) {
+        this.id = id;
         this.email = email;
+        this.firstName = firstName;
+        this.middleName = middleName;
+        this.lastName = lastName;
         this.password = password;
         this.mobile = mobile;
-        this.image_url = image_url;
+        this.imageUrl = imageUrl;
+        this.isAdmin = isAdmin;
     }
-
 
     @Override
     public String toString() {
         return "Person{" +
-                "first_name=" + first_name +
-                ", middle_name='" + middle_name + '\'' +
-                ", last_name='" + last_name + '\'' +
+                "first_name=" + firstName +
+                ", middle_name='" + middleName + '\'' +
+                ", last_name='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", mobile='" + mobile + '\'' +
-                ", image_url='" + image_url + '\'' +
+                ", image_url='" + imageUrl + '\'' +
                 '}';
     }
 }

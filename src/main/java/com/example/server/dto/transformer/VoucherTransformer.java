@@ -3,6 +3,7 @@ package com.example.server.dto.transformer;
 import com.example.server.dto.request.VoucherRequest;
 import com.example.server.dto.response.VoucherResponse;
 import com.example.server.entities.Voucher;
+import com.example.server.enums.VoucherVerificationStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ public class VoucherTransformer {
         Voucher voucher = new Voucher();
         copyProperties(voucherRequest, voucher);
         voucher.setCreatedOn(new Date().toString());
+        voucher.setVerificationStatus(VoucherVerificationStatus.PENDING);
         return voucher;
     }
 
