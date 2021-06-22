@@ -62,6 +62,7 @@ public class UserService implements UserDetailsService {
     public Person save(Person person) {
         person.setPassword(bcryptEncoder.encode(person.getPassword()));
         System.out.println(person);
+        person.setIsAdmin(false);
         return personRepo.save(person);
     }
 }
