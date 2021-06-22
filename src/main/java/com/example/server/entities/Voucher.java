@@ -35,9 +35,6 @@ public class Voucher {
     @Column(name = "is_verified")
     private boolean isVerified;
 
-    @Column(name = "discount")
-    private Integer discount;
-
     @Column(name = "description")
     private String description;
 
