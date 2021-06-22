@@ -76,4 +76,14 @@ public class VoucherController {
     public String addCompany(@RequestBody String company) {
         return voucherService.addCompany(company);
     }
+
+    @PostMapping("/acceptVoucher")
+    public String acceptVoucher(@RequestBody Voucher voucher) {
+        return voucherService.acceptVoucher(voucher);
+    }
+
+    @PostMapping("/rejectVoucher")
+    public String rejectVoucher(@RequestBody Voucher voucher) {
+        return voucherService.rejectVoucher(voucher);
+    }
 }
