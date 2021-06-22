@@ -51,6 +51,12 @@ public class VoucherController {
         return voucherTransformer.convertEntityListToResponseList(voucherList);
     }
 
+    @GetMapping(value = "/vouchers/unverified")
+    public List<VoucherResponse> getAllUnverifiedVouchers() {
+        List<Voucher> voucherList = this.voucherService.getAllUnverifiedVouchers();
+        return voucherTransformer.convertEntityListToResponseList(voucherList);
+    }
+
     @GetMapping("/getVoucherCategories")
     public List<VoucherCategory> getVoucherCategories() {
         return voucherService.getAllVoucherCategory();

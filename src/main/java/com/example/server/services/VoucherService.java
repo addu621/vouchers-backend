@@ -4,6 +4,7 @@ import com.example.server.entities.Voucher;
 import com.example.server.entities.VoucherCategory;
 import com.example.server.entities.VoucherCompany;
 import com.example.server.entities.VoucherType;
+import com.example.server.enums.VoucherVerificationStatus;
 import com.example.server.repositories.VoucherCategoryRepo;
 import com.example.server.repositories.VoucherCompanyRepo;
 import com.example.server.repositories.VoucherRepository;
@@ -55,6 +56,10 @@ public class VoucherService {
     public List<VoucherType> getAllVoucherType()
     {
         return voucherTypeRepo.findAll();
+    }
+
+    public List<Voucher> getAllUnverifiedVouchers(){
+        return this.voucherRepository.findByVerificationStatus(VoucherVerificationStatus.PENDING);
     }
 
     public String addCompany(String company) {
