@@ -1,7 +1,13 @@
 package com.example.server.services;
 
 import com.example.server.entities.Person;
+import com.example.server.entities.VoucherCategory;
+import com.example.server.entities.VoucherCompany;
+import com.example.server.entities.VoucherType;
 import com.example.server.repositories.PersonRepo;
+import com.example.server.repositories.VoucherCategoryRepo;
+import com.example.server.repositories.VoucherCompanyRepo;
+import com.example.server.repositories.VoucherTypeRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -10,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -19,6 +26,15 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private PasswordEncoder bcryptEncoder;
+
+    @Autowired
+    private VoucherCategoryRepo voucherCategoryRepo;
+
+    @Autowired
+    private VoucherCompanyRepo voucherCompanyRepo;
+
+    @Autowired
+    private VoucherTypeRepo voucherTypeRepo;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -47,5 +63,32 @@ public class UserService implements UserDetailsService {
         person.setPassword(bcryptEncoder.encode(person.getPassword()));
         System.out.println(person);
         return personRepo.save(person);
+    }
+
+    public List<VoucherCategory> getAllVoucherCategory()
+    {
+        return voucherCategoryRepo.findAll();
+    }
+
+    public List<VoucherCompany> getAllVoucherCompany()
+    {
+        return voucherCompanyRepo.findAll();
+    }
+
+    public List<VoucherType> getAllVoucherType()
+    {
+        return voucherTypeRepo.findAll();
+    }
+
+    public String addCompany(String company) {
+        VoucherCompany voucherCompany= voucherCompanyRepo.findByName(company);
+        if(voucherCompany!=null)
+        {
+            return "Company already exists";
+        }
+        VoucherCompany newCompany = new VoucherCompany();
+        newCompany.setName(company);
+        voucherCompanyRepo.save(newCompany);
+        return "Company: " + company + " added";
     }
 }
