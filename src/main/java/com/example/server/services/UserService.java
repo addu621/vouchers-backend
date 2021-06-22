@@ -64,31 +64,4 @@ public class UserService implements UserDetailsService {
         System.out.println(person);
         return personRepo.save(person);
     }
-
-    public List<VoucherCategory> getAllVoucherCategory()
-    {
-        return voucherCategoryRepo.findAll();
-    }
-
-    public List<VoucherCompany> getAllVoucherCompany()
-    {
-        return voucherCompanyRepo.findAll();
-    }
-
-    public List<VoucherType> getAllVoucherType()
-    {
-        return voucherTypeRepo.findAll();
-    }
-
-    public String addCompany(String company) {
-        VoucherCompany voucherCompany= voucherCompanyRepo.findByName(company);
-        if(voucherCompany!=null)
-        {
-            return "Company already exists";
-        }
-        VoucherCompany newCompany = new VoucherCompany();
-        newCompany.setName(company);
-        voucherCompanyRepo.save(newCompany);
-        return "Company: " + company + " added";
-    }
 }

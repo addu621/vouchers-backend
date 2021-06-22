@@ -1,26 +1,26 @@
 package com.example.server.entities;
 
+import lombok.Data;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "seller_rating")
+@Data
 public class SellerRating {
+    @Column(name = "rating_id")
+    @Id
+    private Long id;
 
-    @EmbeddedId
-    private SellerBuyerId seller_buyer_id;
+    @Column(name = "seller_id")
+    private Long sellerId;
 
-    private Integer stars;
+    @Column(name = "buyer_id")
+    private Long buyerId;
+
+    @Column(name = "stars")
+    private int stars;
+
+    @Column(name = "comment")
     private String comment;
-
-    @OneToOne
-    @MapsId("voucher_id")
-    @JoinColumn(name = "buyer_id")
-    private BuyerProfile buyer_profile;
-
-    @OneToOne
-    @MapsId("seller_id")
-    @JoinColumn(name = "seller_id")
-    private SellerProfile seller_profile;
-
-
 }

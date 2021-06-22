@@ -14,7 +14,6 @@ import java.util.Map;
 @Service
 public class UploadImageService {
 
-
         @Autowired
         private Cloudinary cloudinaryConfig;
 

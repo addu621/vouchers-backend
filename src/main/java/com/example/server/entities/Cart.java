@@ -1,19 +1,22 @@
 package com.example.server.entities;
 
+import lombok.Data;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "cart")
+@Data
 public class Cart {
 
-    @EmbeddedId
-    private CartId cart_id;
-    private String created_on;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "cart_id")
+    private long id;
 
+    @Column(name = "created_on")
+    private String createdOn;
 
-    @ManyToOne
-    @MapsId("buyer_id")
-    @JoinColumn(name = "buyer_id")
-    private BuyerProfile buyer_profile;
-
+    @Column(name = "buyer_id")
+    private long buyerId;
 }

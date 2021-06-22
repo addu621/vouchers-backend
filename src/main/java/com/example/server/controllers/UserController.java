@@ -15,24 +15,4 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-
-    @GetMapping("/getVoucherCategories")
-    public List<VoucherCategory> getVoucherCategories() {
-        return userService.getAllVoucherCategory();
-    }
-
-    @GetMapping("/getVoucherCompanies")
-    public List<VoucherCompany> getVoucherCompanies() {
-        return userService.getAllVoucherCompany();
-    }
-
-    @GetMapping("/getVoucherTypes")
-    public List<VoucherType> getVoucherTypes() {
-        return userService.getAllVoucherType();
-    }
-
-    @PostMapping("/addCompany")
-    public String addCompany(@RequestBody String company) {
-        return userService.addCompany(company);
-    }
 }

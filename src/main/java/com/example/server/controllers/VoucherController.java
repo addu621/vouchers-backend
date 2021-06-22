@@ -1,10 +1,12 @@
 package com.example.server.controllers;
 
-<<<<<<< HEAD
 import com.example.server.dto.request.VoucherRequest;
 import com.example.server.dto.response.VoucherResponse;
 import com.example.server.dto.transformer.VoucherTransformer;
 import com.example.server.entities.Voucher;
+import com.example.server.entities.VoucherCategory;
+import com.example.server.entities.VoucherCompany;
+import com.example.server.entities.VoucherType;
 import com.example.server.services.VoucherService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -15,6 +17,7 @@ import java.util.Map;
 
 @RestController
 @AllArgsConstructor
+@CrossOrigin("*")
 public class VoucherController {
 
     private final VoucherService voucherService;
@@ -46,5 +49,25 @@ public class VoucherController {
     public List<VoucherResponse> getAllVouchers() {
         List<Voucher> voucherList = this.voucherService.getAllVouchers();
         return voucherTransformer.convertEntityListToResponseList(voucherList);
+    }
+
+    @GetMapping("/getVoucherCategories")
+    public List<VoucherCategory> getVoucherCategories() {
+        return voucherService.getAllVoucherCategory();
+    }
+
+    @GetMapping("/getVoucherCompanies")
+    public List<VoucherCompany> getVoucherCompanies() {
+        return voucherService.getAllVoucherCompany();
+    }
+
+    @GetMapping("/getVoucherTypes")
+    public List<VoucherType> getVoucherTypes() {
+        return voucherService.getAllVoucherType();
+    }
+
+    @PostMapping("/addCompany")
+    public String addCompany(@RequestBody String company) {
+        return voucherService.addCompany(company);
     }
 }

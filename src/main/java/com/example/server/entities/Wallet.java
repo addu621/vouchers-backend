@@ -7,11 +7,12 @@ import java.math.BigDecimal;
 @Table(name = "wallet")
 public class Wallet {
     @Id
-    private Long person_id;
+    @Column(name = "wallet_id")
+    private Long id;
+
+    @Column(name = "balance")
     private BigDecimal balance;
 
-    @OneToOne
-    @MapsId
-    @JoinColumn(name = "person_id")
-    private Person person;
+    @Column(name = "owner_id")
+    private Long ownerId;
 }
