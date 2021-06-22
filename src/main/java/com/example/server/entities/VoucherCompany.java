@@ -1,5 +1,6 @@
 package com.example.server.entities;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 
 import javax.persistence.*;

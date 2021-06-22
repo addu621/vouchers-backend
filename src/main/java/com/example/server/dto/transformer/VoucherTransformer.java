@@ -3,6 +3,7 @@ package com.example.server.dto.transformer;
 import com.example.server.dto.request.VoucherRequest;
 import com.example.server.dto.response.VoucherResponse;
 import com.example.server.entities.Voucher;
+import com.example.server.entities.VoucherCompany;
 import com.example.server.enums.VoucherVerificationStatus;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,13 @@ public class VoucherTransformer {
     public VoucherResponse convertEntityToResponse(Voucher voucher){
         VoucherResponse voucherResponse = new VoucherResponse();
         copyProperties(voucher, voucherResponse);
+        return voucherResponse;
+    }
+
+    public VoucherResponse convertEntityToResponse(Voucher voucher, VoucherCompany voucherCompany){
+        VoucherResponse voucherResponse = new VoucherResponse();
+        copyProperties(voucher, voucherResponse);
+        voucherResponse.setCompanyImgUrl(voucherCompany.getImageUrl());
         return voucherResponse;
     }
 

@@ -7,11 +7,13 @@ import com.example.server.entities.Voucher;
 import com.example.server.entities.VoucherCategory;
 import com.example.server.entities.VoucherCompany;
 import com.example.server.entities.VoucherType;
+import com.example.server.services.CompanyService;
 import com.example.server.services.VoucherService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -22,14 +24,8 @@ public class VoucherController {
 
     private final VoucherService voucherService;
     private final VoucherTransformer voucherTransformer;
+    private final CompanyService companyService;
 
-    @PostMapping(value = "/vouchers/new")
-    public VoucherResponse postVoucher(@RequestBody VoucherRequest voucherRequest) {
-        Voucher voucher = voucherTransformer.convertRequestToEntity(voucherRequest);
-        voucher = voucherService.saveVoucher(voucher);
-        VoucherResponse voucherResponse = voucherTransformer.convertEntityToResponse(voucher);
-        return voucherResponse;
-    }
 
     @PostMapping("/search-voucher")
     public List<Voucher> searchVoucher(@RequestBody Map<String, String> req) {
@@ -38,23 +34,41 @@ public class VoucherController {
         return searchResult;
     }
 
+    @PostMapping(value = "/vouchers/new")
+    public VoucherResponse postVoucher(@RequestBody VoucherRequest voucherRequest) {
+        Voucher voucher = voucherTransformer.convertRequestToEntity(voucherRequest);
+        voucher = voucherService.saveVoucher(voucher);
+        VoucherResponse voucherResponse = getVoucherResponse(voucher);
+        return voucherResponse;
+    }
+
     @GetMapping(value = "/vouchers/{id}")
     public VoucherResponse getVoucherById(@PathVariable Long id) {
         Voucher voucher = this.voucherService.getVoucherById(id);
-        VoucherResponse voucherResponse = voucherTransformer.convertEntityToResponse(voucher);
+        VoucherResponse voucherResponse = getVoucherResponse(voucher);
         return voucherResponse;
     }
 
     @GetMapping(value = "/vouchers")
     public List<VoucherResponse> getAllVouchers() {
-        List<Voucher> voucherList = this.voucherService.getAllVouchers();
-        return voucherTransformer.convertEntityListToResponseList(voucherList);
+        List<Voucher> vouchers = this.voucherService.getAllVouchers();
+        List<VoucherResponse> voucherResponses = new ArrayList<VoucherResponse>();
+        vouchers.forEach((Voucher v) -> {
+            VoucherResponse voucherResponse = getVoucherResponse(v);
+            voucherResponses.add(voucherResponse);
+        });
+        return voucherResponses;
     }
 
     @GetMapping(value = "/vouchers/unverified")
     public List<VoucherResponse> getAllUnverifiedVouchers() {
-        List<Voucher> voucherList = this.voucherService.getAllUnverifiedVouchers();
-        return voucherTransformer.convertEntityListToResponseList(voucherList);
+        List<Voucher> vouchers = this.voucherService.getAllUnverifiedVouchers();
+        List<VoucherResponse> voucherResponses = new ArrayList<VoucherResponse>();
+        vouchers.forEach((Voucher v) -> {
+            VoucherResponse voucherResponse = getVoucherResponse(v);
+            voucherResponses.add(voucherResponse);
+        });
+        return voucherResponses;
     }
 
     @GetMapping("/getVoucherCategories")
@@ -75,5 +89,14 @@ public class VoucherController {
     @PostMapping("/addCompany")
     public String addCompany(@RequestBody String company) {
         return voucherService.addCompany(company);
+    }
+
+    public VoucherResponse getVoucherResponse(Voucher voucher){
+        VoucherCompany voucherCompany = voucher.getCompanyId()!=null?this.companyService.getCompanyById(voucher.getCompanyId()):null;
+        VoucherResponse voucherResponse = voucherTransformer.convertEntityToResponse(voucher);
+        if(voucherCompany!=null){
+            voucherResponse = voucherTransformer.convertEntityToResponse(voucher,voucherCompany);
+        }
+        return voucherResponse;
     }
 }
