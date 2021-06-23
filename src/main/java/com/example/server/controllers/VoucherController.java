@@ -91,6 +91,16 @@ public class VoucherController {
         return voucherService.addCompany(company);
     }
 
+    @PutMapping("/vouchers/acceptVoucher/{voucherId}")
+    public String acceptVoucher(@PathVariable Long voucherId){
+        return voucherService.acceptVoucher(voucherId);
+    }
+
+    @PutMapping("/vouchers/rejectVoucher/{voucherId}")
+    public String rejectVoucher(@PathVariable Long voucherId){
+        return voucherService.rejectVoucher(voucherId);
+    }
+
     public VoucherResponse getVoucherResponse(Voucher voucher){
         VoucherCompany voucherCompany = voucher.getCompanyId()!=null?this.companyService.getCompanyById(voucher.getCompanyId()):null;
         VoucherResponse voucherResponse = voucherTransformer.convertEntityToResponse(voucher);

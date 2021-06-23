@@ -1,5 +1,6 @@
 package com.example.server.services;
 
+import com.example.server.dto.response.VoucherResponse;
 import com.example.server.entities.Voucher;
 import com.example.server.entities.VoucherCategory;
 import com.example.server.entities.VoucherCompany;
@@ -83,13 +84,23 @@ public class VoucherService {
 //        System.out.printf("No city found with id %d%n", id2);
 //    }
 
-    public String acceptVoucher(Voucher voucher) {
+    public String acceptVoucher(Long voucherId) {
+        Voucher voucher = voucherRepository.findById(voucherId).get();
+        if(voucher==null) {
+            return "Voucher not found!!!";
+        }
         voucher.setVerificationStatus(VoucherVerificationStatus.VERIFIED);
-        return "Voucher id: " + voucher.getId() + " is accepted";
+        voucherRepository.save(voucher);
+        return "Voucher verified";
     }
 
-    public String rejectVoucher(Voucher voucher) {
+    public String rejectVoucher(Long voucherId) {
+        Voucher voucher = voucherRepository.findById(voucherId).get();
+        if(voucher==null) {
+            return "Voucher not found!!!";
+        }
         voucher.setVerificationStatus(VoucherVerificationStatus.REJECTED);
-        return "Voucher id: " + voucher.getId() + " is rejected";
+        voucherRepository.save(voucher);
+        return "Voucher rejected";
     }
 }
