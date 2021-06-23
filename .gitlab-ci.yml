@@ -12,7 +12,7 @@ maven_build:
     - master
     - development
   tags:
-    - frontend-backend
+    - backend
   before_script:
     - echo "** Installing JAR file **"
     - apt update && apt install gettext -y
@@ -34,7 +34,7 @@ test_application:
     - development
     - master
   tags:
-    - frontend-backend
+    - backend
   before_script:
     - echo "** Initializing test engine **"
   script:
@@ -50,7 +50,7 @@ deploy_backend:
     - master
 
   tags:
-    - frontend-backend
+    - backend
   before_script:
     - "echo ${GITLAB_USER_LOGIN/./-}"
     - "ServiceName=mfpa-backend"
