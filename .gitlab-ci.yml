@@ -16,8 +16,7 @@ maven_build:
   before_script:
     - echo "** Installing JAR file **"
     - apt update && apt install gettext -y
-    - envsubst < src/main/resources/application.yml > src/main/resources/application-local.yml
-    - cat src/main/resources/application-local.yml
+    - envsubst < src/main/resources/application.properties
   script:
     - mvn clean install -DskipTests=true -Dalt.build.dir=target
     - ls -al
