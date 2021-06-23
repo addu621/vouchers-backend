@@ -7,6 +7,7 @@ import com.example.server.dto.response.VoucherResponse;
 import com.example.server.dto.transformer.VoucherTransformer;
 import com.example.server.entities.*;
 import com.example.server.services.CompanyService;
+import com.example.server.services.PersonService;
 import com.example.server.services.VoucherService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -26,7 +27,7 @@ public class VoucherController {
     private final VoucherService voucherService;
     private final VoucherTransformer voucherTransformer;
     private final CompanyService companyService;
-
+    private final PersonService personService;
 
     @PostMapping("/search-voucher")
     public List<Voucher> searchVoucher(@RequestBody Map<String, String> req) {
@@ -103,12 +104,12 @@ public class VoucherController {
         return voucherService.addCompany(company);
     }
 
+    /*@PostMapping("/filter")
+    public List<Voucher> filter(@RequestBody FilterRequest input) {
+        List<Voucher> result = voucherService.filterVouchers(input);
+        return result;
+    }*/
 
-//    @PostMapping("/filter")
-//    public List<Voucher> filter(@RequestBody FilterRequest input) {
-//        List<Voucher> result = voucherService.filterVouchers(input);
-//        return result;
-//    }
     @PutMapping("/vouchers/acceptVoucher/{voucherId}")
     public String acceptVoucher(@PathVariable Long voucherId){
         return voucherService.acceptVoucher(voucherId);
@@ -119,15 +120,6 @@ public class VoucherController {
         return voucherService.rejectVoucher(voucherId);
     }
 
-    public VoucherResponse getVoucherResponse(Voucher voucher){
-        VoucherCompany voucherCompany = voucher.getCompanyId()!=null?this.companyService.getCompanyById(voucher.getCompanyId()):null;
-        VoucherResponse voucherResponse = voucherTransformer.convertEntityToResponse(voucher);
-        if(voucherCompany!=null){
-            voucherResponse = voucherTransformer.convertEntityToResponse(voucher,voucherCompany);
-        }
-        return voucherResponse;
-
-    }
     @GetMapping("/users/buyVouchers")
     public List<VoucherResponse> getBuyVouchers(HttpServletRequest request){
         Person personDetails = (Person) request.getAttribute("person");
@@ -152,4 +144,11 @@ public class VoucherController {
         return voucherResponses;
     }
 
+    public VoucherResponse getVoucherResponse(Voucher voucher){
+        VoucherResponse voucherResponse = voucherTransformer.convertEntityToResponse(voucher);
+        Person seller = voucher.getSellerId() != null ? this.personService.findById(voucher.getSellerId()):null;
+        VoucherCompany voucherCompany = voucher.getCompanyId() != null? this.companyService.getCompanyById(voucher.getCompanyId()):null;
+        voucherResponse = voucherTransformer.convertEntityToResponse(voucher,seller,voucherCompany);
+        return voucherResponse;
+    }
 }
