@@ -1,5 +1,6 @@
 package com.example.server.services;
 
+import com.example.server.dto.request.FilterRequest;
 import com.example.server.dto.response.VoucherResponse;
 import com.example.server.entities.Voucher;
 import com.example.server.entities.VoucherCategory;
@@ -76,12 +77,10 @@ public class VoucherService {
         voucherCompanyRepo.save(newCompany);
         return "Company: " + company + " added";
     }
-
-//    var val = cityService.findById(id2);
-//        if (val.isPresent()) {
-//        System.out.println(val.get());
-//    } else {
-//        System.out.printf("No city found with id %d%n", id2);
+//    public List<Voucher> filterVouchers(FilterRequest filterRequest) {
+//
+//        List<Voucher> voucherList = voucherRepository.findByCategoryIdAndCompanyIdIn(filterRequest.getCategories(),filterRequest.getCompanies());
+//        return voucherList;
 //    }
 
     public String acceptVoucher(Long voucherId) {
@@ -102,5 +101,6 @@ public class VoucherService {
         voucher.setVerificationStatus(VoucherVerificationStatus.REJECTED);
         voucherRepository.save(voucher);
         return "Voucher rejected";
+
     }
 }
