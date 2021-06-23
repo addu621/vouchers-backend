@@ -1,19 +1,19 @@
 package com.example.server.controllers;
 
-import com.example.server.dto.request.JwtTokenRequest;
+import com.example.server.dto.request.FilterRequest;
 import com.example.server.dto.request.VoucherRequest;
+import com.example.server.dto.response.GenericResponse;
 import com.example.server.dto.response.VoucherResponse;
 import com.example.server.dto.transformer.VoucherTransformer;
 import com.example.server.entities.*;
-import com.example.server.model.JwtUtil;
 import com.example.server.services.CompanyService;
 import com.example.server.services.VoucherService;
-import io.jsonwebtoken.Jwt;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -61,17 +61,6 @@ public class VoucherController {
         return voucherResponses;
     }
 
-    @GetMapping(value = "/vouchers/verified")
-    public List<VoucherResponse> getAllVerifiedVouchers() {
-        List<Voucher> vouchers = this.voucherService.getAllVerifiedVouchers();
-        List<VoucherResponse> voucherResponses = new ArrayList<VoucherResponse>();
-        vouchers.forEach((Voucher v) -> {
-            VoucherResponse voucherResponse = getVoucherResponse(v);
-            voucherResponses.add(voucherResponse);
-        });
-        return voucherResponses;
-    }
-
     @GetMapping(value = "/vouchers/unverified")
     public List<VoucherResponse> getAllUnverifiedVouchers() {
         List<Voucher> vouchers = this.voucherService.getAllUnverifiedVouchers();
@@ -103,6 +92,12 @@ public class VoucherController {
         return voucherService.addCompany(company);
     }
 
+
+//    @PostMapping("/filter")
+//    public List<Voucher> filter(@RequestBody FilterRequest input) {
+//        List<Voucher> result = voucherService.filterVouchers(input);
+//        return result;
+//    }
     @PutMapping("/vouchers/acceptVoucher/{voucherId}")
     public String acceptVoucher(@PathVariable Long voucherId){
         return voucherService.acceptVoucher(voucherId);
@@ -113,28 +108,6 @@ public class VoucherController {
         return voucherService.rejectVoucher(voucherId);
     }
 
-    @GetMapping("/users/{userId}/buyVouchers")
-    public List<VoucherResponse> getBuyVouchers(@PathVariable Long userId){
-        List<Voucher> vouchers = voucherService.getBuyVouchers(userId);
-        List<VoucherResponse> voucherResponses = new ArrayList<>();
-        vouchers.forEach((Voucher voucher) -> {
-            VoucherResponse voucherResponse = getVoucherResponse(voucher);
-            voucherResponses.add(voucherResponse);
-        });
-        return voucherResponses;
-    }
-
-    @GetMapping("/users/{userId}/sellVouchers")
-    public List<VoucherResponse> getSellVouchers(@PathVariable Long userId){
-        List<Voucher> vouchers = voucherService.getSellVouchers(userId);
-        List<VoucherResponse> voucherResponses = new ArrayList<>();
-        vouchers.forEach((Voucher voucher) -> {
-            VoucherResponse voucherResponse = getVoucherResponse(voucher);
-            voucherResponses.add(voucherResponse);
-        });
-        return voucherResponses;
-    }
-
     public VoucherResponse getVoucherResponse(Voucher voucher){
         VoucherCompany voucherCompany = voucher.getCompanyId()!=null?this.companyService.getCompanyById(voucher.getCompanyId()):null;
         VoucherResponse voucherResponse = voucherTransformer.convertEntityToResponse(voucher);
@@ -142,5 +115,30 @@ public class VoucherController {
             voucherResponse = voucherTransformer.convertEntityToResponse(voucher,voucherCompany);
         }
         return voucherResponse;
+
     }
+    @GetMapping("/users/buyVouchers")
+    public List<VoucherResponse> getBuyVouchers(HttpServletRequest request){
+        Person personDetails = (Person) request.getAttribute("person");
+        List<Voucher> vouchers = voucherService.getBuyVouchers(personDetails.getId());
+        List<VoucherResponse> voucherResponses = new ArrayList<>();
+        vouchers.forEach((Voucher voucher) -> {
+            VoucherResponse voucherResponse = getVoucherResponse(voucher);
+            voucherResponses.add(voucherResponse);
+        });
+        return voucherResponses;
+    }
+
+    @GetMapping("/users/sellVouchers")
+    public List<VoucherResponse> getSellVouchers(HttpServletRequest request){
+        Person personDetails = (Person) request.getAttribute("person");
+        List<Voucher> vouchers = voucherService.getSellVouchers(personDetails.getId());
+        List<VoucherResponse> voucherResponses = new ArrayList<>();
+        vouchers.forEach((Voucher voucher) -> {
+            VoucherResponse voucherResponse = getVoucherResponse(voucher);
+            voucherResponses.add(voucherResponse);
+        });
+        return voucherResponses;
+    }
+
 }
