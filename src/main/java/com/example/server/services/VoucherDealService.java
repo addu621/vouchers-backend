@@ -29,15 +29,15 @@ public class VoucherDealService {
         Voucher voucher = voucherRepository.findById(voucherId).get();
 
         // check if voucher exists already in the deals table
-        List<VoucherDeal> voucherDeals = voucherDealRepository.findByVoucherIdAndDealStatus(voucherId, DealStatus.BOUGHT)
+        List<VoucherDeal> voucherDeals = voucherDealRepository.findByVoucherIdAndDealStatus(voucherId, DealStatus.BOUGHT);
         if(voucherDeals.size()==0){
             // voucher is not bought yet
             // buy the voucher
             voucherDeal.setBuyerId(buyerId);
             voucherDeal.setBoughtPrice(voucher.getSellingPrice());
             voucherDeal.setDealStatus(DealStatus.BOUGHT);
-
-            voucherDeal.setBoughtOn(new Date(););
+            Date date = new Date();
+            voucherDeal.setBoughtOn(date.toString());
             return voucherDealRepository.save(voucherDeal);
         }
 
