@@ -12,6 +12,7 @@ import com.example.server.services.CompanyService;
 import com.example.server.services.VoucherService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -93,11 +94,11 @@ public class VoucherController {
     }
 
 
-    @PostMapping("/filter")
-    public List<Voucher> filter(@RequestBody FilterRequest input) {
-        List<Voucher> result = voucherService.filterVouchers(input);
-        return result;
-    }
+//    @PostMapping("/filter")
+//    public List<Voucher> filter(@RequestBody FilterRequest input) {
+//        List<Voucher> result = voucherService.filterVouchers(input);
+//        return result;
+//    }
     @PutMapping("/vouchers/acceptVoucher/{voucherId}")
     public String acceptVoucher(@PathVariable Long voucherId){
         return voucherService.acceptVoucher(voucherId);

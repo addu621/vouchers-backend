@@ -37,7 +37,7 @@ public class UserController {
     public PersonResponse updateUser(HttpServletRequest request) {
         Object personDetails = request.getAttribute("person");
         PersonResponse personResponse = new PersonResponse();
-        copyProperties(personResponse,personDetails);
+        copyProperties(personDetails,personResponse);
         return personResponse;
     }
 
