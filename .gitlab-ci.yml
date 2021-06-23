@@ -67,7 +67,7 @@ deploy_backend:
               DB_USERNAME: "$DB_USERNAME"
               DB_PASSWORD: "$DB_PASSWORD"
               DB_INSTANCE_NAME: "$DB_INSTANCE_NAME"
-      service: $ServiceName
+      service: default
       handlers:
       - url: /.*
         script: this field is required, but ignored
@@ -86,7 +86,7 @@ deploy_backend:
   script:
     - gcloud auth activate-service-account --key-file ${CI_PIPELINE_ID}.json
     # gcloud app deploy --project=hbs-ontrack --version v1 --appyaml app.yaml
-    - gcloud --project hbs-ontrack app deploy target/server-0.0.1-SNAPSHOT.jar --appyaml app.yaml --version v1
+    - gcloud --project hbs-ontrack app deploy target/server-0.0.1-SNAPSHOT.jar --appyaml app.yaml 
     - url=$(gcloud app services browse $ServiceName --no-launch-browser --project hbs-ontrack)
     - echo $url
 
