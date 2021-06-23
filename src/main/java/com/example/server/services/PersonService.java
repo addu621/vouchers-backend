@@ -25,10 +25,6 @@ public class PersonService {
         }
 
         copyProperties(personRequest, oldPerson, getNullPropertyNames(personRequest));
-//        copyProperties(personRequest,oldPerson);
-        System.out.println(personRequest.getFirstName());
-        System.out.println(oldPerson);
-
         personRepository.save(oldPerson);
 
         return oldPerson;
@@ -46,6 +42,10 @@ public class PersonService {
 
         String[] result = new String[emptyNames.size()];
         return emptyNames.toArray(result);
+    }
+
+    public Person findByEmail(String email){
+        return personRepository.findByEmail(email);
     }
 
 }
