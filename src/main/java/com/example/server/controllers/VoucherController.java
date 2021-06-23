@@ -93,11 +93,11 @@ public class VoucherController {
     }
 
 
-//    @PostMapping("/filter")
-//    public List<Voucher> filter(@RequestBody FilterRequest input) {
-//        List<Voucher> result = voucherService.filterVouchers(input);
-//        return result;
-//    }
+    @PostMapping("/filter")
+    public List<Voucher> filter(@RequestBody FilterRequest input) {
+        List<Voucher> result = voucherService.filterVouchers(input);
+        return result;
+    }
     @PutMapping("/vouchers/acceptVoucher/{voucherId}")
     public String acceptVoucher(@PathVariable Long voucherId){
         return voucherService.acceptVoucher(voucherId);
