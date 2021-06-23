@@ -4,6 +4,7 @@ import com.example.server.dto.request.PersonRequest;
 import com.example.server.dto.response.GenericResponse;
 import com.example.server.dto.response.PersonResponse;
 import com.example.server.entities.Person;
+import com.example.server.entities.Voucher;
 import com.example.server.services.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,11 +21,13 @@ public class UserController {
     @Autowired
     private PersonService personService;
 
-    @PutMapping("/user/{userId}/update")
-    public GenericResponse updateUser(@PathVariable Long userId,@RequestBody PersonRequest personRequest){
+    @PutMapping("/user/update")
+    public GenericResponse updateUser(HttpServletRequest request,@RequestBody PersonRequest personRequest){
 
         GenericResponse genericResponse = new GenericResponse();
-        Person updatedPerson = personService.updatePerson(userId,personRequest);
+        Person personDetails = (Person) request.getAttribute("person");
+
+        Person updatedPerson = personService.updatePerson(personDetails.getId(),personRequest);
 
         if(updatedPerson!=null){
             genericResponse.setMessage("Success!!");
