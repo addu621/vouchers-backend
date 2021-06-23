@@ -45,9 +45,6 @@ public class Voucher {
     @Column(name = "seller_id")
     private Long sellerId;
 
-    @Column(name = "voucher_buyer")
-    private Long buyerId;
-
     @Column(name = "voucher_type")
     private Long voucher_type;
 
