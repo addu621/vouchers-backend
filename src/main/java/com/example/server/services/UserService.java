@@ -16,7 +16,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -35,6 +37,9 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private VoucherTypeRepo voucherTypeRepo;
+
+    @Autowired
+    private Utility utility;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -59,10 +64,28 @@ public class UserService implements UserDetailsService {
 //        return userRepo.save(user1);
 //    }
 
-    public Person save(Person person) {
-        person.setPassword(bcryptEncoder.encode(person.getPassword()));
-        System.out.println(person);
-        person.setIsAdmin(false);
-        return personRepo.save(person);
+    public Map save(Person person) {
+        String otp = utility.getOtp(6);
+        person.setOtp(otp);
+        Map<String,Object> mp = new HashMap<>();
+        try{
+            Person oldPerson = personRepo.findByEmail(person.getEmail());
+            if(oldPerson!=null)
+            {
+                throw new Exception("User with this Email Id already exists!!!");
+            }
+            person.setPassword(bcryptEncoder.encode(person.getPassword()));
+            System.out.println(person);
+            person.setIsAdmin(false);
+            personRepo.save(person);
+            mp.put("person", person);
+            mp.put("message", "Please verify your email");
+            utility.sendMail(person, otp);
+        } catch (Exception e) {
+            e.printStackTrace();
+            mp.put("Message",e.getMessage());
+        }
+        return mp;
     }
+
 }

@@ -13,6 +13,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @CrossOrigin("*")
 public class JwtController {
@@ -45,7 +47,7 @@ public class JwtController {
     }
 
     @PostMapping("/signup")
-    public Person signUp(@RequestBody Person person){
+    public Map signUp(@RequestBody Person person){
         System.out.println(person);
         return userService.save(person);
     }

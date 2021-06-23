@@ -35,9 +35,9 @@ public class Utility {
                 "</div>" +
                 "</div>";
 
-        mimeMessageHelper.setFrom("adarshsingh621@gmail.com","The Switch");
+        mimeMessageHelper.setFrom("studiocars2021@gmail.com","The Switch");
         mimeMessageHelper.setSubject(mailSubject);
-        mimeMessageHelper.setText(mailContent);
+        mimeMessageHelper.setText(mailContent,true);
         mimeMessageHelper.setTo(person.getEmail());
 
         javaMailSender.send(mimeMessage);
