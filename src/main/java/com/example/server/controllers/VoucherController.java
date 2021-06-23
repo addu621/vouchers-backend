@@ -76,4 +76,11 @@ public class VoucherController {
     public String addCompany(@RequestBody String company) {
         return voucherService.addCompany(company);
     }
+
+    @PostMapping("/filter")
+    public List<Voucher> filter(@RequestBody Map<String, List<String>> input){
+        List<String> arr = input.get("params");
+        List<Voucher>result = voucherService.filterVouchers(arr);
+        return result;
+    }
 }

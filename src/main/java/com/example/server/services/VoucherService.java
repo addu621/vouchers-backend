@@ -73,4 +73,8 @@ public class VoucherService {
         voucherCompanyRepo.save(newCompany);
         return "Company: " + company + " added";
     }
+    public List<Voucher> filterVouchers(List<String> arr){
+        List<Voucher> voucherList = voucherRepository.filter(arr);
+        return voucherList;
+    }
 }

@@ -15,5 +15,8 @@ public interface VoucherRepository extends CrudRepository<Voucher,Long> {
             "or lower(v.description) like lower(concat('%', :search, '%'))")
     List<Voucher> searchVoucher(@Param("search") String search);
 
+    @Query("select v from Voucher v where v.title in (:array)")
+    List<Voucher> filter(@Param("companies") List<String> arr);
+
     List<Voucher> findByVerificationStatus(VoucherVerificationStatus voucherVerificationStatus);
 }
