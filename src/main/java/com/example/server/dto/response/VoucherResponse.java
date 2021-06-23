@@ -1,5 +1,6 @@
 package com.example.server.dto.response;
 
+import com.example.server.entities.VoucherCompany;
 import com.example.server.enums.VoucherVerificationStatus;
 import lombok.Data;
 
@@ -18,6 +19,7 @@ public class VoucherResponse {
     private String title;
     private Long categoryId;
     private Long companyId;
+    private String companyImgUrl;
     private String createdOn;
     private VoucherVerificationStatus verificationStatus;
     private String imageUrl;

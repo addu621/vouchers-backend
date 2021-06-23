@@ -17,7 +17,7 @@ public class UserController {
     private PersonService personService;
 
     @PutMapping("/user/{userId}/update")
-    public GenericResponse updateUser(@RequestParam Long userId,@RequestBody PersonRequest personRequest){
+    public GenericResponse updateUser(@PathVariable Long userId,@RequestBody PersonRequest personRequest){
 
         GenericResponse genericResponse = new GenericResponse();
         Person updatedPerson = personService.updatePerson(userId,personRequest);

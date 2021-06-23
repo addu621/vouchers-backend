@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface VoucherCompanyRepo extends JpaRepository<VoucherCompany,String> {
+public interface VoucherCompanyRepo extends JpaRepository<VoucherCompany,Long> {
 
 //    @Query(value = "select count(*) from voucher_company where name=?1")
     public VoucherCompany findByName(String company);

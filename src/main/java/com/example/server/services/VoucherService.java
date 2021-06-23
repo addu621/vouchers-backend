@@ -1,5 +1,7 @@
 package com.example.server.services;
 
+import com.example.server.dto.request.FilterRequest;
+import com.example.server.dto.response.VoucherResponse;
 import com.example.server.entities.Voucher;
 import com.example.server.entities.VoucherCategory;
 import com.example.server.entities.VoucherCompany;
@@ -10,11 +12,13 @@ import com.example.server.repositories.VoucherCompanyRepo;
 import com.example.server.repositories.VoucherRepository;
 import com.example.server.repositories.VoucherTypeRepo;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @AllArgsConstructor
 @Service
@@ -73,8 +77,30 @@ public class VoucherService {
         voucherCompanyRepo.save(newCompany);
         return "Company: " + company + " added";
     }
-    public List<Voucher> filterVouchers(List<String> arr){
-        List<Voucher> voucherList = voucherRepository.filter(arr);
-        return voucherList;
+//    public List<Voucher> filterVouchers(FilterRequest filterRequest) {
+//
+//        List<Voucher> voucherList = voucherRepository.findByCategoryIdAndCompanyIdIn(filterRequest.getCategories(),filterRequest.getCompanies());
+//        return voucherList;
+//    }
+
+    public String acceptVoucher(Long voucherId) {
+        Voucher voucher = voucherRepository.findById(voucherId).get();
+        if(voucher==null) {
+            return "Voucher not found!!!";
+        }
+        voucher.setVerificationStatus(VoucherVerificationStatus.VERIFIED);
+        voucherRepository.save(voucher);
+        return "Voucher verified";
+    }
+
+    public String rejectVoucher(Long voucherId) {
+        Voucher voucher = voucherRepository.findById(voucherId).get();
+        if(voucher==null) {
+            return "Voucher not found!!!";
+        }
+        voucher.setVerificationStatus(VoucherVerificationStatus.REJECTED);
+        voucherRepository.save(voucher);
+        return "Voucher rejected";
+
     }
 }
