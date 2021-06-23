@@ -28,20 +28,20 @@ maven_build:
       - target/*.jar
 
 
-test_application:
-  image: maven:3.6.3-openjdk-11
-  stage: test
-  only:
-    - development
-    - master
-  tags:
-    - backend
-  before_script:
-    - echo "** Initializing test engine **"
-  script:
-    - mvn clean test
-  after_script:
-    - echo "** Testing complete **"
+#test_application:
+ # image: maven:3.6.3-openjdk-11
+ # stage: test
+#  only:
+  #  - development
+  #  - master
+ # tags:
+  #  - backend
+ # before_script:
+  #  - echo "** Initializing test engine **"
+ # script:
+ #   - mvn clean test
+  #after_script:
+   # - echo "** Testing complete **"
 
 
 deploy_backend:
