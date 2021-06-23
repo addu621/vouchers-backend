@@ -54,7 +54,7 @@ deploy_backend:
     - backend
   before_script:
     - "echo ${GITLAB_USER_LOGIN/./-}"
-    - "ServiceName=mfpa-backend"
+    - "ServiceName=vouchermoney-backend"
     - |
       cat <<EOF >> app.yaml
       runtime: java11
@@ -73,7 +73,7 @@ deploy_backend:
         script: this field is required, but ignored
       manual_scaling:
         instances: 1
-      instance_class: B1
+      instance_class: B2
       resources:
         cpu: 1
         memory_gb: 2
