@@ -1,5 +1,6 @@
 package com.example.server.services;
 
+import com.example.server.dto.request.FilterRequest;
 import com.example.server.dto.response.VoucherResponse;
 import com.example.server.entities.*;
 import com.example.server.enums.DealStatus;

@@ -26,7 +26,7 @@ public class VoucherController {
     private final VoucherService voucherService;
     private final VoucherTransformer voucherTransformer;
     private final CompanyService companyService;
-    private JwtUtil jwtUtil;
+
 
     @PostMapping("/search-voucher")
     public List<Voucher> searchVoucher(@RequestBody Map<String, String> req) {

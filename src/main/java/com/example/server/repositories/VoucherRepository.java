@@ -17,6 +17,9 @@ public interface VoucherRepository extends JpaRepository<Voucher,Long> {
             "or lower(v.description) like lower(concat('%', :search, '%'))")
     List<Voucher> searchVoucher(@Param("search") String search);
 
+//    @Query("select v from Voucher v where v.title in (:array)")
+//    List<Voucher> findByCategoryIdAndCompanyIdIn(@Param("categories") List<Long>categories,List<Long>companies);
+
     List<Voucher> findByVerificationStatus(VoucherVerificationStatus voucherVerificationStatus);
 
     List<Voucher> findBySellerId(Long sellerId);
