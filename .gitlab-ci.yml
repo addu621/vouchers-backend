@@ -20,6 +20,8 @@ maven_build:
   script:
     - mvn clean install -DskipTests=true -Dalt.build.dir=target
     - ls -al
+    - cd target
+    - ls
 
   artifacts:
     paths:
