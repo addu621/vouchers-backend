@@ -65,6 +65,10 @@ public class VoucherService {
         return this.voucherRepository.findByVerificationStatus(VoucherVerificationStatus.PENDING);
     }
 
+    public List<Voucher> getAllVerifiedVouchers(){
+        return this.voucherRepository.findByVerificationStatus(VoucherVerificationStatus.VERIFIED);
+    }
+
     public List<Voucher> getBuyVouchers(Long userId){
         List<VoucherDeal> voucherDeals = this.voucherDealRepository.findByBuyerIdAndDealStatus(userId, DealStatus.BOUGHT);
         List<Voucher> vouchers = new ArrayList<>();

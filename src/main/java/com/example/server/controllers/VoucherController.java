@@ -61,6 +61,17 @@ public class VoucherController {
         return voucherResponses;
     }
 
+    @GetMapping(value = "/vouchers/verified")
+    public List<VoucherResponse> getAllVerifiedVouchers() {
+        List<Voucher> vouchers = this.voucherService.getAllVerifiedVouchers();
+        List<VoucherResponse> voucherResponses = new ArrayList<VoucherResponse>();
+        vouchers.forEach((Voucher v) -> {
+            VoucherResponse voucherResponse = getVoucherResponse(v);
+            voucherResponses.add(voucherResponse);
+        });
+        return voucherResponses;
+    }
+
     @GetMapping(value = "/vouchers/unverified")
     public List<VoucherResponse> getAllUnverifiedVouchers() {
         List<Voucher> vouchers = this.voucherService.getAllUnverifiedVouchers();
