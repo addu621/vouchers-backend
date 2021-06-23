@@ -88,4 +88,29 @@ public class UserService implements UserDetailsService {
         return mp;
     }
 
+    public Map otpVerify(String email, String otp) {
+        Map<String,Object> mp =new HashMap<>();
+        try {
+            Person person = personRepo.findByEmail(email);
+            if(person != null) {
+                if(otp.equals(person.getOtp()))
+                {
+                    person.setIsOtpVerified(true);
+                    personRepo.save(person);
+                    mp.put("message","person otp verified");
+                    mp.put("person", person);
+                }
+                else {
+                    mp.put("message","Incorrect OTP");
+                }
+            }
+            else {
+                throw new Exception("User with this email do not exist!!!");
+            }
+        } catch (Exception e) {
+            mp.put("error",e.getMessage());
+            e.printStackTrace();
+        }
+        return mp;
+    }
 }

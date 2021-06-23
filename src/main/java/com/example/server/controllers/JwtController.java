@@ -52,6 +52,11 @@ public class JwtController {
         return userService.save(person);
     }
 
+    @PatchMapping("/otpVerify")
+    public Map otpVerify(@RequestBody Map<String,String> mp) {
+        return userService.otpVerify(mp.get("email"),mp.get("otp"));
+    }
+
     private void authenticate(String username, String password) throws Exception {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
