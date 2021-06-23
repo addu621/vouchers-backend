@@ -36,7 +36,7 @@ public class UserController {
 
         return genericResponse;
     }
-    @PostMapping("/profile")
+    @GetMapping("/profile")
     public PersonResponse updateUser(HttpServletRequest request) {
         Object personDetails = request.getAttribute("person");
         PersonResponse personResponse = new PersonResponse();
