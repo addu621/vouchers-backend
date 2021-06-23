@@ -2,12 +2,10 @@ package com.example.server.controllers;
 
 import com.example.server.dto.request.FilterRequest;
 import com.example.server.dto.request.VoucherRequest;
+import com.example.server.dto.response.GenericResponse;
 import com.example.server.dto.response.VoucherResponse;
 import com.example.server.dto.transformer.VoucherTransformer;
-import com.example.server.entities.Voucher;
-import com.example.server.entities.VoucherCategory;
-import com.example.server.entities.VoucherCompany;
-import com.example.server.entities.VoucherType;
+import com.example.server.entities.*;
 import com.example.server.services.CompanyService;
 import com.example.server.services.VoucherService;
 import lombok.AllArgsConstructor;
@@ -15,6 +13,7 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -118,4 +117,28 @@ public class VoucherController {
         return voucherResponse;
 
     }
+    @GetMapping("/users/buyVouchers")
+    public List<VoucherResponse> getBuyVouchers(HttpServletRequest request){
+        Person personDetails = (Person) request.getAttribute("person");
+        List<Voucher> vouchers = voucherService.getBuyVouchers(personDetails.getId());
+        List<VoucherResponse> voucherResponses = new ArrayList<>();
+        vouchers.forEach((Voucher voucher) -> {
+            VoucherResponse voucherResponse = getVoucherResponse(voucher);
+            voucherResponses.add(voucherResponse);
+        });
+        return voucherResponses;
+    }
+
+    @GetMapping("/users/sellVouchers")
+    public List<VoucherResponse> getSellVouchers(HttpServletRequest request){
+        Person personDetails = (Person) request.getAttribute("person");
+        List<Voucher> vouchers = voucherService.getSellVouchers(personDetails.getId());
+        List<VoucherResponse> voucherResponses = new ArrayList<>();
+        vouchers.forEach((Voucher voucher) -> {
+            VoucherResponse voucherResponse = getVoucherResponse(voucher);
+            voucherResponses.add(voucherResponse);
+        });
+        return voucherResponses;
+    }
+
 }
