@@ -55,7 +55,7 @@ deploy_backend:
     - backend
   before_script:
     - "echo ${GITLAB_USER_LOGIN/./-}"
-    - "ServiceName=mfpa-backend"
+    - "ServiceName=vouchermoney-backend"
     - |
       cat <<EOF >> app.yaml
       runtime: java11
