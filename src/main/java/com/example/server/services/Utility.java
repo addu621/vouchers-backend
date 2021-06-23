@@ -28,14 +28,14 @@ public class Utility {
                 "<div>" +
                 "<p>" +
                 "Hi "+person.getFirstName()+",<br>" +
-                "Thanks for signing up at The Switch, you are just One step away of your email verification.<br>" +
+                "Thanks for signing up at Voucher Money, you are just One step away of your email verification.<br>" +
                 "Please Enter the below OTP within <b>10 minutes</b>." +
                 "</p>" +
                 "<h3 style=\"color: red\">"+otp+"</h3>" +
                 "</div>" +
                 "</div>";
 
-        mimeMessageHelper.setFrom("studiocars2021@gmail.com","The Switch");
+        mimeMessageHelper.setFrom("studiocars2021@gmail.com","Voucher Money");
         mimeMessageHelper.setSubject(mailSubject);
         mimeMessageHelper.setText(mailContent,true);
         mimeMessageHelper.setTo(person.getEmail());

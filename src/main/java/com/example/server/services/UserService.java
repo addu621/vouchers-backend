@@ -75,8 +75,9 @@ public class UserService implements UserDetailsService {
                 throw new Exception("User with this Email Id already exists!!!");
             }
             person.setPassword(bcryptEncoder.encode(person.getPassword()));
-            System.out.println(person);
+            person.setIsOtpVerified(false);
             person.setIsAdmin(false);
+            System.out.println(person);
             personRepo.save(person);
             mp.put("person", person);
             mp.put("message", "Please verify your email");
