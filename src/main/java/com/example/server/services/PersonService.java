@@ -48,4 +48,7 @@ public class PersonService {
         return personRepository.findByEmail(email);
     }
 
+    public Person findById(Long id){
+        return personRepository.findById(id).get();
+    }
 }

@@ -36,14 +36,14 @@ public class VoucherService {
         return searchResult;
     }
 
+    public boolean isVoucherSold(long voucherId){
+        List<VoucherDeal> voucherDeals = this.voucherDealRepository.findByDealStatus(DealStatus.BOUGHT);
+        return voucherDeals.stream().anyMatch((VoucherDeal vd)->vd.getVoucherId()==voucherId);
+    }
+
     public List<Voucher> getAllVouchers() {
-        List<VoucherDeal> voucherDeals = this.voucherDealRepository.findByDealStatusNot(DealStatus.BOUGHT);
-        List<Voucher> vouchers = new ArrayList<>();
-        voucherDeals.forEach((VoucherDeal v) -> {
-            Voucher voucher = this.getVoucherById(v.getVoucherId());
-            vouchers.add(voucher);
-        });
-        return vouchers;
+        List<Voucher> vouchers = this.voucherRepository.findAll();
+        return vouchers.stream().filter((Voucher voucher)->!isVoucherSold(voucher.getId())).collect(Collectors.toList());
     }
 
     public List<VoucherCategory> getAllVoucherCategory()
@@ -62,11 +62,13 @@ public class VoucherService {
     }
 
     public List<Voucher> getAllUnverifiedVouchers(){
-        return this.voucherRepository.findByVerificationStatus(VoucherVerificationStatus.PENDING);
+        List<Voucher> vouchers = this.voucherRepository.findByVerificationStatus(VoucherVerificationStatus.PENDING);
+        return vouchers.stream().filter((Voucher voucher)->!isVoucherSold(voucher.getId())).collect(Collectors.toList());
     }
 
     public List<Voucher> getAllVerifiedVouchers(){
-        return this.voucherRepository.findByVerificationStatus(VoucherVerificationStatus.VERIFIED);
+        List<Voucher> vouchers = this.voucherRepository.findByVerificationStatus(VoucherVerificationStatus.VERIFIED);
+        return vouchers.stream().filter((Voucher voucher)->!isVoucherSold(voucher.getId())).collect(Collectors.toList());
     }
 
     public List<Voucher> getBuyVouchers(Long userId){
