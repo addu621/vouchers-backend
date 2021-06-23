@@ -77,11 +77,11 @@ public class VoucherService {
         voucherCompanyRepo.save(newCompany);
         return "Company: " + company + " added";
     }
-//    public List<Voucher> filterVouchers(FilterRequest filterRequest) {
-//
-//        List<Voucher> voucherList = voucherRepository.findByCategoryIdAndCompanyIdIn(filterRequest.getCategories(),filterRequest.getCompanies());
-//        return voucherList;
-//    }
+    public List<Voucher> filterVouchers(FilterRequest filterRequest) {
+
+        List<Voucher> voucherList = voucherRepository.filterCoupons(filterRequest.getCategories(),filterRequest.getCompanies());
+        return voucherList;
+    }
 
     public String acceptVoucher(Long voucherId) {
         Voucher voucher = voucherRepository.findById(voucherId).get();
