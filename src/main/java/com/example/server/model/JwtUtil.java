@@ -1,5 +1,6 @@
 package com.example.server.model;
 
+import com.example.server.entities.Person;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -58,5 +59,9 @@ public class JwtUtil {
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    }
+
+    public Person fetchUserByToken(String jwtToken){
+        return new Person();
     }
 }

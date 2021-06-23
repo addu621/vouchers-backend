@@ -16,7 +16,7 @@ public class VoucherDeal {
     private Long id;
 
     @Column(name = "status")
-    private DealStatus status;
+    private DealStatus dealStatus;
 
     @Column(name = "bought_price")
     private BigDecimal boughtPrice;
@@ -25,7 +25,7 @@ public class VoucherDeal {
     private String boughtOn;
 
     @Column(name = "buyer_id")
-    private Long buyer_id;
+    private Long buyerId;
 
     @Column(name = "voucher_id")
     private Long voucherId;

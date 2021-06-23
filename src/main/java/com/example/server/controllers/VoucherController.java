@@ -1,16 +1,17 @@
 package com.example.server.controllers;
 
+import com.example.server.dto.request.JwtTokenRequest;
 import com.example.server.dto.request.VoucherRequest;
 import com.example.server.dto.response.VoucherResponse;
 import com.example.server.dto.transformer.VoucherTransformer;
-import com.example.server.entities.Voucher;
-import com.example.server.entities.VoucherCategory;
-import com.example.server.entities.VoucherCompany;
-import com.example.server.entities.VoucherType;
+import com.example.server.entities.*;
+import com.example.server.model.JwtUtil;
 import com.example.server.services.CompanyService;
 import com.example.server.services.VoucherService;
+import io.jsonwebtoken.Jwt;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ public class VoucherController {
     private final VoucherService voucherService;
     private final VoucherTransformer voucherTransformer;
     private final CompanyService companyService;
-
+    private JwtUtil jwtUtil;
 
     @PostMapping("/search-voucher")
     public List<Voucher> searchVoucher(@RequestBody Map<String, String> req) {
@@ -99,6 +100,28 @@ public class VoucherController {
     @PutMapping("/vouchers/rejectVoucher/{voucherId}")
     public String rejectVoucher(@PathVariable Long voucherId){
         return voucherService.rejectVoucher(voucherId);
+    }
+
+    @GetMapping("/users/{userId}/buyVouchers")
+    public List<VoucherResponse> getBuyVouchers(@PathVariable Long userId){
+        List<Voucher> vouchers = voucherService.getBuyVouchers(userId);
+        List<VoucherResponse> voucherResponses = new ArrayList<>();
+        vouchers.forEach((Voucher voucher) -> {
+            VoucherResponse voucherResponse = getVoucherResponse(voucher);
+            voucherResponses.add(voucherResponse);
+        });
+        return voucherResponses;
+    }
+
+    @GetMapping("/users/{userId}/sellVouchers")
+    public List<VoucherResponse> getSellVouchers(@PathVariable Long userId){
+        List<Voucher> vouchers = voucherService.getSellVouchers(userId);
+        List<VoucherResponse> voucherResponses = new ArrayList<>();
+        vouchers.forEach((Voucher voucher) -> {
+            VoucherResponse voucherResponse = getVoucherResponse(voucher);
+            voucherResponses.add(voucherResponse);
+        });
+        return voucherResponses;
     }
 
     public VoucherResponse getVoucherResponse(Voucher voucher){
