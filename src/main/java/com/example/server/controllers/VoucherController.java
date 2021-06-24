@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +40,7 @@ public class VoucherController {
     }
 
     @PostMapping(value = "/vouchers/new")
-    public VoucherResponse postVoucher(HttpServletRequest request,@RequestBody VoucherRequest voucherRequest) {
+    public VoucherResponse postVoucher(HttpServletRequest request,@RequestBody VoucherRequest voucherRequest) throws ParseException {
         Person personDetails = (Person) request.getAttribute("person");
         voucherRequest.setSellerId(personDetails.getId());
         Voucher voucher = voucherTransformer.convertRequestToEntity(voucherRequest);
@@ -70,6 +71,13 @@ public class VoucherController {
     @GetMapping(value = "/vouchers/unverified")
     public List<VoucherResponse> getAllUnverifiedVouchers() {
         List<Voucher> vouchers = this.voucherService.getAllUnverifiedVouchers();
+        return this.voucherTransformer.convertEntityListToResponseList(vouchers);
+    }
+
+    @GetMapping(value = "/user/myVouchers")
+    public List<VoucherResponse> getMyVouchers(HttpServletRequest request) {
+        Person personDetails = (Person) request.getAttribute("person");
+        List<Voucher> vouchers = this.voucherService.getVouchersBySellerId(personDetails.getId());
         return this.voucherTransformer.convertEntityListToResponseList(vouchers);
     }
 

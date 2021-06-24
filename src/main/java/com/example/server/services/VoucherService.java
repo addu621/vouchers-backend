@@ -54,9 +54,15 @@ public class VoucherService {
         return voucherTypeRepo.findAll();
     }
 
+    public List<Voucher> sortByTime(List<Voucher> vouchers){
+        vouchers.sort((v1,v2)->v2.getCreatedOn().compareTo(v1.getCreatedOn()));
+        return vouchers;
+    }
+
     public List<Voucher> getAllUnverifiedVouchers(){
         List<Voucher> vouchers = this.voucherRepository.findByVerificationStatus(VoucherVerificationStatus.PENDING);
-        return vouchers.stream().filter((Voucher voucher)->!isVoucherSold(voucher.getId())).collect(Collectors.toList());
+        vouchers = vouchers.stream().filter((Voucher voucher)->!isVoucherSold(voucher.getId())).collect(Collectors.toList());
+        return sortByTime(vouchers);
     }
 
     public boolean isVoucherSold(long voucherId){
@@ -66,12 +72,14 @@ public class VoucherService {
 
     public List<Voucher> getAllVouchers() {
         List<Voucher> vouchers = this.voucherRepository.findAll();
-        return vouchers.stream().filter((Voucher voucher)->!isVoucherSold(voucher.getId())).collect(Collectors.toList());
+        vouchers =  vouchers.stream().filter((Voucher voucher)->!isVoucherSold(voucher.getId())).collect(Collectors.toList());
+        return sortByTime(vouchers);
     }
 
     public List<Voucher> getAllVerifiedVouchers(){
         List<Voucher> vouchers = this.voucherRepository.findByVerificationStatus(VoucherVerificationStatus.VERIFIED);
-        return vouchers.stream().filter((Voucher voucher)->!isVoucherSold(voucher.getId())).collect(Collectors.toList());
+        vouchers =  vouchers.stream().filter((Voucher voucher)->!isVoucherSold(voucher.getId())).collect(Collectors.toList());
+        return sortByTime(vouchers);
     }
 
     public List<Voucher> getBuyVouchers(Long userId){
@@ -81,15 +89,19 @@ public class VoucherService {
             Voucher voucher = this.getVoucherById(v.getVoucherId());
             vouchers.add(voucher);
         });
-        return vouchers;
+        return sortByTime(vouchers);
     }
 
     public List<Voucher> getSellVouchers(Long sellerId){
-        return this.voucherRepository
+        return sortByTime(this.voucherRepository
                     .findBySellerId(sellerId)
                     .stream()
                     .filter((Voucher voucher) -> isVoucherSold(voucher.getId()))
-                    .collect(Collectors.toList());
+                    .collect(Collectors.toList()));
+    }
+
+    public List<Voucher> getVouchersBySellerId(long sellerId){
+        return sortByTime(this.voucherRepository.findBySellerId(sellerId));
     }
 
     public String addCompany(String company) {
@@ -106,7 +118,7 @@ public class VoucherService {
 
     public List<Voucher> filterVouchers(FilterRequest filterRequest) {
         List<Voucher> voucherList = voucherRepository.filterCoupons(filterRequest.getCategories(),filterRequest.getCompanies());
-        return voucherList;
+        return sortByTime(voucherList);
     }
 
     public String acceptVoucher(Long voucherId) {

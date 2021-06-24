@@ -5,6 +5,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Date;
 
 @Entity
 @Table(name = "voucher")
@@ -25,10 +26,10 @@ public class Voucher {
     private BigDecimal sellingPrice;
 
     @Column(name = "created_on")
-    private String createdOn;
+    private Date createdOn;
 
     @Column(name = "expiry_date")
-    private String expiryDate;
+    private Date expiryDate;
 
     @Column(name = "is_negotiable")
     private boolean isNegotiable;
