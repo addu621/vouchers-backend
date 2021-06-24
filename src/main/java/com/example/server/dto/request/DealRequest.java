@@ -7,5 +7,6 @@ import java.math.BigDecimal;
 @Data
 public class DealRequest {
     private Long voucherId;
+    private Long buyerId;
     private BigDecimal quotedPrice;
 }
