@@ -45,11 +45,12 @@ public class Person {
     @Column(name = "is_otp_verified")
     private Boolean isOtpVerified;
 
+
     public Person() {
 
     }
 
-    public Person(Long id, String email, String firstName, String middleName, String lastName, String password, String mobile, String imageUrl, Boolean isAdmin, String otp, Boolean isOtpVerified) {
+    public Person(Long id, String email, String firstName, String middleName, String lastName, String password, String mobile, String imageUrl, Boolean isAdmin, String otp, Boolean isOtpVerified, Boolean isForgotPasswordOtpVerified) {
         this.id = id;
         this.email = email;
         this.firstName = firstName;

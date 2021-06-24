@@ -76,6 +76,16 @@ public class JwtController {
         return userService.otpVerify(mp.get("email"),mp.get("otp"));
     }
 
+    @PatchMapping("/forgotPasswordReq")
+    public Map forgotPasswordReq(@RequestBody Map<String,String> mp){
+        return userService.sendForgotPasswordReq(mp.get("email"));
+    }
+
+    @PatchMapping("/updatePassword")
+    public Map passwordUpdate(@RequestBody Map<String,String> mp) {
+        return userService.updatePassword(mp.get("email"),mp.get("otp"),mp.get("newPassword"));
+    }
+
     private void authenticate(String username, String password) throws Exception {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
