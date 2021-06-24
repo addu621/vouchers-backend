@@ -3,6 +3,7 @@ package com.example.server.controllers;
 import com.example.server.entities.Person;
 import com.example.server.model.JwtResponse;
 import com.example.server.model.JwtUtil;
+import com.example.server.repositories.PersonRepo;
 import com.example.server.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,9 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @CrossOrigin("*")
@@ -26,6 +30,9 @@ public class JwtController {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Autowired
+    private PersonRepo personRepo;
+
     //web security test api
     @RequestMapping("/welcome")
     public String welcome() {
@@ -33,7 +40,9 @@ public class JwtController {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody Person authenticationRequest) throws Exception {
+    public Map createAuthenticationToken(@RequestBody Person authenticationRequest) throws Exception {
+
+        Map<String, String> mp = new HashMap<>();
 
         authenticate(authenticationRequest.getEmail(), authenticationRequest.getPassword());
 
@@ -41,13 +50,27 @@ public class JwtController {
 
         final String token = jwtUtil.generateToken(userDetails);
 
-        return ResponseEntity.ok(new JwtResponse(token));
+        Person person = personRepo.findByEmail(authenticationRequest.getEmail());
+
+        if(person==null) {
+            mp.put("error", "Invalid Credentials");
+        }
+
+        mp.put("token", token);
+        mp.put("isAdmin", person.getIsAdmin().toString());
+
+        return mp;
     }
 
     @PostMapping("/signup")
-    public Person signUp(@RequestBody Person person){
+    public Map signUp(@RequestBody Person person){
         System.out.println(person);
         return userService.save(person);
+    }
+
+    @PatchMapping("/otpVerify")
+    public Map otpVerify(@RequestBody Map<String,String> mp) {
+        return userService.otpVerify(mp.get("email"),mp.get("otp"));
     }
 
     private void authenticate(String username, String password) throws Exception {
