@@ -8,6 +8,7 @@ import com.example.server.dto.transformer.VoucherTransformer;
 import com.example.server.entities.*;
 import com.example.server.services.CompanyService;
 import com.example.server.services.PersonService;
+import com.example.server.services.VoucherOrderService;
 import com.example.server.services.VoucherService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -28,6 +29,7 @@ public class VoucherController {
     private final VoucherTransformer voucherTransformer;
     private final CompanyService companyService;
     private final PersonService personService;
+    private final VoucherOrderService voucherOrderService;
 
     @PostMapping("/search-voucher")
     public List<Voucher> searchVoucher(@RequestBody Map<String, String> req) {
@@ -37,51 +39,38 @@ public class VoucherController {
     }
 
     @PostMapping(value = "/vouchers/new")
-    public VoucherResponse postVoucher(@RequestBody VoucherRequest voucherRequest) {
+    public VoucherResponse postVoucher(HttpServletRequest request,@RequestBody VoucherRequest voucherRequest) {
+        Person personDetails = (Person) request.getAttribute("person");
+        voucherRequest.setSellerId(personDetails.getId());
         Voucher voucher = voucherTransformer.convertRequestToEntity(voucherRequest);
         voucher = voucherService.saveVoucher(voucher);
-        VoucherResponse voucherResponse = getVoucherResponse(voucher);
+        VoucherResponse voucherResponse = this.voucherTransformer.convertEntityToResponse(voucher);
         return voucherResponse;
     }
 
     @GetMapping(value = "/vouchers/{id}")
     public VoucherResponse getVoucherById(@PathVariable Long id) {
         Voucher voucher = this.voucherService.getVoucherById(id);
-        VoucherResponse voucherResponse = getVoucherResponse(voucher);
+        VoucherResponse voucherResponse = this.voucherTransformer.convertEntityToResponse(voucher);
         return voucherResponse;
     }
 
     @GetMapping(value = "/vouchers")
     public List<VoucherResponse> getAllVouchers() {
         List<Voucher> vouchers = this.voucherService.getAllVouchers();
-        List<VoucherResponse> voucherResponses = new ArrayList<VoucherResponse>();
-        vouchers.forEach((Voucher v) -> {
-            VoucherResponse voucherResponse = getVoucherResponse(v);
-            voucherResponses.add(voucherResponse);
-        });
-        return voucherResponses;
+        return this.voucherTransformer.convertEntityListToResponseList(vouchers);
     }
 
     @GetMapping(value = "/vouchers/verified")
     public List<VoucherResponse> getAllVerifiedVouchers() {
         List<Voucher> vouchers = this.voucherService.getAllVerifiedVouchers();
-        List<VoucherResponse> voucherResponses = new ArrayList<VoucherResponse>();
-        vouchers.forEach((Voucher v) -> {
-            VoucherResponse voucherResponse = getVoucherResponse(v);
-            voucherResponses.add(voucherResponse);
-        });
-        return voucherResponses;
+        return this.voucherTransformer.convertEntityListToResponseList(vouchers);
     }
 
     @GetMapping(value = "/vouchers/unverified")
     public List<VoucherResponse> getAllUnverifiedVouchers() {
         List<Voucher> vouchers = this.voucherService.getAllUnverifiedVouchers();
-        List<VoucherResponse> voucherResponses = new ArrayList<VoucherResponse>();
-        vouchers.forEach((Voucher v) -> {
-            VoucherResponse voucherResponse = getVoucherResponse(v);
-            voucherResponses.add(voucherResponse);
-        });
-        return voucherResponses;
+        return this.voucherTransformer.convertEntityListToResponseList(vouchers);
     }
 
     @GetMapping("/getVoucherCategories")
@@ -104,12 +93,6 @@ public class VoucherController {
         return voucherService.addCompany(company);
     }
 
-    /*@PostMapping("/filter")
-    public List<Voucher> filter(@RequestBody FilterRequest input) {
-        List<Voucher> result = voucherService.filterVouchers(input);
-        return result;
-    }*/
-
     @PutMapping("/vouchers/acceptVoucher/{voucherId}")
     public String acceptVoucher(@PathVariable Long voucherId){
         return voucherService.acceptVoucher(voucherId);
@@ -124,31 +107,34 @@ public class VoucherController {
     public List<VoucherResponse> getBuyVouchers(HttpServletRequest request){
         Person personDetails = (Person) request.getAttribute("person");
         List<Voucher> vouchers = voucherService.getBuyVouchers(personDetails.getId());
-        List<VoucherResponse> voucherResponses = new ArrayList<>();
-        vouchers.forEach((Voucher voucher) -> {
-            VoucherResponse voucherResponse = getVoucherResponse(voucher);
-            voucherResponses.add(voucherResponse);
-        });
-        return voucherResponses;
+        return this.voucherTransformer.convertEntityListToResponseList(vouchers);
     }
 
     @GetMapping("/users/sellVouchers")
     public List<VoucherResponse> getSellVouchers(HttpServletRequest request){
         Person personDetails = (Person) request.getAttribute("person");
         List<Voucher> vouchers = voucherService.getSellVouchers(personDetails.getId());
-        List<VoucherResponse> voucherResponses = new ArrayList<>();
-        vouchers.forEach((Voucher voucher) -> {
-            VoucherResponse voucherResponse = getVoucherResponse(voucher);
-            voucherResponses.add(voucherResponse);
-        });
-        return voucherResponses;
+        return this.voucherTransformer.convertEntityListToResponseList(vouchers);
     }
 
-    public VoucherResponse getVoucherResponse(Voucher voucher){
-        VoucherResponse voucherResponse = voucherTransformer.convertEntityToResponse(voucher);
-        Person seller = voucher.getSellerId() != null ? this.personService.findById(voucher.getSellerId()):null;
-        VoucherCompany voucherCompany = voucher.getCompanyId() != null? this.companyService.getCompanyById(voucher.getCompanyId()):null;
-        voucherResponse = voucherTransformer.convertEntityToResponse(voucher,seller,voucherCompany);
-        return voucherResponse;
+    @PostMapping("/buy/voucher")
+    public GenericResponse buyVoucher(HttpServletRequest request,Long voucherId){
+        Person personDetails = (Person) request.getAttribute("person");
+        Long buyerId = personDetails.getId();
+
+        VoucherOrder voucherOrder = voucherOrderService.addOrder(buyerId,voucherId);
+        GenericResponse genericResponse= new GenericResponse();
+
+        if(voucherOrder!=null){
+            genericResponse.setMessage("Voucher Bought Successfully");
+            genericResponse.setStatus(200);
+        }
+        return genericResponse;
     }
+
+    /*@PostMapping("/filter")
+    public List<Voucher> filter(@RequestBody FilterRequest input) {
+        List<Voucher> result = voucherService.filterVouchers(input);
+        return result;
+    }*/
 }

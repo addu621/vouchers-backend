@@ -39,11 +39,17 @@ public class Person {
     @Column(name = "is_admin")
     private Boolean isAdmin;
 
+    @Column
+    private String otp;
+
+    @Column(name = "is_otp_verified")
+    private Boolean isOtpVerified;
+
     public Person() {
 
     }
 
-    public Person(Long id, String email, String firstName, String middleName, String lastName, String password, String mobile, String imageUrl, Boolean isAdmin) {
+    public Person(Long id, String email, String firstName, String middleName, String lastName, String password, String mobile, String imageUrl, Boolean isAdmin, String otp, Boolean isOtpVerified) {
         this.id = id;
         this.email = email;
         this.firstName = firstName;
@@ -53,18 +59,24 @@ public class Person {
         this.mobile = mobile;
         this.imageUrl = imageUrl;
         this.isAdmin = isAdmin;
+        this.otp = otp;
+        this.isOtpVerified = isOtpVerified;
     }
 
     @Override
     public String toString() {
         return "Person{" +
-                "first_name=" + firstName +
-                ", middle_name='" + middleName + '\'' +
-                ", last_name='" + lastName + '\'' +
+                "id=" + id +
                 ", email='" + email + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", middleName='" + middleName + '\'' +
+                ", lastName='" + lastName + '\'' +
                 ", password='" + password + '\'' +
                 ", mobile='" + mobile + '\'' +
-                ", image_url='" + imageUrl + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", isAdmin=" + isAdmin +
+                ", otp='" + otp + '\'' +
+                ", isOtpVerified=" + isOtpVerified +
                 '}';
     }
 }

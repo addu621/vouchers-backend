@@ -1,9 +1,6 @@
 package com.example.server.services;
 
-import com.example.server.entities.BargainVoucher;
-import com.example.server.entities.Voucher;
 import com.example.server.entities.VoucherDeal;
-import com.example.server.enums.BargainVoucherStatus;
 import com.example.server.enums.DealStatus;
 import com.example.server.repositories.VoucherDealRepository;
 import com.example.server.repositories.VoucherRepository;
@@ -12,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.*;
 
 @AllArgsConstructor
 @Service
@@ -57,5 +52,6 @@ public class VoucherDealService {
         return savedVoucher;
 
     }
+
 
 }
