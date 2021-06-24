@@ -141,4 +141,8 @@ public class VoucherService {
         return "Voucher rejected";
 
     }
+    public Long getSellerIdByVoucherId(Long voucherId){
+        Voucher voucher = voucherRepository.findById(voucherId).get();
+        return voucher.getSellerId();
+    }
 }
