@@ -7,6 +7,9 @@ import com.example.server.entities.Person;
 import com.example.server.entities.Voucher;
 import com.example.server.entities.VoucherCompany;
 import com.example.server.enums.VoucherVerificationStatus;
+import com.example.server.services.CompanyService;
+import com.example.server.services.PersonService;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,7 +19,11 @@ import java.util.List;
 import static org.springframework.beans.BeanUtils.copyProperties;
 
 @Service
+@AllArgsConstructor
 public class VoucherTransformer {
+
+    private final CompanyService companyService;
+    private final PersonService personService;
 
     public Voucher convertRequestToEntity(VoucherRequest voucherRequest){
         Voucher voucher = new Voucher();
@@ -27,27 +34,9 @@ public class VoucherTransformer {
     }
 
     public VoucherResponse convertEntityToResponse(Voucher voucher){
-        VoucherResponse voucherResponse = new VoucherResponse();
-        copyProperties(voucher, voucherResponse);
-        return voucherResponse;
-    }
+        Person seller = voucher.getSellerId() != null ? this.personService.findById(voucher.getSellerId()):null;
+        VoucherCompany voucherCompany = voucher.getCompanyId() != null? this.companyService.getCompanyById(voucher.getCompanyId()):null;
 
-    public VoucherResponse convertEntityToResponse(Voucher voucher, Person seller, VoucherCompany voucherCompany){
-        VoucherResponse voucherResponse = new VoucherResponse();
-        copyProperties(voucher, voucherResponse);
-
-        PersonResponse personResponse = new PersonResponse();
-        if(seller!=null){
-            copyProperties(seller,personResponse);
-            voucherResponse.setSeller(personResponse);
-        }
-        if(voucherCompany!=null){
-            voucherResponse.setCompanyImgUrl(voucherCompany.getImageUrl());
-        }
-        return voucherResponse;
-    }
-
-    public VoucherResponse convertEntityToResponse(Voucher voucher, Person seller){
         VoucherResponse voucherResponse = new VoucherResponse();
         copyProperties(voucher, voucherResponse);
 
@@ -55,6 +44,9 @@ public class VoucherTransformer {
             PersonResponse personResponse = new PersonResponse();
             copyProperties(seller,personResponse);
             voucherResponse.setSeller(personResponse);
+        }
+        if(voucherCompany!=null){
+            voucherResponse.setCompanyImgUrl(voucherCompany.getImageUrl());
         }
 
         return voucherResponse;

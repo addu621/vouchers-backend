@@ -13,4 +13,5 @@ public interface VoucherDealRepository extends CrudRepository<VoucherDeal,Long> 
     List<VoucherDeal> findByVoucherIdAndDealStatus(Long voucherId,DealStatus dealStatus);
     List<VoucherDeal> findByDealStatus(DealStatus dealStatus);
     List<VoucherDeal> findByDealStatusNot(DealStatus dealStatus);
+    List<VoucherDeal> findByVoucherIdAndBuyerId(Long voucherId,Long buyerId);
 }
