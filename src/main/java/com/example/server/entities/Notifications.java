@@ -15,6 +15,9 @@ public class Notifications {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "notification_id")
+    private Long notificationId;
+
     @Column(name = "voucher_id")
     private Long voucherId;
 
@@ -33,4 +36,7 @@ public class Notifications {
 
     @Column(name = "brand_image_url")
     private String brandImageUrl;
+
+    @Column(name = "notification_type")
+    private String notificationType;
 }

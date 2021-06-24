@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class NotificationController {
@@ -24,4 +25,8 @@ public class NotificationController {
         return result;
     }
 
+    @GetMapping("/notificationSeen")
+    public void notificationSeen(Map<String,Long> mp) {
+        notificationService.notificationSeen(mp.get("notificationId"));
+    }
 }

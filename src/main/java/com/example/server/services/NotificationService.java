@@ -14,7 +14,13 @@ public class NotificationService {
     private NotificationRepo notificationRepo;
 
     public List<Notifications> getNotifications(Long receiverId){
-        List<Notifications> notificationsList = notificationRepo.findByReceiverId(receiverId);
+        List<Notifications> notificationsList = notificationRepo.findAllByReceiverId(receiverId);
         return notificationsList;
+    }
+
+    public void notificationSeen(Long notificationId){
+        Notifications notification = notificationRepo.findByNotificationId(notificationId);
+        notification.setIsSeen(true);
+        notificationRepo.save(notification);
     }
 }
