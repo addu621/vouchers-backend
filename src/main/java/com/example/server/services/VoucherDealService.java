@@ -1,10 +1,12 @@
 package com.example.server.services;
 
 import com.example.server.dto.response.GenericResponse;
+import com.example.server.entities.Notification;
 import com.example.server.entities.Voucher;
 import com.example.server.entities.VoucherDeal;
 import com.example.server.entities.VoucherOrder;
 import com.example.server.enums.DealStatus;
+import com.example.server.enums.NotificationType;
 import com.example.server.enums.OrderStatus;
 import com.example.server.repositories.VoucherDealRepository;
 import lombok.AllArgsConstructor;
@@ -26,6 +28,9 @@ public class VoucherDealService {
 
     @Autowired
     CartService cartService;
+
+    @Autowired
+    NotificationService notificationService;
 //    public VoucherDeal buyVoucher(Long buyerId, Long voucherId){
 //
 //        VoucherDeal voucherDeal = new VoucherDeal();
@@ -72,6 +77,15 @@ public class VoucherDealService {
             VoucherDeal savedVoucher = voucherDealRepository.save(voucherDeal);
             genericResponse.setMessage("You have placed bid for this coupon");
             genericResponse.setStatus(200);
+
+            Notification notification = new Notification();
+            notification.setNotificationType(NotificationType.NEW_PRICE_QUOTED);
+            notification.setVoucherId(voucherId);
+            notification.setReceiverId(voucherService.getSellerIdByVoucherId(voucherId));
+            notification.setTitle("New Price Quoted");
+            notification.setDescription("Someone quoted "+ quotedPrice + " for your coupon");
+            notificationService.createNewNotification(notification);
+
         }
         else{
             // update existing order Deal
@@ -83,6 +97,14 @@ public class VoucherDealService {
             VoucherDeal savedVoucher = voucherDealRepository.save(oldDeal);
             genericResponse.setMessage("Your new bid has been placed bid for this coupon");
             genericResponse.setStatus(200);
+
+            Notification notification = new Notification();
+            notification.setNotificationType(NotificationType.NEW_PRICE_QUOTED);
+            notification.setVoucherId(voucherId);
+            notification.setReceiverId(voucherService.getSellerIdByVoucherId(voucherId));
+            notification.setTitle("Quoted Price Updated");
+            notification.setDescription("Someone quoted " + quotedPrice + " for your coupon");
+            notificationService.createNewNotification(notification);
         }
     return genericResponse;
     // allow only higher bid than before
@@ -115,6 +137,14 @@ public class VoucherDealService {
         if(savedVoucherDeal!=null){
             genericResponse.setStatus(200);
             genericResponse.setMessage("Quote Price accepted");
+
+            Notification notification = new Notification();
+            notification.setNotificationType(NotificationType.QUOTE_PRICE_ACCEPTED);
+            notification.setVoucherId(voucherId);
+            notification.setReceiverId(buyerId);
+            notification.setTitle("Quoted Price Accepted");
+            notification.setDescription("Your quoted price was accepted by the seller");
+            notificationService.createNewNotification(notification);
         }
 
         // move voucher to buyer cart
@@ -136,10 +166,21 @@ public class VoucherDealService {
         }
 
         VoucherDeal voucherDeal = voucherDealList.get(0);
-        voucherDeal.setDealStatus(DealStatus.REJECTED);
+        if(voucherDeal!=null){
+            voucherDeal.setDealStatus(DealStatus.REJECTED);
+            genericResponse.setStatus(200);
+            genericResponse.setMessage("Quoted price rejected");
 
-        genericResponse.setStatus(200);
-        genericResponse.setMessage("Quoted price rejected");
+            Notification notification = new Notification();
+            notification.setNotificationType(NotificationType.QUOTE_PRICE_REJECTED);
+            notification.setVoucherId(voucherId);
+            notification.setReceiverId(buyerId);
+            notification.setTitle("Quoted Price Rejected");
+            notification.setDescription("Your quoted price was rejected by the seller");
+            notificationService.createNewNotification(notification);
+
+        }
+
         return genericResponse;
     }
     public boolean isVoucherQuotePriceAccepted(long voucherId){

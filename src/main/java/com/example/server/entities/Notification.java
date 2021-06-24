@@ -1,5 +1,6 @@
 package com.example.server.entities;
 
+import com.example.server.enums.NotificationType;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -15,29 +16,24 @@ public class Notification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "notification_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long notificationId;
+    @Column(name = "receiver_id")
+    private Long receiverId;
 
     @Column(name = "voucher_id")
     private Long voucherId;
 
-    @Column(name = "receiver_id")
-    private Long receiverId;
-
+    @Column(name = "title")
     private String title;
 
+    @Column(columnDefinition="TEXT")
     private String description;
 
     @CreationTimestamp
-    private Date createdOn;
+    private Date createdDate;
 
     @Column(name = "is_seen")
-    private Boolean isSeen;
-
-    @Column(name = "brand_image_url")
-    private String brandImageUrl;
+    private Boolean isSeen = false;
 
     @Column(name = "notification_type")
-    private String notificationType;
+    private NotificationType notificationType;
 }

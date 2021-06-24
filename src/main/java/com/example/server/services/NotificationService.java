@@ -24,44 +24,18 @@ public class NotificationService {
     private PersonRepo personRepo;
 
     public List<Notification> getNotifications(Long receiverId){
-        List<Notification> notificationsList = notificationRepo.findAllByReceiverId(receiverId);
+        List<Notification> notificationsList = notificationRepo.findAllByReceiverIdOrderByCreatedDateDesc(receiverId);
         return notificationsList;
     }
 
     public void notificationSeen(Long notificationId){
-        Notification notification = notificationRepo.findByNotificationId(notificationId);
+        Notification notification = notificationRepo.findById(notificationId).get();
         notification.setIsSeen(true);
         notificationRepo.save(notification);
     }
 
-    public String postNotification(Long receiverId,Long voucherId,String notificationType){
-        Voucher voucher = voucherRepository.findById(voucherId).get();
-        if(voucher==null)
-        {
-            return "Voucher not found!!!";
-        }
-        Person person = personRepo.findById(receiverId).get();
-        if(person==null)
-        {
-            return "User not found!!!";
-        }
-        Notification newNotifcation = new Notification();
-        newNotifcation.setReceiverId(receiverId);
-        newNotifcation.setVoucherId(voucherId);
-        newNotifcation.setIsSeen(false);
-        newNotifcation.setBrandImageUrl(voucher.getImageUrl());
-        if(notificationType.equals("bargain request"))
-        {
-            //for buyer
-            newNotifcation.setTitle("Price Quoted");
-            newNotifcation.setDescription("Username abc has quoted xyz price");
-        }
-        else if(notificationType.equals("purchase complete")) {
-            //to both buyer and seller
-        }
-        else if(notificationType.equals("admin verified")) {
-            //to seller  (admin verifies)
-        }
-        return "Notification saved!!!";
+    public Notification createNewNotification(Notification notification){
+        Notification createdNotification = notificationRepo.save(notification);
+        return createdNotification;
     }
 }

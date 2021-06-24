@@ -2,6 +2,7 @@ package com.example.server.entities;
 
 import com.example.server.enums.VoucherVerificationStatus;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -25,7 +26,7 @@ public class Voucher {
     @Column(name = "selling_price")
     private BigDecimal sellingPrice;
 
-    @Column(name = "created_on")
+    @CreationTimestamp
     private Date createdOn;
 
     @Column(name = "expiry_date")

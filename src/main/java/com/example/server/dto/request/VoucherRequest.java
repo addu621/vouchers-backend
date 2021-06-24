@@ -10,7 +10,7 @@ public class VoucherRequest {
     private BigDecimal voucherValue;
     private String voucherCode;
     private BigDecimal sellingPrice;
-    private String expiryDate;
+    private Date expiryDate;
     private boolean isNegotiable;
     private String description;
     private String title;
