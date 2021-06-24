@@ -9,7 +9,7 @@ import java.util.Date;
 @Entity
 @Data
 @Table(name = "notifications")
-public class Notifications {
+public class Notification {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

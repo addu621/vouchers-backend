@@ -1,15 +1,15 @@
 package com.example.server.repositories;
 
-import com.example.server.entities.Notifications;
+import com.example.server.entities.Notification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface NotificationRepo extends JpaRepository<Notifications,String> {
+public interface NotificationRepo extends JpaRepository<Notification,String> {
 
-    public List<Notifications> findAllByReceiverId(Long receiverId);
+    public List<Notification> findAllByReceiverId(Long receiverId);
 
-    public Notifications findByNotificationId(Long notificationId);
+    public Notification findByNotificationId(Long notificationId);
 }
