@@ -77,6 +77,7 @@ public class UserService implements UserDetailsService {
             person.setPassword(bcryptEncoder.encode(person.getPassword()));
             person.setIsOtpVerified(false);
             person.setIsAdmin(false);
+            person.setIsForgotPasswordOtpVerified(false);
             System.out.println(person);
             personRepo.save(person);
             mp.put("person", person);
@@ -114,4 +115,25 @@ public class UserService implements UserDetailsService {
         }
         return mp;
     }
+
+    public Map sendForgotPasswordReq(String email) {
+        Map<String, Object> mp = new HashMap<>();
+        try {
+            Person person = personRepo.findByEmail(email);
+            if(person==null){
+                throw new Exception("User with this email do not exist!!!");
+            }
+            String otp = utility.getOtp(6);
+            person.setOtp(otp);
+            personRepo.save(person);
+            mp.put("Person", person);
+            mp.put("message", "Verify the Otp sent to your email!!!");
+            utility.forgotPasswordMail(person,otp);
+        } catch (Exception e) {
+            mp.put("error",e.getMessage());
+            e.printStackTrace();
+        }
+        return mp;
+    }
+
 }

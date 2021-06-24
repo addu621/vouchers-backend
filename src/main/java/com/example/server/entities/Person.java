@@ -45,11 +45,15 @@ public class Person {
     @Column(name = "is_otp_verified")
     private Boolean isOtpVerified;
 
+    @Column(name = "is_forgot_password_otp_verified")
+    private Boolean isForgotPasswordOtpVerified;
+
+
     public Person() {
 
     }
 
-    public Person(Long id, String email, String firstName, String middleName, String lastName, String password, String mobile, String imageUrl, Boolean isAdmin, String otp, Boolean isOtpVerified) {
+    public Person(Long id, String email, String firstName, String middleName, String lastName, String password, String mobile, String imageUrl, Boolean isAdmin, String otp, Boolean isOtpVerified, Boolean isForgotPasswordOtpVerified) {
         this.id = id;
         this.email = email;
         this.firstName = firstName;
@@ -61,6 +65,7 @@ public class Person {
         this.isAdmin = isAdmin;
         this.otp = otp;
         this.isOtpVerified = isOtpVerified;
+        this.isForgotPasswordOtpVerified = isForgotPasswordOtpVerified;
     }
 
     @Override
@@ -77,6 +82,7 @@ public class Person {
                 ", isAdmin=" + isAdmin +
                 ", otp='" + otp + '\'' +
                 ", isOtpVerified=" + isOtpVerified +
+                ", isForgotPasswordOtpVerified=" + isForgotPasswordOtpVerified +
                 '}';
     }
 }
