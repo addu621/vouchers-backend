@@ -47,6 +47,7 @@ public class VoucherDealService {
 //    }
 
     public GenericResponse quotePrice(Long buyerId, Long voucherId, BigDecimal quotedPrice){
+
         GenericResponse genericResponse = new GenericResponse();
         // check if current Coupon is already sold
         if(voucherService.isVoucherSold(voucherId)){
@@ -98,6 +99,7 @@ public class VoucherDealService {
             genericResponse.setMessage("voucher or buyer not found !!");
             return genericResponse;
         }
+
         VoucherDeal voucherDeal =  voucherDealList.get(0);
         voucherDeal.setDealStatus(DealStatus.ACCEPTED);
         VoucherDeal savedVoucherDeal = voucherDealRepository.save(voucherDeal);
@@ -107,9 +109,26 @@ public class VoucherDealService {
             genericResponse.setMessage("Quote Price accepted");
         }
         // move voucher to buyer cart
+        // reject all quoted price except for current coupon id
         return genericResponse;
     }
 
+    public GenericResponse rejectQuotePrice(Long voucherId, Long buyerId){
+        GenericResponse genericResponse = new GenericResponse();
+        List<VoucherDeal>voucherDealList = voucherDealRepository.findByVoucherIdAndBuyerId(voucherId,buyerId);
+        if(voucherDealList.size()==0){
+            genericResponse.setStatus(404);
+            genericResponse.setMessage("voucher or buyer not found !!");
+            return genericResponse;
+        }
+
+        VoucherDeal voucherDeal = voucherDealList.get(0);
+        voucherDeal.setDealStatus(DealStatus.REJECTED);
+
+        genericResponse.setStatus(200);
+        genericResponse.setMessage("Quoted price rejected");
+        return genericResponse;
+    }
     public boolean isVoucherQuotePriceAccepted(long voucherId){
         List<VoucherDeal> voucherDealList = this.voucherDealRepository.findByDealStatus(DealStatus.ACCEPTED);
         return voucherDealList.stream().anyMatch((VoucherDeal vd)->vd.getVoucherId()==voucherId);

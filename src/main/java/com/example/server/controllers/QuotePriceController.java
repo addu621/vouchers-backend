@@ -7,6 +7,7 @@ import com.example.server.entities.Voucher;
 import com.example.server.entities.VoucherDeal;
 import com.example.server.services.VoucherDealService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
+@CrossOrigin("*")
 public class QuotePriceController {
 
     @Autowired
@@ -34,13 +36,13 @@ public class QuotePriceController {
     @PostMapping("/quote/accept")
     public GenericResponse acceptQuotedPrice(HttpServletRequest request, @RequestBody DealRequest dealRequest){
         GenericResponse genericResponse = new GenericResponse();
-//        Person personDetails = (Person) request.getAttribute("person");
-//        Long sellerId = personDetails.getId();
-//        List<VoucherDeal> list= (List<VoucherDeal>)
-//                voucherDealService.acceptQuotedPrice(dealRequest.getVoucherId(),dealRequest.getBuyerId());
-//
         return voucherDealService.acceptQuotedPrice(dealRequest.getVoucherId(), dealRequest.getBuyerId());
-//
+    }
+
+    @PostMapping("/quote/reject")
+    public GenericResponse rejectQuotedPrice(HttpServletRequest request, @RequestBody DealRequest dealRequest){
+        GenericResponse genericResponse = new GenericResponse();
+        return voucherDealService.rejectQuotePrice(dealRequest.getVoucherId(), dealRequest.getBuyerId());
     }
 
 }
