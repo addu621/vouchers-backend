@@ -12,6 +12,8 @@ import com.example.server.services.PersonService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,11 +27,16 @@ public class VoucherTransformer {
     private final CompanyService companyService;
     private final PersonService personService;
 
-    public Voucher convertRequestToEntity(VoucherRequest voucherRequest){
+    public Voucher convertRequestToEntity(VoucherRequest voucherRequest) throws ParseException {
         Voucher voucher = new Voucher();
-        copyProperties(voucherRequest, voucher);
-        voucher.setCreatedOn(new Date().toString());
+        copyProperties(voucherRequest, voucher,"expiryDate");
+        SimpleDateFormat formatter=new SimpleDateFormat("dd-MM-yyyy");
+        voucher.setExpiryDate(formatter.parse(voucherRequest.getExpiryDate()));
+        String currentDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date());
+        System.out.println(currentDate);
+        voucher.setCreatedOn(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(currentDate));
         voucher.setVerificationStatus(VoucherVerificationStatus.PENDING);
+        System.out.println(voucher);
         return voucher;
     }
 

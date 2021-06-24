@@ -14,14 +14,14 @@ public class VoucherResponse {
     private BigDecimal voucherValue;
     private String voucherCode;
     private BigDecimal sellingPrice;
-    private String expiryDate;
+    private Date expiryDate;
     private boolean isNegotiable;
     private String description;
     private String title;
     private Long categoryId;
     private Long companyId;
     private String companyImgUrl;
-    private String createdOn;
+    private Date createdOn;
     private VoucherVerificationStatus verificationStatus;
     private String imageUrl;
     private PersonResponse seller;

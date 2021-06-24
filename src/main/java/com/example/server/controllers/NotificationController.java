@@ -1,7 +1,6 @@
 package com.example.server.controllers;
 
-import com.example.server.dto.response.GenericResponse;
-import com.example.server.entities.Notifications;
+import com.example.server.entities.Notification;
 import com.example.server.entities.Person;
 import com.example.server.services.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +18,9 @@ public class NotificationController {
     private NotificationService notificationService;
 
     @GetMapping("/getNotifications")
-    public List<Notifications> getNotifications(HttpServletRequest request) {
+    public List<Notification> getNotifications(HttpServletRequest request) {
         Person personDetails = (Person) request.getAttribute("person");
-        List<Notifications> result = notificationService.getNotifications(personDetails.getId());
+        List<Notification> result = notificationService.getNotifications(personDetails.getId());
         return result;
     }
 
