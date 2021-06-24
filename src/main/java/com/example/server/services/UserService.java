@@ -114,4 +114,45 @@ public class UserService implements UserDetailsService {
         }
         return mp;
     }
+
+    public Map sendForgotPasswordReq(String email) {
+        Map<String, Object> mp = new HashMap<>();
+        try {
+            Person person = personRepo.findByEmail(email);
+            if(person==null){
+                throw new Exception("User with this email do not exist!!!");
+            }
+            String otp = utility.getOtp(6);
+            person.setOtp(otp);
+            personRepo.save(person);
+            mp.put("Person", person);
+            mp.put("message", "Verify the Otp sent to your email!!!");
+            utility.forgotPasswordMail(person,otp);
+        } catch (Exception e) {
+            mp.put("error",e.getMessage());
+            e.printStackTrace();
+        }
+        return mp;
+    }
+
+    public Map updatePassword(String email,String otp,String newPassword) {
+        Map<String, Object> mp = new HashMap<>();
+        Person person = personRepo.findByEmail(email);
+        if(person==null) {
+            mp.put("error", "user with this email does not exist!!!");
+            return mp;
+        }
+        if(person.getOtp().equals(otp)) {
+            System.out.println(person.getPassword());
+            person.setPassword(bcryptEncoder.encode(newPassword));
+            System.out.println(person.getPassword());
+            personRepo.save(person);
+        }
+        else {
+            mp.put("error", "Incorrect Otp!!! Try again.");
+            return mp;
+        }
+        mp.put("Success", "Password updated sucessfully!!!");
+        return mp;
+    }
 }
