@@ -28,20 +28,20 @@ maven_build:
       - target/*.jar
 
 
-test_application:
-  image: maven:3.6.3-openjdk-11
-  stage: test
-  only:
-    - development
-    - master
-  tags:
-    - backend
-  before_script:
-    - echo "** Initializing test engine **"
-  script:
-    - mvn clean test
-  after_script:
-    - echo "** Testing complete **"
+#test_application:
+ # image: maven:3.6.3-openjdk-11
+ # stage: test
+#  only:
+  #  - development
+  #  - master
+ # tags:
+  #  - backend
+ # before_script:
+  #  - echo "** Initializing test engine **"
+ # script:
+ #   - mvn clean test
+  #after_script:
+   # - echo "** Testing complete **"
 
 
 deploy_backend:
@@ -49,7 +49,6 @@ deploy_backend:
   stage: deploy
   only:
     - master
-    - development
 
   tags:
     - backend
@@ -74,7 +73,7 @@ deploy_backend:
         script: this field is required, but ignored
       manual_scaling:
         instances: 1
-      instance_class: B1
+      instance_class: B2
       resources:
         cpu: 1
         memory_gb: 2
@@ -86,7 +85,7 @@ deploy_backend:
       
   script:
     - gcloud auth activate-service-account --key-file ${CI_PIPELINE_ID}.json
-    # gcloud app deploy --project=hbs-ontrack --version v1 --appyaml app.yaml
+    # gcloud app deploy --project=hu18-groupa-java --version v1 --appyaml app.yaml
     - gcloud --project hu18-groupa-java app deploy target/server-0.0.1-SNAPSHOT.jar --appyaml app.yaml --version v1
     - url=$(gcloud app services browse $ServiceName --no-launch-browser --project hu18-groupa-java)
     - echo $url
