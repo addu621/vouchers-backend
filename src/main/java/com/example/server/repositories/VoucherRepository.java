@@ -1,5 +1,6 @@
 package com.example.server.repositories;
 
+import com.example.server.dto.response.VoucherResponse;
 import com.example.server.entities.Voucher;
 import com.example.server.enums.VoucherVerificationStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,8 +17,10 @@ public interface VoucherRepository extends JpaRepository<Voucher,Long> {
             "or lower(v.description) like lower(concat('%', :search, '%'))")
     List<Voucher> searchVoucher(@Param("search") String search);
 
-//    @Query("select v from Voucher v where v.title in (:array)")
-//    List<Voucher> findByCategoryIdAndCompanyIdIn(@Param("categories") List<Long>categories,List<Long>companies);
+    @Query("select v from Voucher v where v.companyId in (:companies) and v.categoryId in (:categories)")
+    List<Voucher> filterCoupons(@Param("categories") List<Long>categories,@Param("companies")List<Long>companies);
 
     List<Voucher> findByVerificationStatus(VoucherVerificationStatus voucherVerificationStatus);
+
+    List<Voucher> findBySellerId(Long sellerId);
 }
