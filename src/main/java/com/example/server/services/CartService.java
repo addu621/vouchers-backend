@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -29,6 +30,19 @@ public class CartService {
         CartItem cartItem = new CartItem();
         cartItem.setCartId(cartId);
         cartItem.setVoucherId(voucherId);
+        Voucher voucher = voucherRepository.findById(voucherId).get();
+        cartItem.setItemPrice(voucher.getSellingPrice());
+        if(!cartItemRepository.findByCartIdAndVoucherId(cartId,voucherId).isEmpty()){
+            return false;
+        }
+        return cartItemRepository.save(cartItem)!=null;
+    }
+
+    public boolean addItemToCart(long cartId, long voucherId, BigDecimal itemPrice){
+        CartItem cartItem = new CartItem();
+        cartItem.setCartId(cartId);
+        cartItem.setVoucherId(voucherId);
+        cartItem.setItemPrice(itemPrice);
         if(!cartItemRepository.findByCartIdAndVoucherId(cartId,voucherId).isEmpty()){
             return false;
         }
@@ -47,6 +61,7 @@ public class CartService {
         List<Voucher> vouchers = new ArrayList<>();
         cartItems.forEach((CartItem cartItem)->{
             Voucher voucher = voucherRepository.findById(cartItem.getVoucherId()).get();
+            voucher.setSellingPrice(cartItem.getItemPrice());
             vouchers.add(voucher);
         });
         return vouchers;
@@ -57,7 +72,8 @@ public class CartService {
         List<Voucher> vouchers = new ArrayList<>();
         cartItems.forEach((CartItem cartItem)->{
             Voucher voucher = voucherRepository.findById(cartItem.getVoucherId()).get();
-            VoucherOrder voucherOrder = this.voucherOrderService.addOrder(cartId,voucher.getId());   //cartId is same as buyer Id
+            voucher.setSellingPrice(cartItem.getItemPrice());
+            VoucherOrder voucherOrder = this.voucherOrderService.addOrder(cartId,voucher.getId(),cartItem.getItemPrice());   //cartId is same as buyer Id
             if(voucherOrder!=null){
                 this.removeItemFromCart(cartId,voucher.getId());
                 vouchers.add(voucher);
