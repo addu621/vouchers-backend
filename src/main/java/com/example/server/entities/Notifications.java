@@ -3,9 +3,7 @@ package com.example.server.entities;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -13,11 +11,15 @@ import java.util.Date;
 @Table(name = "notifications")
 public class Notifications {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @Column(name = "voucher_id")
-    private Integer voucherId;
+    private Long voucherId;
 
     @Column(name = "receiver_id")
-    private Integer receiverId;
+    private Long receiverId;
 
     private String title;
 
