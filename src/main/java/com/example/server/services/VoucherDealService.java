@@ -24,6 +24,8 @@ public class VoucherDealService {
     @Autowired
     VoucherService voucherService;
 
+    @Autowired
+    CartService cartService;
 //    public VoucherDeal buyVoucher(Long buyerId, Long voucherId){
 //
 //        VoucherDeal voucherDeal = new VoucherDeal();
@@ -49,10 +51,15 @@ public class VoucherDealService {
     public GenericResponse quotePrice(Long buyerId, Long voucherId, BigDecimal quotedPrice){
 
         GenericResponse genericResponse = new GenericResponse();
-        // check if current Coupon is already sold
+        if(voucherId==null|| quotedPrice==null){
+            genericResponse.setStatus(404);
+            genericResponse.setMessage("voucher Id or quoted price missing");
+            return genericResponse;
+        }
         if(voucherService.isVoucherSold(voucherId)){
             genericResponse.setStatus(404);
             genericResponse.setMessage("Coupon is already sold, you cannot bid now!!");
+            return genericResponse;
         }
         List<VoucherDeal> alreadyExists = voucherDealRepository.findByVoucherIdAndBuyerId(voucherId,buyerId);
         if(alreadyExists.size()==0){
@@ -104,11 +111,17 @@ public class VoucherDealService {
         voucherDeal.setDealStatus(DealStatus.ACCEPTED);
         VoucherDeal savedVoucherDeal = voucherDealRepository.save(voucherDeal);
 
+
         if(savedVoucherDeal!=null){
             genericResponse.setStatus(200);
             genericResponse.setMessage("Quote Price accepted");
         }
+
         // move voucher to buyer cart
+        if(cartService.addItemToCart(buyerId,voucherId,voucherDeal.getQuotedPrice())){
+            genericResponse.setMessage(genericResponse.getMessage()+" and Voucher added to cart");
+        }
+
         // reject all quoted price except for current coupon id
         return genericResponse;
     }
