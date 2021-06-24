@@ -41,6 +41,9 @@ public class UserService implements UserDetailsService {
     @Autowired
     private Utility utility;
 
+    @Autowired
+    private CartService cartService;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
@@ -74,11 +77,13 @@ public class UserService implements UserDetailsService {
             {
                 throw new Exception("User with this Email Id already exists!!!");
             }
+
             person.setPassword(bcryptEncoder.encode(person.getPassword()));
             person.setIsOtpVerified(false);
             person.setIsAdmin(false);
             System.out.println(person);
-            personRepo.save(person);
+            long id = personRepo.save(person).getId();
+            cartService.createCart(id);
             mp.put("person", person);
             mp.put("message", "Please verify your email");
             utility.sendMail(person, otp);

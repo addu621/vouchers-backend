@@ -132,6 +132,11 @@ public class VoucherController {
         return genericResponse;
     }
 
+    @GetMapping("/vouchers/{voucherId}/isSold")
+    public boolean isVoucherSold(@PathVariable long voucherId){
+        return this.voucherService.isVoucherSold(voucherId);
+    }
+
     /*@PostMapping("/filter")
     public List<Voucher> filter(@RequestBody FilterRequest input) {
         List<Voucher> result = voucherService.filterVouchers(input);
