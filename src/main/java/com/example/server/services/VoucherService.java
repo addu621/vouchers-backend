@@ -4,9 +4,11 @@ import com.example.server.dto.request.FilterRequest;
 import com.example.server.dto.response.VoucherResponse;
 import com.example.server.entities.*;
 import com.example.server.enums.DealStatus;
+import com.example.server.enums.OrderStatus;
 import com.example.server.enums.VoucherVerificationStatus;
 import com.example.server.repositories.*;
 import lombok.AllArgsConstructor;
+import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,7 @@ public class VoucherService {
     private final VoucherCompanyRepo voucherCompanyRepo;
     private final VoucherTypeRepo voucherTypeRepo;
     private final VoucherDealRepository voucherDealRepository;
+    private final VoucherOrderRepository voucherOrderRepository;
 
     public Voucher saveVoucher(Voucher voucher) {
         return voucherRepository.save(voucher);
@@ -34,16 +37,6 @@ public class VoucherService {
     public List<Voucher> searchVoucher(String search){
         List<Voucher> searchResult = voucherRepository.searchVoucher(search);
         return searchResult;
-    }
-
-    public boolean isVoucherSold(long voucherId){
-        List<VoucherDeal> voucherDeals = this.voucherDealRepository.findByDealStatus(DealStatus.BOUGHT);
-        return voucherDeals.stream().anyMatch((VoucherDeal vd)->vd.getVoucherId()==voucherId);
-    }
-
-    public List<Voucher> getAllVouchers() {
-        List<Voucher> vouchers = this.voucherRepository.findAll();
-        return vouchers.stream().filter((Voucher voucher)->!isVoucherSold(voucher.getId())).collect(Collectors.toList());
     }
 
     public List<VoucherCategory> getAllVoucherCategory()
@@ -66,15 +59,25 @@ public class VoucherService {
         return vouchers.stream().filter((Voucher voucher)->!isVoucherSold(voucher.getId())).collect(Collectors.toList());
     }
 
+    public boolean isVoucherSold(long voucherId){
+        List<VoucherOrder> voucherOrders = this.voucherOrderRepository.findByOrderStatus(OrderStatus.SUCCESS);
+        return voucherOrders.stream().anyMatch((VoucherOrder vd)->vd.getVoucherId()==voucherId);
+    }
+
+    public List<Voucher> getAllVouchers() {
+        List<Voucher> vouchers = this.voucherRepository.findAll();
+        return vouchers.stream().filter((Voucher voucher)->!isVoucherSold(voucher.getId())).collect(Collectors.toList());
+    }
+
     public List<Voucher> getAllVerifiedVouchers(){
         List<Voucher> vouchers = this.voucherRepository.findByVerificationStatus(VoucherVerificationStatus.VERIFIED);
         return vouchers.stream().filter((Voucher voucher)->!isVoucherSold(voucher.getId())).collect(Collectors.toList());
     }
 
     public List<Voucher> getBuyVouchers(Long userId){
-        List<VoucherDeal> voucherDeals = this.voucherDealRepository.findByBuyerIdAndDealStatus(userId, DealStatus.BOUGHT);
+        List<VoucherOrder> voucherOrders = this.voucherOrderRepository.findByBuyerIdAndOrderStatus(userId, OrderStatus.SUCCESS);
         List<Voucher> vouchers = new ArrayList<>();
-        voucherDeals.forEach((VoucherDeal v) -> {
+        voucherOrders.forEach((VoucherOrder v) -> {
             Voucher voucher = this.getVoucherById(v.getVoucherId());
             vouchers.add(voucher);
         });
@@ -82,10 +85,11 @@ public class VoucherService {
     }
 
     public List<Voucher> getSellVouchers(Long sellerId){
-        return this.voucherRepository.findBySellerId(sellerId).stream().filter((Voucher voucher) ->{
-            List<VoucherDeal> voucherDeals = voucherDealRepository.findByVoucherIdAndDealStatus(voucher.getId(),DealStatus.BOUGHT);
-            return !voucherDeals.isEmpty();
-        }).collect(Collectors.toList());
+        return this.voucherRepository
+                    .findBySellerId(sellerId)
+                    .stream()
+                    .filter((Voucher voucher) -> isVoucherSold(voucher.getId()))
+                    .collect(Collectors.toList());
     }
 
     public String addCompany(String company) {
@@ -99,8 +103,8 @@ public class VoucherService {
         voucherCompanyRepo.save(newCompany);
         return "Company: " + company + " added";
     }
-    public List<Voucher> filterVouchers(FilterRequest filterRequest) {
 
+    public List<Voucher> filterVouchers(FilterRequest filterRequest) {
         List<Voucher> voucherList = voucherRepository.filterCoupons(filterRequest.getCategories(),filterRequest.getCompanies());
         return voucherList;
     }
