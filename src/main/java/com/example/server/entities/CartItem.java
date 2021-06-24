@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "cart_item")
@@ -19,4 +20,7 @@ public class CartItem {
 
     @Column(name = "voucher_id")
     private Long voucherId;
+
+    @Column(name = "item_price")
+    private BigDecimal itemPrice;
 }
