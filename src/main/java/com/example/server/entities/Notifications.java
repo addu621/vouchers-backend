@@ -16,6 +16,7 @@ public class Notifications {
     private Long id;
 
     @Column(name = "notification_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long notificationId;
 
     @Column(name = "voucher_id")
