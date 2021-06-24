@@ -5,6 +5,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Date;
 
 @Entity
 @Table(name="voucher_deal")
@@ -18,11 +19,11 @@ public class VoucherDeal {
     @Column(name = "status")
     private DealStatus dealStatus;
 
-    @Column(name = "bought_price")
-    private BigDecimal boughtPrice;
+    @Column(name = "quoted_price")
+    private BigDecimal quotedPrice;
 
-    @Column(name = "bought_on")
-    private String boughtOn;
+    @Column(name = "created_on")
+    private Date createdOn;
 
     @Column(name = "buyer_id")
     private Long buyerId;
