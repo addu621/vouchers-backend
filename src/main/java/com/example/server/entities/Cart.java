@@ -3,6 +3,7 @@ package com.example.server.entities;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "cart")
@@ -15,8 +16,5 @@ public class Cart {
     private long id;
 
     @Column(name = "created_on")
-    private String createdOn;
-
-    @Column(name = "buyer_id")
-    private long buyerId;
+    private Date createdOn;
 }

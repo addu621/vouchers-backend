@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -32,7 +33,27 @@ public class VoucherOrderService {
         if(voucherDeals.size()==0){
             voucherOrder.setBuyerId(buyerId);
             voucherOrder.setOrderPrice(voucher.getSellingPrice());
-            voucherOrder.setOrderStatus(OrderStatus.DISPUTE);
+            voucherOrder.setOrderStatus(OrderStatus.SUCCESS);
+            voucherOrder.setVoucherId(voucherId);
+            Date date = new Date();
+            voucherOrder.setOrderDate(date);
+            return voucherOrderRepository.save(voucherOrder);
+        }
+        return null;
+    }
+
+    public VoucherOrder addOrder(Long buyerId, Long voucherId, BigDecimal price){
+
+        VoucherOrder voucherOrder = new VoucherOrder();
+        voucherOrder.setVoucherId(voucherId);
+        Voucher voucher = voucherRepository.findById(voucherId).get();
+
+        List<VoucherOrder> voucherDeals = voucherOrderRepository.findByVoucherIdAndOrderStatus(voucherId, OrderStatus.SUCCESS);
+        if(voucherDeals.size()==0){
+            voucherOrder.setBuyerId(buyerId);
+            voucherOrder.setOrderPrice(price);
+            voucherOrder.setOrderStatus(OrderStatus.SUCCESS);
+            voucherOrder.setVoucherId(voucherId);
             Date date = new Date();
             voucherOrder.setOrderDate(date);
             return voucherOrderRepository.save(voucherOrder);

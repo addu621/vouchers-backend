@@ -1,10 +1,13 @@
 package com.example.server.entities;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "wallet")
+@Data
 public class Wallet {
     @Id
     @Column(name = "wallet_id")
@@ -12,7 +15,4 @@ public class Wallet {
 
     @Column(name = "balance")
     private BigDecimal balance;
-
-    @Column(name = "owner_id")
-    private Long ownerId;
 }

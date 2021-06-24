@@ -4,6 +4,7 @@ import com.example.server.entities.Person;
 import com.example.server.model.JwtResponse;
 import com.example.server.model.JwtUtil;
 import com.example.server.repositories.PersonRepo;
+import com.example.server.services.CartService;
 import com.example.server.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,9 @@ public class JwtController {
 
     @Autowired
     private PersonRepo personRepo;
+
+    @Autowired
+    private CartService cartService;
 
     //web security test api
     @RequestMapping("/welcome")
@@ -64,7 +68,6 @@ public class JwtController {
 
     @PostMapping("/signup")
     public Map signUp(@RequestBody Person person){
-        System.out.println(person);
         return userService.save(person);
     }
 
