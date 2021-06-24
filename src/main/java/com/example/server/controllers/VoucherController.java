@@ -37,7 +37,9 @@ public class VoucherController {
     }
 
     @PostMapping(value = "/vouchers/new")
-    public VoucherResponse postVoucher(@RequestBody VoucherRequest voucherRequest) {
+    public VoucherResponse postVoucher(HttpServletRequest request,@RequestBody VoucherRequest voucherRequest) {
+        Person personDetails = (Person) request.getAttribute("person");
+        voucherRequest.setSellerId(personDetails.getId());
         Voucher voucher = voucherTransformer.convertRequestToEntity(voucherRequest);
         voucher = voucherService.saveVoucher(voucher);
         VoucherResponse voucherResponse = getVoucherResponse(voucher);
@@ -104,12 +106,6 @@ public class VoucherController {
         return voucherService.addCompany(company);
     }
 
-    /*@PostMapping("/filter")
-    public List<Voucher> filter(@RequestBody FilterRequest input) {
-        List<Voucher> result = voucherService.filterVouchers(input);
-        return result;
-    }*/
-
     @PutMapping("/vouchers/acceptVoucher/{voucherId}")
     public String acceptVoucher(@PathVariable Long voucherId){
         return voucherService.acceptVoucher(voucherId);
@@ -151,4 +147,10 @@ public class VoucherController {
         voucherResponse = voucherTransformer.convertEntityToResponse(voucher,seller,voucherCompany);
         return voucherResponse;
     }
+
+    /*@PostMapping("/filter")
+    public List<Voucher> filter(@RequestBody FilterRequest input) {
+        List<Voucher> result = voucherService.filterVouchers(input);
+        return result;
+    }*/
 }
