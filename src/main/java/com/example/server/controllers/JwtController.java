@@ -78,7 +78,10 @@ public class JwtController {
         return userService.sendForgotPasswordReq(mp.get("email"));
     }
 
-//    public Map
+    @PatchMapping("/updatePassword")
+    public Map passwordUpdate(@RequestBody Map<String,String> mp) {
+        return userService.updatePassword(mp.get("email"),mp.get("otp"),mp.get("newPassword"));
+    }
 
     private void authenticate(String username, String password) throws Exception {
         try {

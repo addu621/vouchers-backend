@@ -45,9 +45,6 @@ public class Person {
     @Column(name = "is_otp_verified")
     private Boolean isOtpVerified;
 
-    @Column(name = "is_forgot_password_otp_verified")
-    private Boolean isForgotPasswordOtpVerified;
-
 
     public Person() {
 
@@ -65,7 +62,6 @@ public class Person {
         this.isAdmin = isAdmin;
         this.otp = otp;
         this.isOtpVerified = isOtpVerified;
-        this.isForgotPasswordOtpVerified = isForgotPasswordOtpVerified;
     }
 
     @Override
@@ -82,7 +78,6 @@ public class Person {
                 ", isAdmin=" + isAdmin +
                 ", otp='" + otp + '\'' +
                 ", isOtpVerified=" + isOtpVerified +
-                ", isForgotPasswordOtpVerified=" + isForgotPasswordOtpVerified +
                 '}';
     }
 }
