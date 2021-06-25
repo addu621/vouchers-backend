@@ -6,16 +6,14 @@ import com.example.server.entities.Person;
 import com.example.server.entities.Wallet;
 import com.example.server.services.WalletService;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 
 @RestController
 @AllArgsConstructor
+@CrossOrigin("*")
 public class WalletController {
 
     private final WalletTransformer walletTransformer;
