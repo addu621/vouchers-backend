@@ -28,9 +28,15 @@ public class NotificationService {
         return notificationsList;
     }
 
-    public void notificationSeen(Long notificationId){
+    public void notificationSeen(boolean isSeen,Long notificationId){
         Notification notification = notificationRepo.findById(notificationId).get();
-        notification.setIsSeen(true);
+        notification.setIsSeen(isSeen);
+        notificationRepo.save(notification);
+    }
+
+    public void notificationCompleted(boolean isCompleted,Long notificationId){
+        Notification notification = notificationRepo.findById(notificationId).get();
+        notification.setIsComplete(isCompleted);
         notificationRepo.save(notification);
     }
 

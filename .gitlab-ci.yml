@@ -49,7 +49,6 @@ deploy_backend:
   stage: deploy
   only:
     - master
-    - development
 
   tags:
     - backend
