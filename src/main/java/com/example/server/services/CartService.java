@@ -1,9 +1,7 @@
 package com.example.server.services;
 
-import com.example.server.entities.Cart;
-import com.example.server.entities.CartItem;
-import com.example.server.entities.Voucher;
-import com.example.server.entities.VoucherOrder;
+import com.example.server.entities.*;
+import com.example.server.enums.TransactionType;
 import com.example.server.repositories.CartItemRepository;
 import com.example.server.repositories.CartRepository;
 import com.example.server.repositories.VoucherRepository;
@@ -25,6 +23,7 @@ public class CartService {
     private final CartItemRepository cartItemRepository;
     private final VoucherRepository voucherRepository;
     private final VoucherOrderService voucherOrderService;
+    private final TransactionService transactionService;
 
     public boolean addItemToCart(long cartId,long voucherId){
         CartItem cartItem = new CartItem();
@@ -70,10 +69,14 @@ public class CartService {
     public List<Voucher> checkOutCart(long cartId){
         List<CartItem> cartItems = cartItemRepository.findByCartId(cartId);
         List<Voucher> vouchers = new ArrayList<>();
+        BigDecimal totalPrice = new BigDecimal(0);
+        System.out.print("bhai ye price h:"+totalPrice);
+        cartItems.stream().forEach((CartItem c)->totalPrice.add(c.getItemPrice()));
+        Transaction transaction = this.transactionService.addTransaction(cartId,TransactionType.ITEMS_PURCHASED,totalPrice);
         cartItems.forEach((CartItem cartItem)->{
             Voucher voucher = voucherRepository.findById(cartItem.getVoucherId()).get();
             voucher.setSellingPrice(cartItem.getItemPrice());
-            VoucherOrder voucherOrder = this.voucherOrderService.addOrder(cartId,voucher.getId(),cartItem.getItemPrice());   //cartId is same as buyer Id
+            VoucherOrder voucherOrder = this.voucherOrderService.addOrder(cartId,voucher.getId(),cartItem.getItemPrice(),transaction.getId());   //cartId is same as buyer Id
             if(voucherOrder!=null){
                 this.removeItemFromCart(cartId,voucher.getId());
                 vouchers.add(voucher);
