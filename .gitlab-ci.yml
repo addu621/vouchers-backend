@@ -28,20 +28,20 @@ maven_build:
       - target/*.jar
 
 
-    #test_application:
-    # image: maven:3.6.3-openjdk-11
-    # stage: test
-    #  only:
-    #  - development
-    #  - master
-    # tags:
-    #  - backend
-    # before_script:
-    #  - echo "** Initializing test engine **"
-    # script:
-    #   - mvn clean test
-    #after_script:
-    # - echo "** Testing complete **"
+#test_application:
+ # image: maven:3.6.3-openjdk-11
+ # stage: test
+#  only:
+  #  - development
+  #  - master
+ # tags:
+  #  - backend
+ # before_script:
+  #  - echo "** Initializing test engine **"
+ # script:
+ #   - mvn clean test
+  #after_script:
+   # - echo "** Testing complete **"
 
 
 deploy_backend:
@@ -82,7 +82,7 @@ deploy_backend:
     - cat app.yaml
     - echo $SERVICE_ACC_KEY > ${CI_PIPELINE_ID}.json
     - "cat $CI_PIPELINE_ID.json"
-
+      
   script:
     - gcloud auth activate-service-account --key-file ${CI_PIPELINE_ID}.json
     # gcloud app deploy --project=hu18-groupa-java --version v1 --appyaml app.yaml

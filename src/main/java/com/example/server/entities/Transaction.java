@@ -1,5 +1,6 @@
 package com.example.server.entities;
 
+import com.example.server.enums.TransactionType;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -21,4 +22,10 @@ public class Transaction {
 
     @Column(name = "total_price")
     private BigDecimal totalPrice;
+
+    @Column(name = "user_id")
+    private Long userId;
+
+    @Column(name = "transaction_type")
+    private TransactionType transactionType;
 }
