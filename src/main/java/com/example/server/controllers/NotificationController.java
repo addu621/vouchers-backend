@@ -1,11 +1,11 @@
 package com.example.server.controllers;
 
+import com.example.server.dto.response.GenericResponse;
 import com.example.server.entities.Notification;
 import com.example.server.entities.Person;
 import com.example.server.services.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -24,8 +24,21 @@ public class NotificationController {
         return result;
     }
 
-    @GetMapping("/notificationSeen")
-    public void notificationSeen(Map<String,Long> mp) {
-        notificationService.notificationSeen(mp.get("notificationId"));
+    @PutMapping("/notification/{notificationId}/is-seen")
+    public GenericResponse notificationSeen(@PathVariable Long notificationId,@RequestBody Map<String,Boolean> mp) {
+        notificationService.notificationSeen(mp.get("seen"),notificationId);
+        GenericResponse genericResponse = new GenericResponse();
+        genericResponse.setMessage("Updated successfully");
+        genericResponse.setStatus(200);
+        return genericResponse;
+    }
+
+    @PutMapping("/notification/{notificationId}/is-complete")
+    public GenericResponse notificationCompleted(@PathVariable Long notificationId,@RequestBody Map<String,Boolean> mp) {
+        notificationService.notificationCompleted(mp.get("completed"),notificationId);
+        GenericResponse genericResponse = new GenericResponse();
+        genericResponse.setMessage("Updated successfully");
+        genericResponse.setStatus(200);
+        return genericResponse;
     }
 }

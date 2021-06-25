@@ -22,6 +22,12 @@ public class Notification {
     @Column(name = "voucher_id")
     private Long voucherId;
 
+    @Column(name = "buyer_id")
+    private Long buyerId;
+
+    @Column(name = "seller_id")
+    private Long sellerId;
+
     @Column(name = "title")
     private String title;
 
@@ -33,6 +39,9 @@ public class Notification {
 
     @Column(name = "is_seen")
     private Boolean isSeen = false;
+
+    @Column(name = "is_complete")
+    private Boolean isComplete = false;
 
     @Column(name = "notification_type")
     private NotificationType notificationType;
