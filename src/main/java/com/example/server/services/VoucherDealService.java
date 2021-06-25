@@ -56,6 +56,7 @@ public class VoucherDealService {
     public GenericResponse quotePrice(Long buyerId, Long voucherId, BigDecimal quotedPrice){
 
         GenericResponse genericResponse = new GenericResponse();
+        Long sellerId = voucherService.getSellerIdByVoucherId(voucherId);
         if(voucherId==null|| quotedPrice==null){
             genericResponse.setStatus(404);
             genericResponse.setMessage("voucher Id or quoted price missing");
@@ -81,7 +82,9 @@ public class VoucherDealService {
             Notification notification = new Notification();
             notification.setNotificationType(NotificationType.NEW_PRICE_QUOTED);
             notification.setVoucherId(voucherId);
-            notification.setReceiverId(voucherService.getSellerIdByVoucherId(voucherId));
+            notification.setBuyerId(buyerId);
+            notification.setSellerId(sellerId);
+            notification.setReceiverId(sellerId);
             notification.setTitle("New Price Quoted");
             notification.setDescription("Someone quoted "+ quotedPrice + " for your coupon");
             notificationService.createNewNotification(notification);
@@ -101,7 +104,9 @@ public class VoucherDealService {
             Notification notification = new Notification();
             notification.setNotificationType(NotificationType.NEW_PRICE_QUOTED);
             notification.setVoucherId(voucherId);
-            notification.setReceiverId(voucherService.getSellerIdByVoucherId(voucherId));
+            notification.setBuyerId(buyerId);
+            notification.setSellerId(sellerId);
+            notification.setReceiverId(sellerId);
             notification.setTitle("Quoted Price Updated");
             notification.setDescription("Someone quoted " + quotedPrice + " for your coupon");
             notificationService.createNewNotification(notification);
@@ -113,6 +118,8 @@ public class VoucherDealService {
 
     public GenericResponse acceptQuotedPrice(Long voucherId, Long buyerId){
         GenericResponse genericResponse = new GenericResponse();
+        Long sellerId = voucherService.getSellerIdByVoucherId(voucherId);
+
         if(voucherService.isVoucherSold(voucherId)){
             genericResponse.setStatus(404);
             genericResponse.setMessage("Coupon is already sold, you cannot accept now!!");
@@ -142,6 +149,8 @@ public class VoucherDealService {
             notification.setNotificationType(NotificationType.QUOTE_PRICE_ACCEPTED);
             notification.setVoucherId(voucherId);
             notification.setReceiverId(buyerId);
+            notification.setBuyerId(buyerId);
+            notification.setSellerId(sellerId);
             notification.setTitle("Quoted Price Accepted");
             notification.setDescription("Your quoted price was accepted by the seller");
             notificationService.createNewNotification(notification);
@@ -158,6 +167,7 @@ public class VoucherDealService {
 
     public GenericResponse rejectQuotePrice(Long voucherId, Long buyerId){
         GenericResponse genericResponse = new GenericResponse();
+        Long sellerId = voucherService.getSellerIdByVoucherId(voucherId);
         List<VoucherDeal>voucherDealList = voucherDealRepository.findByVoucherIdAndBuyerId(voucherId,buyerId);
         if(voucherDealList.size()==0){
             genericResponse.setStatus(404);
@@ -175,6 +185,8 @@ public class VoucherDealService {
             notification.setNotificationType(NotificationType.QUOTE_PRICE_REJECTED);
             notification.setVoucherId(voucherId);
             notification.setReceiverId(buyerId);
+            notification.setBuyerId(buyerId);
+            notification.setSellerId(sellerId);
             notification.setTitle("Quoted Price Rejected");
             notification.setDescription("Your quoted price was rejected by the seller");
             notificationService.createNewNotification(notification);
