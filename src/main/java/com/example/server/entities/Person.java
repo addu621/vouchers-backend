@@ -45,6 +45,17 @@ public class Person {
     @Column(name = "is_otp_verified")
     private Boolean isOtpVerified;
 
+    @Column(name = "account_number")
+    private String accountNumber;
+
+    @Column(name = "ifsc_code")
+    private String ifscCode;
+
+    @Column(name = "ssn")
+    private String ssn;
+
+    @Column(name = "ssn_verified")
+    private boolean ssnVerified=false;
 
     public Person() {
 

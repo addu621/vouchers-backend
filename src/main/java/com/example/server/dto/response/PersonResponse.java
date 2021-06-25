@@ -11,4 +11,8 @@ public class PersonResponse {
     private String imgUrl;
     private String mobile;
     private Long id;
+    private String accountNumber;
+    private String ifscCode;
+    private String ssn;
+    private boolean ssnVerified;
 }

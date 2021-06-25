@@ -2,6 +2,8 @@ package com.example.server.dto.request;
 
 import lombok.Data;
 
+import javax.persistence.Column;
+
 @Data
 public class PersonRequest {
     private String firstName;
@@ -9,4 +11,8 @@ public class PersonRequest {
     private String middleName;
     private String imgUrl;
     private String mobile;
+    private String accountNumber;
+    private String ifscCode;
+    private String ssn;
+    private boolean ssnVerified;
 }
