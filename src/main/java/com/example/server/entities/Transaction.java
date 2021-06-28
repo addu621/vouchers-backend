@@ -1,5 +1,6 @@
 package com.example.server.entities;
 
+import com.example.server.enums.TransactionStatus;
 import com.example.server.enums.TransactionType;
 import lombok.Data;
 
@@ -13,12 +14,14 @@ import java.util.Date;
 public class Transaction {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "transaction_id")
-    private Long id;
+    private String id;
 
     @Column(name = "transaction_date")
     private Date transactionDate;
+
+    @Column(name = "transaction_status")
+    private TransactionStatus transactionStatus;
 
     @Column(name = "total_price")
     private BigDecimal totalPrice;

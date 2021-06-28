@@ -26,10 +26,10 @@ public class WalletController {
         return walletTransformer.convertEntityToResponse(wallet);
     }
 
-    @PostMapping("/wallet/addMoney/{amount}")
+    /*@PostMapping("/wallet/addMoney/{amount}")
     public WalletResponse addMoneyToWallet(HttpServletRequest request,@PathVariable BigDecimal amount){
         Person personDetails = (Person) request.getAttribute("person");
-        Wallet wallet = this.walletService.addMoneyToWallet(personDetails.getId(),amount);
+        Wallet wallet = this.walletService.addCoinsToWallet(personDetails.getId(),amount);
         return walletTransformer.convertEntityToResponse(wallet);
-    }
+    }*/
 }

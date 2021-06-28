@@ -51,10 +51,10 @@ public class CartController {
         return genericResponse;
     }
 
-    @GetMapping("/cart/checkout")
-    public List<VoucherResponse> checkoutCart(HttpServletRequest request){
+    @GetMapping("/cart/checkout/{transactionId}")
+    public List<VoucherResponse> checkoutCart(HttpServletRequest request,@PathVariable String transactionId){
         Person personDetails = (Person) request.getAttribute("person");
-        List<Voucher> vouchers = cartService.checkOutCart(personDetails.getId());
+        List<Voucher> vouchers = cartService.checkOutCart(personDetails.getId(),transactionId);
         return this.voucherTransformer.convertEntityListToResponseList(vouchers);
     }
 }

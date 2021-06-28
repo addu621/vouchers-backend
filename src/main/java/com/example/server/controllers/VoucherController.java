@@ -126,14 +126,16 @@ public class VoucherController {
     }
 
     @PostMapping("/buy/voucher")
-    public GenericResponse buyVoucher(HttpServletRequest request,Long voucherId){
+    public GenericResponse buyVoucher(HttpServletRequest request,Long voucherId,String transactionId){
         Person personDetails = (Person) request.getAttribute("person");
         Long buyerId = personDetails.getId();
 
-        VoucherOrder voucherOrder = voucherOrderService.addOrder(buyerId,voucherId);
-        GenericResponse genericResponse= new GenericResponse();
+        VoucherOrder voucherOrder = voucherOrderService.createOrder(buyerId,transactionId);
+        VoucherOrderDetail voucherOrderItem = voucherOrderService.addOrderItem(voucherOrder.getId(),voucherId);
+        voucherOrderService.placeOrder(voucherOrder.getId());
 
-        if(voucherOrder!=null){
+        GenericResponse genericResponse= new GenericResponse();
+        if(voucherOrderItem!=null){
             genericResponse.setMessage("Voucher Bought Successfully");
             genericResponse.setStatus(200);
         }

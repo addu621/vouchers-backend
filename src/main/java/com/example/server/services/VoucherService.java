@@ -26,6 +26,7 @@ public class VoucherService {
     private final VoucherTypeRepo voucherTypeRepo;
     private final VoucherDealRepository voucherDealRepository;
     private final VoucherOrderRepository voucherOrderRepository;
+    private final VoucherOrderDetailRepository voucherOrderDetailRepository;
 
     public Voucher saveVoucher(Voucher voucher) {
         return voucherRepository.save(voucher);
@@ -67,8 +68,8 @@ public class VoucherService {
     }
 
     public boolean isVoucherSold(long voucherId){
-        List<VoucherOrder> voucherOrders = this.voucherOrderRepository.findByOrderStatus(OrderStatus.SUCCESS);
-        return voucherOrders.stream().anyMatch((VoucherOrder vd)->vd.getVoucherId()==voucherId);
+        List<VoucherOrderDetail> voucherOrders = (List<VoucherOrderDetail>) this.voucherOrderDetailRepository.findAll();
+        return voucherOrders.stream().anyMatch((VoucherOrderDetail vd)->vd.getVoucherId()==voucherId);
     }
 
     public List<Voucher> getAllVouchers() {
@@ -87,8 +88,10 @@ public class VoucherService {
         List<VoucherOrder> voucherOrders = this.voucherOrderRepository.findByBuyerIdAndOrderStatus(userId, OrderStatus.SUCCESS);
         List<Voucher> vouchers = new ArrayList<>();
         voucherOrders.forEach((VoucherOrder v) -> {
-            Voucher voucher = this.getVoucherById(v.getVoucherId());
-            vouchers.add(voucher);
+            voucherOrderDetailRepository.findByOrderId(v.getId()).forEach((VoucherOrderDetail vd)->{
+                Voucher voucher = this.getVoucherById(vd.getVoucherId());
+                vouchers.add(voucher);
+            });
         });
         return sortByTime(vouchers);
     }
