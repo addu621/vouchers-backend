@@ -8,7 +8,7 @@ public class PersonResponse {
     private String firstName;
     private String lastName;
     private String middleName;
-    private String imgUrl;
+    private String imageUrl;
     private String mobile;
     private Long id;
     private String accountNumber;
