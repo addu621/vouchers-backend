@@ -1,5 +1,6 @@
 package com.example.server.controllers;
 
+import com.example.server.dto.request.GoogleRequest;
 import com.example.server.entities.Person;
 import com.example.server.model.JwtResponse;
 import com.example.server.model.JwtUtil;
@@ -13,6 +14,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -37,6 +39,8 @@ public class JwtController {
     @Autowired
     private CartService cartService;
 
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
     //web security test api
     @RequestMapping("/welcome")
     public String welcome() {
@@ -61,7 +65,43 @@ public class JwtController {
         }
 
         mp.put("token", token);
+        mp.put("userId", person.getId().toString());
         mp.put("isAdmin", person.getIsAdmin().toString());
+
+        return mp;
+    }
+
+    @PostMapping("/gAuth")
+    public Map gAuth(@RequestBody GoogleRequest googleRequest) throws Exception {
+        Map<String,String> mp = new HashMap<>();
+
+        Person oldPerson = personRepo.findByEmail(googleRequest.getEmail());
+        if(oldPerson==null)
+        {
+            Person person = new Person();
+            person.setEmail(googleRequest.getEmail());
+            person.setFirstName(googleRequest.getFirstName());
+            person.setLastName(googleRequest.getLastName());
+            person.setImageUrl(googleRequest.getPhotoUrl());
+            person.setIsAdmin(false);
+            person.setPassword(bCryptPasswordEncoder.encode(""));
+            personRepo.save(person);
+        }
+        authenticate(googleRequest.getEmail(),"");
+
+        final UserDetails userDetails = userService.loadUserByUsername(googleRequest.getEmail());
+
+        final String token = jwtUtil.generateToken(userDetails);
+
+        Person newPerson = personRepo.findByEmail(googleRequest.getEmail());
+
+        if(newPerson==null){
+            mp.put("error","Invalid Credentials");
+        }
+
+        mp.put("token", token);
+        mp.put("userId", newPerson.getId().toString());
+        mp.put("isAdmin", newPerson.getIsAdmin().toString());
 
         return mp;
     }
