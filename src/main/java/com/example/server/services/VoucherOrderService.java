@@ -67,4 +67,8 @@ public class VoucherOrderService {
         walletService.addCoinsToWallet(voucherOrder.getBuyerId(),coins);
         return true;
     }
+
+    public VoucherOrder findByTransactionId(String transactionId){
+        return this.voucherOrderRepository.findByTransactionId(transactionId).get(0);
+    }
 }
