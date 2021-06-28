@@ -108,7 +108,7 @@ public class CartService {
 
         BigDecimal tax = utilityService.calculatePercentage(checkoutPageCost.getItemsValue(),new BigDecimal(2.5));
         BigDecimal finalCost = tax.add(checkoutPageCost.getItemsValue());
-        Integer loyaltyCoins = utilityService.calculatePercentage(totalPrice,new BigDecimal(5)).intValue();
+        Integer loyaltyCoins = utilityService.calculatePercentage(checkoutPageCost.getItemsValue(),new BigDecimal(5)).intValue();
 
         checkoutPageCost.setTaxCalculated(tax);
         checkoutPageCost.setLoyaltyCoins(loyaltyCoins);

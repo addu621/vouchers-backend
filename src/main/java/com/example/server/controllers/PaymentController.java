@@ -48,9 +48,9 @@ public class PaymentController {
         Person personDetails = (Person) request.getAttribute("person");
         Long userId = personDetails.getId();
 
-        BigDecimal amount = voucherService.getVoucherCostById(voucherId);
+        CheckoutPageCost checkoutPageCost = voucherService.getVoucherCostById(voucherId);
 
-        Order order = paymentService.createRazorPayOrder( amount.toString() );
+        Order order = paymentService.createRazorPayOrder( checkoutPageCost.getFinalCost().toString() );
         String orderId = order.get("id");
 
         PaymentOrderResponse paymentOrderResponse = new PaymentOrderResponse();
@@ -58,10 +58,17 @@ public class PaymentController {
         return paymentOrderResponse;
     }
 
-//    @GetMapping("/cost")
-//    public CheckoutPageCost cost(){
-//        CheckoutPageCost checkoutPageCost = cartService.getCartValue(new Long(1));
-//        return checkoutPageCost;
-//    }
+    @GetMapping("payment/get/voucher-order/{voucherId}")
+    public CheckoutPageCost voucherCost(HttpServletRequest request,@PathVariable Long voucherId){
+         CheckoutPageCost checkoutPageCost = voucherService.getVoucherCostById(voucherId);
+        return checkoutPageCost;
+    }
+    @GetMapping("payment/get/cart-order/")
+    public CheckoutPageCost voucherCost(HttpServletRequest request){
+        Person personDetails = (Person) request.getAttribute("person");
+        Long userId = personDetails.getId();
+        CheckoutPageCost checkoutPageCost = cartService.getCartValue(userId);
+        return checkoutPageCost;
+    }
 
 }
