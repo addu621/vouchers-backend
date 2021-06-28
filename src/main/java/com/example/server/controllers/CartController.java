@@ -52,9 +52,9 @@ public class CartController {
     }
 
     @GetMapping("/cart/checkout")
-    public List<VoucherResponse> checkoutCart(HttpServletRequest request){
+    public List<VoucherResponse> checkoutCart(HttpServletRequest request,@RequestBody String transactionId){
         Person personDetails = (Person) request.getAttribute("person");
-        List<Voucher> vouchers = cartService.checkOutCart(personDetails.getId());
+        List<Voucher> vouchers = cartService.checkOutCart(personDetails.getId(),transactionId);
         return this.voucherTransformer.convertEntityListToResponseList(vouchers);
     }
 }

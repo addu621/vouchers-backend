@@ -52,8 +52,10 @@ public class VoucherTransformer {
             copyProperties(seller,personResponse);
             voucherResponse.setSeller(personResponse);
         }
+
         if(voucherCompany!=null){
             voucherResponse.setCompanyImgUrl(voucherCompany.getImageUrl());
+            voucherResponse.setCompanyName(voucherCompany.getName());
         }
 
         return voucherResponse;

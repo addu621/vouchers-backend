@@ -13,6 +13,6 @@ public class Wallet {
     @Column(name = "wallet_id")
     private Long id;
 
-    @Column(name = "balance")
-    private BigDecimal balance;
+    @Column(name = "coins")
+    private int coins;
 }

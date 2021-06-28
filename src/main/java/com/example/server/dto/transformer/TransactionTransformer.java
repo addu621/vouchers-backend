@@ -18,6 +18,7 @@ public class TransactionTransformer {
 
     public TransactionResponse convertEntityToResponse(Transaction transaction){
         TransactionResponse transactionResponse = new TransactionResponse();
+
         copyProperties(transaction,transactionResponse);
         return transactionResponse;
     }

@@ -17,16 +17,13 @@ public class WalletService {
     private final WalletRepository walletRepository;
     private final TransactionService transactionService;
 
-    public Wallet addMoneyToWallet(long walletId,BigDecimal amount){
+    public Wallet addCoinsToWallet(long walletId,int coins){
         Wallet wallet = walletRepository.findById(walletId).get();
         if(wallet==null){
             return null;
         }
-        BigDecimal balance = wallet.getBalance();
-        System.out.println(amount);
-        BigDecimal newBalance = balance.add(amount);
-        wallet.setBalance(newBalance);
-        transactionService.addTransaction(walletId,TransactionType.MONEY_ADDED_TO_WALLET,amount);
+        int coins1 = wallet.getCoins();
+        wallet.setCoins(coins1+coins);
         return walletRepository.save(wallet);
     }
 

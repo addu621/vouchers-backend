@@ -17,14 +17,8 @@ public class VoucherOrder {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "voucher_id")
-    private Long voucherId;
-
     @Column(name = "order_date")
     private Date orderDate;
-
-    @Column(name = "order_price")
-    private BigDecimal orderPrice;
 
     @Column(name = "buyer_id")
     private Long buyerId;
@@ -33,5 +27,5 @@ public class VoucherOrder {
     private OrderStatus orderStatus;
 
     @Column(name = "transaction_id")
-    private Long transactionId;
+    private String transactionId;
 }

@@ -1,6 +1,7 @@
 package com.example.server.services;
 
 import com.example.server.entities.Transaction;
+import com.example.server.enums.TransactionStatus;
 import com.example.server.enums.TransactionType;
 import com.example.server.repositories.TransactionRepository;
 import lombok.AllArgsConstructor;
@@ -16,12 +17,14 @@ import java.util.List;
 public class TransactionService {
     private final TransactionRepository transactionRepository;
 
-    public Transaction addTransaction(long userId,TransactionType transactionType,BigDecimal amount){
+    public Transaction addTransaction(String transactionId,long userId,TransactionType transactionType,BigDecimal amount){
         Transaction transaction = new Transaction();
         transaction.setUserId(userId);
         transaction.setTransactionDate(new Date());
         transaction.setTransactionType(transactionType);
         transaction.setTotalPrice(amount);
+        transaction.setId(transactionId);
+        transaction.setTransactionStatus(TransactionStatus.SUCCESS);
         return this.transactionRepository.save(transaction);
     }
 
