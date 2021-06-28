@@ -12,6 +12,7 @@ import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -144,5 +145,9 @@ public class VoucherService {
     public Long getSellerIdByVoucherId(Long voucherId){
         Voucher voucher = voucherRepository.findById(voucherId).get();
         return voucher.getSellerId();
+    }
+    public BigDecimal getVoucherCostById(Long voucherId){
+        Voucher voucher = voucherRepository.findById(voucherId).get();
+        return voucher.getVoucherValue();
     }
 }
