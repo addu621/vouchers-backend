@@ -2,6 +2,7 @@ package com.example.server.services;
 
 import com.example.server.entities.*;
 import com.example.server.enums.TransactionType;
+import com.example.server.model.CheckoutPageCost;
 import com.example.server.repositories.CartItemRepository;
 import com.example.server.repositories.CartRepository;
 import com.example.server.repositories.VoucherRepository;
@@ -24,7 +25,9 @@ public class CartService {
     private final VoucherRepository voucherRepository;
     private final VoucherOrderService voucherOrderService;
     private final TransactionService transactionService;
+    private final Utility utilityService;
     private final WalletService walletService;
+
 
     public boolean addItemToCart(long cartId,long voucherId){
         CartItem cartItem = new CartItem();
@@ -93,4 +96,25 @@ public class CartService {
     public boolean removeItemFromCart(long cartId,long voucherId){
         return !cartItemRepository.deleteByCartIdAndVoucherId(cartId,voucherId).isEmpty();
     }
+
+    public CheckoutPageCost getCartValue(Long cartId){
+        List<CartItem> cartItemList = cartItemRepository.findByCartId(cartId);
+        CheckoutPageCost checkoutPageCost = new CheckoutPageCost();
+
+        BigDecimal totalPrice = new BigDecimal(0);
+        cartItemList.forEach((CartItem cartItem)-> {
+            checkoutPageCost.setItemsValue((totalPrice.add(cartItem.getItemPrice())));
+        });
+
+        BigDecimal tax = utilityService.calculatePercentage(checkoutPageCost.getItemsValue(),new BigDecimal(2.5));
+        BigDecimal finalCost = tax.add(checkoutPageCost.getItemsValue());
+        Integer loyaltyCoins = utilityService.calculatePercentage(totalPrice,new BigDecimal(5)).intValue();
+
+        checkoutPageCost.setTaxCalculated(tax);
+        checkoutPageCost.setLoyaltyCoins(loyaltyCoins);
+        checkoutPageCost.setFinalCost(finalCost);
+
+        return checkoutPageCost;
+    }
 }
+
