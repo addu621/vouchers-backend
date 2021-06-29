@@ -1,8 +1,13 @@
 package com.example.server.repositories;
 
+import com.example.server.entities.Transaction;
+import com.example.server.entities.Wallet;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public interface TransactionRepository {
+import java.util.List;
 
+@Repository
+public interface TransactionRepository extends CrudRepository<Transaction,Long> {
+    List<Transaction> findByUserId(long userId);
 }

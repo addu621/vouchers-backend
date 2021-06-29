@@ -3,6 +3,7 @@ package com.example.server.controllers;
 import com.example.server.dto.request.FilterRequest;
 import com.example.server.dto.request.VoucherRequest;
 import com.example.server.dto.response.GenericResponse;
+import com.example.server.dto.response.SellerRatingResponse;
 import com.example.server.dto.response.VoucherResponse;
 import com.example.server.dto.transformer.VoucherTransformer;
 import com.example.server.entities.*;
@@ -125,15 +126,18 @@ public class VoucherController {
         return this.voucherTransformer.convertEntityListToResponseList(vouchers);
     }
 
-    @PostMapping("/buy/voucher")
-    public GenericResponse buyVoucher(HttpServletRequest request,Long voucherId){
+    @GetMapping("/buy/voucher/{voucherId}/{transactionId}")
+    public GenericResponse buyVoucher(HttpServletRequest request,@PathVariable Long voucherId, @PathVariable String transactionId){
         Person personDetails = (Person) request.getAttribute("person");
         Long buyerId = personDetails.getId();
+        System.out.println("vId = "+voucherId);
+        System.out.println("tId = "+transactionId);
+        VoucherOrder voucherOrder = voucherOrderService.createOrder(buyerId,transactionId);
+        VoucherOrderDetail voucherOrderItem = voucherOrderService.addOrderItem(voucherOrder.getId(),voucherId);
+        voucherOrderService.placeOrder(voucherOrder.getId());
 
-        VoucherOrder voucherOrder = voucherOrderService.addOrder(buyerId,voucherId);
         GenericResponse genericResponse= new GenericResponse();
-
-        if(voucherOrder!=null){
+        if(voucherOrderItem!=null){
             genericResponse.setMessage("Voucher Bought Successfully");
             genericResponse.setStatus(200);
         }
@@ -145,9 +149,9 @@ public class VoucherController {
         return this.voucherService.isVoucherSold(voucherId);
     }
 
-    /*@PostMapping("/filter")
+    @PostMapping("/filter")
     public List<Voucher> filter(@RequestBody FilterRequest input) {
         List<Voucher> result = voucherService.filterVouchers(input);
         return result;
-    }*/
+    }
 }

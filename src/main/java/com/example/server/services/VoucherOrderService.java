@@ -1,10 +1,10 @@
 package com.example.server.services;
 
-import com.example.server.entities.Voucher;
-import com.example.server.entities.VoucherDeal;
-import com.example.server.entities.VoucherOrder;
+import com.example.server.entities.*;
 import com.example.server.enums.DealStatus;
 import com.example.server.enums.OrderStatus;
+import com.example.server.enums.TransactionType;
+import com.example.server.repositories.VoucherOrderDetailRepository;
 import com.example.server.repositories.VoucherOrderRepository;
 import com.example.server.repositories.VoucherRepository;
 import lombok.AllArgsConstructor;
@@ -20,44 +20,55 @@ import java.util.List;
 public class VoucherOrderService {
 
     private final VoucherOrderRepository voucherOrderRepository;
+    private final VoucherOrderDetailRepository voucherOrderDetailRepository;
+    private final TransactionService transactionService;
+    private final WalletService walletService;
 
     private final VoucherRepository voucherRepository;
 
-    public VoucherOrder addOrder(Long buyerId, Long voucherId){
-
+    public VoucherOrder createOrder(Long buyerId,String transactionId){
         VoucherOrder voucherOrder = new VoucherOrder();
-        voucherOrder.setVoucherId(voucherId);
-        Voucher voucher = voucherRepository.findById(voucherId).get();
-
-        List<VoucherOrder> voucherDeals = voucherOrderRepository.findByVoucherIdAndOrderStatus(voucherId, OrderStatus.SUCCESS);
-        if(voucherDeals.size()==0){
-            voucherOrder.setBuyerId(buyerId);
-            voucherOrder.setOrderPrice(voucher.getSellingPrice());
-            voucherOrder.setOrderStatus(OrderStatus.SUCCESS);
-            voucherOrder.setVoucherId(voucherId);
-            Date date = new Date();
-            voucherOrder.setOrderDate(date);
-            return voucherOrderRepository.save(voucherOrder);
-        }
-        return null;
+        voucherOrder.setBuyerId(buyerId);
+        voucherOrder.setOrderStatus(OrderStatus.SUCCESS);
+        Date date = new Date();
+        voucherOrder.setOrderDate(date);
+        voucherOrder.setTransactionId(transactionId);
+        return voucherOrderRepository.save(voucherOrder);
     }
 
-    public VoucherOrder addOrder(Long buyerId, Long voucherId, BigDecimal price){
+    public VoucherOrderDetail addOrderItem(Long orderId, Long voucherId, BigDecimal price){
+        VoucherOrderDetail voucherOrderDetail = new VoucherOrderDetail();
+        voucherOrderDetail.setOrderId(orderId);
+        voucherOrderDetail.setVoucherId(voucherId);
+        voucherOrderDetail.setItemPrice(price);
+        voucherOrderDetail.setVoucherId(voucherId);
+        return this.voucherOrderDetailRepository.save(voucherOrderDetail);
+    }
 
-        VoucherOrder voucherOrder = new VoucherOrder();
-        voucherOrder.setVoucherId(voucherId);
-        Voucher voucher = voucherRepository.findById(voucherId).get();
+    public VoucherOrderDetail addOrderItem(Long orderId, Long voucherId){
+        Voucher voucher = this.voucherRepository.findById(voucherId).get();
+        VoucherOrderDetail voucherOrderDetail = new VoucherOrderDetail();
+        voucherOrderDetail.setOrderId(orderId);
+        voucherOrderDetail.setVoucherId(voucherId);
+        voucherOrderDetail.setItemPrice(voucher.getSellingPrice());
+        voucherOrderDetail.setVoucherId(voucherId);
+        return this.voucherOrderDetailRepository.save(voucherOrderDetail);
+    }
 
-        List<VoucherOrder> voucherDeals = voucherOrderRepository.findByVoucherIdAndOrderStatus(voucherId, OrderStatus.SUCCESS);
-        if(voucherDeals.size()==0){
-            voucherOrder.setBuyerId(buyerId);
-            voucherOrder.setOrderPrice(price);
-            voucherOrder.setOrderStatus(OrderStatus.SUCCESS);
-            voucherOrder.setVoucherId(voucherId);
-            Date date = new Date();
-            voucherOrder.setOrderDate(date);
-            return voucherOrderRepository.save(voucherOrder);
-        }
-        return null;
+    public boolean placeOrder(long orderId){
+        if(this.voucherOrderRepository.findById(orderId)==null) return false;
+        VoucherOrder voucherOrder = this.voucherOrderRepository.findById(orderId).get();
+        voucherOrder.setOrderStatus(OrderStatus.SUCCESS);
+        BigDecimal totalPrice = new BigDecimal(0);
+        this.voucherOrderDetailRepository.findByOrderId(voucherOrder.getId()).forEach((VoucherOrderDetail v)->{
+            totalPrice.add(v.getItemPrice());
+        });
+        int coins = totalPrice.intValue()*5/100;
+        walletService.addCoinsToWallet(voucherOrder.getBuyerId(),coins);
+        return true;
+    }
+
+    public VoucherOrder findByTransactionId(String transactionId){
+        return this.voucherOrderRepository.findByTransactionId(transactionId).get(0);
     }
 }

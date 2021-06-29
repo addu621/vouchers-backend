@@ -31,7 +31,7 @@ public class VoucherTransformer {
         Voucher voucher = new Voucher();
         copyProperties(voucherRequest, voucher,"expiryDate");
         SimpleDateFormat formatter=new SimpleDateFormat("dd-MM-yyyy");
-        voucher.setExpiryDate(voucherRequest.getExpiryDate());
+        voucher.setExpiryDate(formatter.parse(voucherRequest.getExpiryDate()));
         String currentDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date());
         System.out.println(currentDate);
         voucher.setCreatedOn(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(currentDate));
@@ -52,8 +52,10 @@ public class VoucherTransformer {
             copyProperties(seller,personResponse);
             voucherResponse.setSeller(personResponse);
         }
+
         if(voucherCompany!=null){
             voucherResponse.setCompanyImgUrl(voucherCompany.getImageUrl());
+            voucherResponse.setCompanyName(voucherCompany.getName());
         }
 
         return voucherResponse;

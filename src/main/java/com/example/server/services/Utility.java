@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 
 
 @Service
@@ -16,6 +17,11 @@ public class Utility {
 
     @Autowired
     private JavaMailSender javaMailSender;
+
+    public static final BigDecimal ONE_HUNDRED = new BigDecimal(100);
+    public BigDecimal  calculatePercentage(BigDecimal value, BigDecimal percent){
+        return value.multiply(percent).divide(ONE_HUNDRED);
+    }
 
     public void sendMail(Person person, String otp) throws MessagingException, UnsupportedEncodingException {
 
