@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -106,8 +107,8 @@ public class CartService {
         });
 
         BigDecimal tax = utilityService.calculatePercentage(checkoutPageCost.getItemsValue(),new BigDecimal(2.5));
-        BigDecimal finalCost = tax.add(checkoutPageCost.getItemsValue());
-        Integer loyaltyCoins = utilityService.calculatePercentage(checkoutPageCost.getItemsValue(),new BigDecimal(5)).intValue();
+        BigDecimal finalCost = tax.setScale(0, RoundingMode.UP).add(checkoutPageCost.getItemsValue());
+        Integer loyaltyCoins = utilityService.calculatePercentage(checkoutPageCost.getItemsValue(),new BigDecimal(5)).setScale(0, RoundingMode.UP).intValue();
 
         checkoutPageCost.setTaxCalculated(tax);
         checkoutPageCost.setLoyaltyCoins(loyaltyCoins);
