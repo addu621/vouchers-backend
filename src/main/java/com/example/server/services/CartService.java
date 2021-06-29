@@ -76,8 +76,7 @@ public class CartService {
         BigDecimal totalPrice = new BigDecimal(0);
         cartItems.stream().forEach((CartItem c)->totalPrice.add(c.getItemPrice()));
 
-        Transaction transaction = this.transactionService.addTransaction(transactionId,cartId,TransactionType.ORDER_PLACED,totalPrice);
-        VoucherOrder voucherOrder = this.voucherOrderService.createOrder(cartId,transaction.getId());   //cartId is same as buyer Id
+        VoucherOrder voucherOrder = this.voucherOrderService.createOrder(cartId);   //cartId is same as buyer Id
 
         cartItems.forEach((CartItem cartItem)->{
             Voucher voucher = voucherRepository.findById(cartItem.getVoucherId()).get();
@@ -89,7 +88,7 @@ public class CartService {
             }
         });
 
-        this.voucherOrderService.placeOrder(voucherOrder.getId());
+        this.voucherOrderService.placeOrder(voucherOrder.getId(),transactionId);
         return vouchers;
     }
 

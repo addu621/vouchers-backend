@@ -130,9 +130,9 @@ public class VoucherController {
         Person personDetails = (Person) request.getAttribute("person");
         Long buyerId = personDetails.getId();
 
-        VoucherOrder voucherOrder = voucherOrderService.createOrder(buyerId,transactionId);
+        VoucherOrder voucherOrder = voucherOrderService.createOrder(buyerId);
         VoucherOrderDetail voucherOrderItem = voucherOrderService.addOrderItem(voucherOrder.getId(),voucherId);
-        voucherOrderService.placeOrder(voucherOrder.getId());
+        voucherOrderService.placeOrder(voucherOrder.getId(),transactionId);
 
         GenericResponse genericResponse= new GenericResponse();
         if(voucherOrderItem!=null){

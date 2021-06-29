@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface TransactionRepository extends CrudRepository<Transaction,Long> {
+public interface TransactionRepository extends CrudRepository<Transaction,String> {
     List<Transaction> findByUserId(long userId);
+    List<Transaction> findByOrderId(long orderId);
 }

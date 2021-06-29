@@ -22,8 +22,6 @@ public class TransactionTransformer {
     public TransactionResponse convertEntityToResponse(Transaction transaction){
         TransactionResponse transactionResponse = new TransactionResponse();
         copyProperties(transaction,transactionResponse);
-        VoucherOrder voucherOrder = this.voucherOrderService.findByTransactionId(transaction.getId());
-        transactionResponse.setOrderId(voucherOrder.getId());
         return transactionResponse;
     }
 
