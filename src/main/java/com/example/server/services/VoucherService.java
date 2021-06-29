@@ -1,6 +1,7 @@
 package com.example.server.services;
 
 import com.example.server.dto.request.FilterRequest;
+import com.example.server.dto.response.SellerRatingResponse;
 import com.example.server.dto.response.VoucherResponse;
 import com.example.server.entities.*;
 import com.example.server.enums.DealStatus;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -123,8 +125,13 @@ public class VoucherService {
     }
 
     public List<Voucher> filterVouchers(FilterRequest filterRequest) {
-        List<Voucher> voucherList = voucherRepository.filterCoupons(filterRequest.getCategories(),filterRequest.getCompanies());
+        List<Voucher> voucherList = voucherRepository.filterCoupons(filterRequest.getCategories(),filterRequest.getCompanies(),filterRequest.getAverageRating());
         return sortByTime(voucherList);
+    }
+
+    public List<?> rating() {
+        List<?> voucherList = voucherRepository.ratings();
+        return voucherList;
     }
 
     public String acceptVoucher(Long voucherId) {
@@ -157,8 +164,8 @@ public class VoucherService {
 
         BigDecimal totalPrice = voucher.getSellingPrice();
         BigDecimal tax = utilityService.calculatePercentage(totalPrice,new BigDecimal(2.5));
-        BigDecimal finalCost = tax.add(totalPrice);
-        Integer loyaltyCoins = utilityService.calculatePercentage(totalPrice,new BigDecimal(5)).intValue();
+        BigDecimal finalCost = tax.add(totalPrice).setScale(0, RoundingMode.UP);
+        Integer loyaltyCoins = utilityService.calculatePercentage(totalPrice,new BigDecimal(5)).setScale(0, RoundingMode.UP).intValue();
 
         checkoutPageCost.setItemsValue(totalPrice);
         checkoutPageCost.setTaxCalculated(tax);
