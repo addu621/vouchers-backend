@@ -1,8 +1,10 @@
 package com.example.server.entities;
 
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Data
@@ -21,5 +23,14 @@ public class Issue {
 
     @Column
     private String comment;
+
+    @Column(name = "is_read")
+    private Boolean isRead = false;
+
+    @Column(name = "is_closed")
+    private Boolean isClosed = false;
+
+    @CreationTimestamp
+    private Date issueDate;
 
 }
