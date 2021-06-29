@@ -21,6 +21,7 @@ public class VoucherResponse {
     private Long categoryId;
     private Long companyId;
     private String companyImgUrl;
+    private String companyName;
     private Date createdOn;
     private VoucherVerificationStatus verificationStatus;
     private String imageUrl;

@@ -1,17 +1,21 @@
 package com.example.server.services;
 
 import com.example.server.dto.request.FilterRequest;
+import com.example.server.dto.response.SellerRatingResponse;
 import com.example.server.dto.response.VoucherResponse;
 import com.example.server.entities.*;
 import com.example.server.enums.DealStatus;
 import com.example.server.enums.OrderStatus;
 import com.example.server.enums.VoucherVerificationStatus;
+import com.example.server.model.CheckoutPageCost;
 import com.example.server.repositories.*;
 import lombok.AllArgsConstructor;
 import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -25,6 +29,8 @@ public class VoucherService {
     private final VoucherTypeRepo voucherTypeRepo;
     private final VoucherDealRepository voucherDealRepository;
     private final VoucherOrderRepository voucherOrderRepository;
+    private final VoucherOrderDetailRepository voucherOrderDetailRepository;
+    private final Utility utilityService;
 
     public Voucher saveVoucher(Voucher voucher) {
         return voucherRepository.save(voucher);
@@ -66,8 +72,8 @@ public class VoucherService {
     }
 
     public boolean isVoucherSold(long voucherId){
-        List<VoucherOrder> voucherOrders = this.voucherOrderRepository.findByOrderStatus(OrderStatus.SUCCESS);
-        return voucherOrders.stream().anyMatch((VoucherOrder vd)->vd.getVoucherId()==voucherId);
+        List<VoucherOrderDetail> voucherOrders = (List<VoucherOrderDetail>) this.voucherOrderDetailRepository.findAll();
+        return voucherOrders.stream().anyMatch((VoucherOrderDetail vd)->vd.getVoucherId()==voucherId);
     }
 
     public List<Voucher> getAllVouchers() {
@@ -86,8 +92,10 @@ public class VoucherService {
         List<VoucherOrder> voucherOrders = this.voucherOrderRepository.findByBuyerIdAndOrderStatus(userId, OrderStatus.SUCCESS);
         List<Voucher> vouchers = new ArrayList<>();
         voucherOrders.forEach((VoucherOrder v) -> {
-            Voucher voucher = this.getVoucherById(v.getVoucherId());
-            vouchers.add(voucher);
+            voucherOrderDetailRepository.findByOrderId(v.getId()).forEach((VoucherOrderDetail vd)->{
+                Voucher voucher = this.getVoucherById(vd.getVoucherId());
+                vouchers.add(voucher);
+            });
         });
         return sortByTime(vouchers);
     }
@@ -117,8 +125,13 @@ public class VoucherService {
     }
 
     public List<Voucher> filterVouchers(FilterRequest filterRequest) {
-        List<Voucher> voucherList = voucherRepository.filterCoupons(filterRequest.getCategories(),filterRequest.getCompanies());
+        List<Voucher> voucherList = voucherRepository.filterCoupons(filterRequest.getCategories(),filterRequest.getCompanies(),filterRequest.getAverageRating());
         return sortByTime(voucherList);
+    }
+
+    public List<?> rating() {
+        List<?> voucherList = voucherRepository.ratings();
+        return voucherList;
     }
 
     public String acceptVoucher(Long voucherId) {
@@ -144,5 +157,21 @@ public class VoucherService {
     public Long getSellerIdByVoucherId(Long voucherId){
         Voucher voucher = voucherRepository.findById(voucherId).get();
         return voucher.getSellerId();
+    }
+    public CheckoutPageCost getVoucherCostById(Long voucherId){
+        Voucher voucher = voucherRepository.findById(voucherId).get();
+        CheckoutPageCost checkoutPageCost = new CheckoutPageCost();
+
+        BigDecimal totalPrice = voucher.getSellingPrice();
+        BigDecimal tax = utilityService.calculatePercentage(totalPrice,new BigDecimal(2.5));
+        BigDecimal finalCost = tax.add(totalPrice).setScale(0, RoundingMode.UP);
+        Integer loyaltyCoins = utilityService.calculatePercentage(totalPrice,new BigDecimal(5)).setScale(0, RoundingMode.UP).intValue();
+
+        checkoutPageCost.setItemsValue(totalPrice);
+        checkoutPageCost.setTaxCalculated(tax);
+        checkoutPageCost.setLoyaltyCoins(loyaltyCoins);
+        checkoutPageCost.setFinalCost(finalCost);
+
+        return checkoutPageCost;
     }
 }

@@ -9,7 +9,7 @@ public class PersonRequest {
     private String firstName;
     private String lastName;
     private String middleName;
-    private String imgUrl;
+    private String imageUrl;
     private String mobile;
     private String accountNumber;
     private String ifscCode;
