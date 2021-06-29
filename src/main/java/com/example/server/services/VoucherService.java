@@ -155,7 +155,7 @@ public class VoucherService {
         Voucher voucher = voucherRepository.findById(voucherId).get();
         CheckoutPageCost checkoutPageCost = new CheckoutPageCost();
 
-        BigDecimal totalPrice = voucher.getVoucherValue();
+        BigDecimal totalPrice = voucher.getSellingPrice();
         BigDecimal tax = utilityService.calculatePercentage(totalPrice,new BigDecimal(2.5));
         BigDecimal finalCost = tax.add(totalPrice);
         Integer loyaltyCoins = utilityService.calculatePercentage(totalPrice,new BigDecimal(5)).intValue();
