@@ -6,6 +6,8 @@ import com.example.server.repositories.IssueRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class IssueService {
 
@@ -16,9 +18,6 @@ public class IssueService {
 
         GenericResponse genericResponse = new GenericResponse();
 
-        System.out.println(transactionId);
-        System.out.println(voucherId);
-        System.out.println(comment);
         if(voucherId==null) {
             genericResponse.setStatus(404);
             genericResponse.setMessage("voucherId cannot be empty");
@@ -39,5 +38,10 @@ public class IssueService {
         genericResponse.setMessage("Issue submitted successfully!!!");
         genericResponse.setStatus(200);
         return genericResponse;
+    }
+
+    public List<Issue> getIssues() {
+        List<Issue> issues = issueRepo.findAllOrderByIssueDate();
+        return issues;
     }
 }
