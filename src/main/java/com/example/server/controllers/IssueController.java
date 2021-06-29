@@ -20,7 +20,7 @@ public class IssueController {
     @PostMapping("/issue/submit")
     public GenericResponse submitIssue(@RequestBody Map<String,String> issue){
         GenericResponse genericResponse = new GenericResponse();
-        return issueService.submitIssue(Long.parseLong(issue.get("transactionId")), Long.parseLong(issue.get("voucherId")), issue.get("comment"));
+        return issueService.submitIssue(issue.get("transactionId"), Long.parseLong(issue.get("voucherId")), issue.get("comment"));
     }
 
     @GetMapping("/getIssues")

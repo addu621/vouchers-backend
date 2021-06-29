@@ -14,7 +14,7 @@ public class IssueService {
     @Autowired
     private IssueRepo issueRepo;
 
-    public GenericResponse submitIssue(Long transactionId,Long voucherId,String comment) {
+    public GenericResponse submitIssue(String transactionId,Long voucherId,String comment) {
 
         GenericResponse genericResponse = new GenericResponse();
 

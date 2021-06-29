@@ -16,7 +16,7 @@ public class Issue {
     private Long issueId;
 
     @Column(name = "transaction_id")
-    private Long transactionId;
+    private String transactionId;
 
     @Column(name = "voucher_id")
     private Long voucherId;
