@@ -6,12 +6,14 @@ import com.example.server.entities.*;
 import com.example.server.enums.DealStatus;
 import com.example.server.enums.OrderStatus;
 import com.example.server.enums.VoucherVerificationStatus;
+import com.example.server.model.CheckoutPageCost;
 import com.example.server.repositories.*;
 import lombok.AllArgsConstructor;
 import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -26,6 +28,7 @@ public class VoucherService {
     private final VoucherDealRepository voucherDealRepository;
     private final VoucherOrderRepository voucherOrderRepository;
     private final VoucherOrderDetailRepository voucherOrderDetailRepository;
+    private final Utility utilityService;
 
     public Voucher saveVoucher(Voucher voucher) {
         return voucherRepository.save(voucher);
@@ -147,5 +150,21 @@ public class VoucherService {
     public Long getSellerIdByVoucherId(Long voucherId){
         Voucher voucher = voucherRepository.findById(voucherId).get();
         return voucher.getSellerId();
+    }
+    public CheckoutPageCost getVoucherCostById(Long voucherId){
+        Voucher voucher = voucherRepository.findById(voucherId).get();
+        CheckoutPageCost checkoutPageCost = new CheckoutPageCost();
+
+        BigDecimal totalPrice = voucher.getSellingPrice();
+        BigDecimal tax = utilityService.calculatePercentage(totalPrice,new BigDecimal(2.5));
+        BigDecimal finalCost = tax.add(totalPrice);
+        Integer loyaltyCoins = utilityService.calculatePercentage(totalPrice,new BigDecimal(5)).intValue();
+
+        checkoutPageCost.setItemsValue(totalPrice);
+        checkoutPageCost.setTaxCalculated(tax);
+        checkoutPageCost.setLoyaltyCoins(loyaltyCoins);
+        checkoutPageCost.setFinalCost(finalCost);
+
+        return checkoutPageCost;
     }
 }
