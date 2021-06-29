@@ -34,4 +34,9 @@ public class IssueController {
     public GenericResponse notificationRead(@PathVariable Long issueId) {
         return issueService.notificationRead(issueId);
     }
+
+    @PutMapping("/issue/{issueId}/mark-closed")
+    public GenericResponse issueClosed(@PathVariable Long issueId) {
+        return issueService.issueClosed(issueId);
+    }
 }

@@ -59,4 +59,19 @@ public class IssueService {
         genericResponse.setStatus(200);
         return genericResponse;
     }
+
+    public GenericResponse issueClosed(Long issueId) {
+        GenericResponse genericResponse = new GenericResponse();
+        Issue issue = issueRepo.findByIssueId(issueId);
+        if(issue==null){
+            genericResponse.setStatus(404);
+            genericResponse.setMessage("Issue not found!!!");
+            return genericResponse;
+        }
+        issue.setIsClosed(true);
+        issueRepo.save(issue);
+        genericResponse.setMessage("Issue Closed!!!");
+        genericResponse.setStatus(200);
+        return genericResponse;
+    }
 }
