@@ -8,5 +8,7 @@ import java.util.List;
 
 @Repository
 public interface IssueRepo extends JpaRepository<Issue,String> {
-    public List<Issue> findAllOrderByIssueDate();
+    public List<Issue> findByIsClosedOrderByCreatedDate(Boolean flag);
+
+    public Issue findByIssueId(Long issueId);
 }

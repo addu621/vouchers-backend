@@ -41,7 +41,22 @@ public class IssueService {
     }
 
     public List<Issue> getIssues() {
-        List<Issue> issues = issueRepo.findAllOrderByIssueDate();
+        List<Issue> issues = issueRepo.findByIsClosedOrderByCreatedDate(false);
         return issues;
+    }
+
+    public GenericResponse notificationRead(Long issueId) {
+        GenericResponse genericResponse = new GenericResponse();
+        Issue issue = issueRepo.findByIssueId(issueId);
+        if(issue==null){
+            genericResponse.setStatus(404);
+            genericResponse.setMessage("Issue not found!!!");
+            return genericResponse;
+        }
+        issue.setIsRead(true);
+        issueRepo.save(issue);
+        genericResponse.setMessage("Issue Read!!!");
+        genericResponse.setStatus(200);
+        return genericResponse;
     }
 }

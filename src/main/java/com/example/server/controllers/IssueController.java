@@ -20,6 +20,7 @@ public class IssueController {
     @PostMapping("/issue/submit")
     public GenericResponse submitIssue(@RequestBody Map<String,String> issue){
         GenericResponse genericResponse = new GenericResponse();
+        System.out.println(issue);
         return issueService.submitIssue(issue.get("transactionId"), Long.parseLong(issue.get("voucherId")), issue.get("comment"));
     }
 
@@ -27,5 +28,10 @@ public class IssueController {
     public List<Issue> getIssues() {
         List<Issue> allIssues = issueService.getIssues();
         return allIssues;
+    }
+
+    @PutMapping("/issue/{issueId}/is-read")
+    public GenericResponse notificationRead(@PathVariable Long issueId) {
+        return issueService.notificationRead(issueId);
     }
 }

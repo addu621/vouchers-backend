@@ -8,6 +8,7 @@ import java.util.Date;
 
 @Entity
 @Data
+@Table(name = "issue")
 public class Issue {
 
     @Id
@@ -31,6 +32,6 @@ public class Issue {
     private Boolean isClosed = false;
 
     @CreationTimestamp
-    private Date issueDate;
+    private Date createdDate;
 
 }
