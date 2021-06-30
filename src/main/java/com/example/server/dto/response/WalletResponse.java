@@ -8,6 +8,6 @@ import java.util.List;
 @Data
 public class WalletResponse {
     private Long id;
-    private BigDecimal balance;
+    private int coins;
     private List<TransactionResponse> transactions;
 }

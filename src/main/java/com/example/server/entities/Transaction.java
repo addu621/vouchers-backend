@@ -29,6 +29,12 @@ public class Transaction {
     @Column(name = "user_id")
     private Long userId;
 
+    @Column(name = "coins_added")
+    private int coinsAddedToWallet = 0;
+
     @Column(name = "transaction_type")
     private TransactionType transactionType;
+
+    @Column(name = "order_id")
+    private Long orderId;
 }

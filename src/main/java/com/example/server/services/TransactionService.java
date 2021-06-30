@@ -17,13 +17,15 @@ import java.util.List;
 public class TransactionService {
     private final TransactionRepository transactionRepository;
 
-    public Transaction addTransaction(String transactionId,long userId,TransactionType transactionType,BigDecimal amount){
+    public Transaction addTransaction(String transactionId, long orderId, int coinsAdded,long userId,TransactionType transactionType,BigDecimal amount){
         Transaction transaction = new Transaction();
         transaction.setUserId(userId);
         transaction.setTransactionDate(new Date());
         transaction.setTransactionType(transactionType);
         transaction.setTotalPrice(amount);
         transaction.setId(transactionId);
+        transaction.setOrderId(orderId);
+        transaction.setCoinsAddedToWallet(coinsAdded);
         transaction.setTransactionStatus(TransactionStatus.SUCCESS);
         return this.transactionRepository.save(transaction);
     }
@@ -36,5 +38,11 @@ public class TransactionService {
     public List<Transaction> findTransactionsByUserId(long userId){
         List<Transaction> transactions =  (List<Transaction>) this.transactionRepository.findByUserId(userId);
         return sortByTime(transactions);
+    }
+
+    public Transaction findTransactionByOrderId(long orderId){
+        List<Transaction> transactions =  (List<Transaction>) this.transactionRepository.findByOrderId(orderId);
+        if(transactions.isEmpty()) return null;
+        return transactions.get(0);
     }
 }
