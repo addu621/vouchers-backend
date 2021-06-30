@@ -10,6 +10,7 @@ import javax.persistence.*;
 public class SellerRating {
     @Column(name = "rating_id")
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "seller_id")
@@ -17,6 +18,9 @@ public class SellerRating {
 
     @Column(name = "buyer_id")
     private Long buyerId;
+
+    @Column(name = "voucher_id")
+    private Long voucherId;
 
     @Column(name = "stars")
     private int stars;
