@@ -18,8 +18,7 @@ import java.util.List;
 
 @Repository
 public interface VoucherRepository extends JpaRepository<Voucher,Long> {
-    @Query("select v from Voucher v where lower(v.title) like lower(concat('%', :search, '%')) " +
-            "or lower(v.description) like lower(concat('%', :search, '%'))")
+    @Query("select v from Voucher v where v.verificationStatus=2 and " + "(lower(v.title) like lower(concat('%', :search, '%')) or lower(v.description) like lower(concat('%', :search, '%')))")
     List<Voucher> searchVoucher(@Param("search") String search);
 
     @Query("SELECT v from Voucher v where v.id = v.id AND (:companies is null or v.companyId in :companies) AND (:categories is null or v.categoryId in :categories)  AND (:rating is null or v.sellerId in (Select r.sellerId From SellerRating AS r Group by r.sellerId HAVING (AVG(r.stars))>=:rating))")
