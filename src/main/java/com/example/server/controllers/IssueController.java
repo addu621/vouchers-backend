@@ -5,6 +5,7 @@ import com.example.server.entities.Issue;
 import com.example.server.services.IssueService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,5 +39,10 @@ public class IssueController {
     @PutMapping("/issue/{issueId}/mark-closed")
     public GenericResponse issueClosed(@PathVariable Long issueId) {
         return issueService.issueClosed(issueId);
+    }
+
+    @DeleteMapping("/issue/{issueId}/delete")
+    public GenericResponse issueDelete(@PathVariable Long issueId) {
+        return issueService.issueDeleted(issueId);
     }
 }
