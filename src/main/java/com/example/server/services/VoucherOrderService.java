@@ -70,4 +70,8 @@ public class VoucherOrderService {
         walletService.addCoinsToWallet(voucherOrder.getBuyerId(),coins);
         return true;
     }
+
+    public int getNoOfDisputesByUserId(long userId){
+        return 0;
+    }
 }

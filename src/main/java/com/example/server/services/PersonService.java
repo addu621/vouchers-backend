@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static org.springframework.beans.BeanUtils.copyProperties;
@@ -28,6 +29,14 @@ public class PersonService {
         personRepository.save(oldPerson);
 
         return oldPerson;
+    }
+
+    public List<Person> getAllPersons(){
+        return (List<Person>) personRepository.findAll();
+    }
+
+    public List<Person> getAllKycSubmittedPersons(){
+        return personRepository.findBySsnNotNullAndSsnVerifiedFalse();
     }
 
     public static String[] getNullPropertyNames (Object source) {

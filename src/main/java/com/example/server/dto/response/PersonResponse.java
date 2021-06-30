@@ -15,4 +15,7 @@ public class PersonResponse {
     private String ifscCode;
     private String ssn;
     private boolean ssnVerified;
+    private int sales;
+    private int purchases;
+    private int disputes;
 }
