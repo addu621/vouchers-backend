@@ -45,9 +45,4 @@ public class UserController {
         return personResponse;
     }
 
-    @GetMapping("/rating/get/{sellerId}")
-    public SellerRatingResponse getSellerRating(@PathVariable Long sellerId){
-        return personService.getSellerRating(sellerId);
-    }
-
 }
