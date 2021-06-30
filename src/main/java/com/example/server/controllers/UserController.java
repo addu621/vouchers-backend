@@ -60,4 +60,15 @@ public class UserController {
         List<Person> persons = personService.getAllKycSubmittedPersons();
         return personTransformer.convertEntityListToResponseList(persons);
     }
+
+    @GetMapping("/users/{userId}/verify")
+    public GenericResponse verifyUser(@PathVariable long userId){
+        GenericResponse genericResponse = new GenericResponse();
+        boolean isSuccess = this.personService.verifyUser(userId);
+        if(isSuccess){
+            genericResponse.setStatus(400);
+            genericResponse.setMessage("User Verified!");
+        }
+        return genericResponse;
+    }
 }
