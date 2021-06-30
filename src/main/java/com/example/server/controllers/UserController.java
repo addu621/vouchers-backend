@@ -3,6 +3,7 @@ package com.example.server.controllers;
 import com.example.server.dto.request.PersonRequest;
 import com.example.server.dto.response.GenericResponse;
 import com.example.server.dto.response.PersonResponse;
+import com.example.server.dto.response.SellerRatingResponse;
 import com.example.server.entities.Person;
 import com.example.server.entities.Voucher;
 import com.example.server.services.PersonService;
@@ -42,6 +43,11 @@ public class UserController {
         PersonResponse personResponse = new PersonResponse();
         copyProperties(personDetails,personResponse);
         return personResponse;
+    }
+
+    @GetMapping("/rating/get/{sellerId}")
+    public SellerRatingResponse getSellerRating(@PathVariable Long sellerId){
+        return personService.getSellerRating(sellerId);
     }
 
 }
