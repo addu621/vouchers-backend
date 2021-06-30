@@ -1,10 +1,13 @@
 package com.example.server.controllers;
 
 import com.example.server.dto.request.GoogleRequest;
+import com.example.server.entities.BlockedUsers;
 import com.example.server.entities.Person;
 import com.example.server.model.JwtResponse;
 import com.example.server.model.JwtUtil;
+import com.example.server.repositories.BlockedUsersRepository;
 import com.example.server.repositories.PersonRepo;
+import com.example.server.services.AdminService;
 import com.example.server.services.CartService;
 import com.example.server.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +44,9 @@ public class JwtController {
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Autowired
+    private BlockedUsersRepository blockedUsersRepository;
     //web security test api
     @RequestMapping("/welcome")
     public String welcome() {
@@ -54,6 +60,10 @@ public class JwtController {
 
         authenticate(authenticationRequest.getEmail(), authenticationRequest.getPassword());
 
+        if(blockedUsersRepository.findByEmail(authenticationRequest.getEmail()) != null){
+            mp.put("error","User is blocked!!!");
+            return mp;
+        }
         final UserDetails userDetails = userService.loadUserByUsername(authenticationRequest.getEmail());
 
         final String token = jwtUtil.generateToken(userDetails);
