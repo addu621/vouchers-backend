@@ -45,4 +45,6 @@ public class IssueController {
     public GenericResponse issueDelete(@PathVariable Long issueId) {
         return issueService.issueDeleted(issueId);
     }
+
+
 }
