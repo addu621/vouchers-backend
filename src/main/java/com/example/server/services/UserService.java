@@ -44,6 +44,9 @@ public class UserService implements UserDetailsService {
     @Autowired
     private CartService cartService;
 
+    @Autowired
+    private WalletService walletService;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
@@ -84,6 +87,7 @@ public class UserService implements UserDetailsService {
             System.out.println(person);
             long id = personRepo.save(person).getId();
             cartService.createCart(id);
+            walletService.createWallet(id);
             mp.put("person", person);
             mp.put("message", "Please verify your email");
             utility.sendMail(person, otp);

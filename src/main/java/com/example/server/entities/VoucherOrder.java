@@ -25,7 +25,4 @@ public class VoucherOrder {
 
     @Column(name = "order_status")
     private OrderStatus orderStatus;
-
-    @Column(name = "transaction_id")
-    private String transactionId;
 }

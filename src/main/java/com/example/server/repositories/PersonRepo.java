@@ -15,5 +15,6 @@ public interface PersonRepo extends CrudRepository<Person,Long> {
     @Query("Select new com.example.server.dto.response.SellerRatingResponse(r.sellerId,AVG(r.stars)) "+"From SellerRating AS r Group by r.sellerId")
     List<SellerRatingResponse> ratings();
 
+    List<Person> findBySsnNotNullAndSsnVerifiedFalse();
 }
 
