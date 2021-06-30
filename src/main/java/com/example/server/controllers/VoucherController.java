@@ -36,7 +36,15 @@ public class VoucherController {
     @PostMapping("/search-voucher")
     public List<VoucherResponse> searchVoucher(@RequestBody Map<String, String> req) {
         String searchInput = req.get("input");
-        List<Voucher> searchResult =  voucherService.searchVoucher(searchInput);
+        List<Voucher> searchResult = new ArrayList<>();
+
+        if(searchInput==null || searchInput==""){
+            searchResult = voucherService.getAllVerifiedVouchers();
+        }
+        else{
+            searchResult = voucherService.searchVoucher(searchInput);
+        }
+
         return voucherTransformer.convertEntityListToResponseList(searchResult);
     }
 
