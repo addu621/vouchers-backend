@@ -44,7 +44,6 @@ public class VoucherController {
         else{
             searchResult = voucherService.searchVoucher(searchInput);
         }
-
         return voucherTransformer.convertEntityListToResponseList(searchResult);
     }
 
