@@ -29,6 +29,7 @@ public class OrderTransformer {
         OrderResponse orderResponse = new OrderResponse();
         copyProperties(voucherOrderDetail,orderResponse);
         orderResponse.setOrderPrice(voucherOrderDetail.getItemPrice());
+        orderResponse.setOrderItemId(voucherOrderDetail.getId());
 
         VoucherOrder voucherOrder = voucherOrderRepository.findById(voucherOrderDetail.getOrderId()).get();
         copyProperties(voucherOrder,orderResponse);
@@ -38,7 +39,7 @@ public class OrderTransformer {
 
         Voucher voucher = voucherRepository.findById(voucherOrderDetail.getVoucherId()).get();
         VoucherResponse voucherResponse = voucherTransformer.convertEntityToResponse(voucher);
-        orderResponse.setVoucherResponse(voucherResponse);
+        orderResponse.setVoucher(voucherResponse);
 
         return orderResponse;
     }
