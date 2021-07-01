@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -69,6 +70,16 @@ public class VoucherOrderService {
         transactionService.addTransaction(transactionId,orderId,coins,voucherOrder.getBuyerId(),TransactionType.ORDER_PLACED,totalPrice);
         walletService.addCoinsToWallet(voucherOrder.getBuyerId(),coins);
         return true;
+    }
+
+    public List<VoucherOrderDetail> getBuyOrders(Long userId){
+        List<VoucherOrder> voucherOrders = this.voucherOrderRepository.findByBuyerIdAndOrderStatus(userId, OrderStatus.SUCCESS);
+        List<VoucherOrderDetail> voucherOrderDetails = new ArrayList<>();
+        voucherOrders.forEach((VoucherOrder v) -> {
+            voucherOrderDetails.add(voucherOrderDetailRepository.findByOrderId(v.getId()).get(0));
+        });
+        voucherOrderDetails.sort((x,y)->voucherOrderRepository.findById(y.getOrderId()).get().getOrderDate().compareTo(voucherOrderRepository.findById(y.getOrderId()).get().getOrderDate()));
+        return voucherOrderDetails;
     }
 
     public int getNoOfDisputesByUserId(long userId){

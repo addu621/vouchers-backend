@@ -9,9 +9,9 @@ import java.util.Date;
 public class OrderResponse {
 
     public Long orderId;
-    public Long voucherId;
+    public Long orderItemId;
     public Date orderDate;
     public String transactionId;
     private BigDecimal orderPrice;
-    public VoucherResponse voucherResponse;
+    public VoucherResponse voucher;
 }
