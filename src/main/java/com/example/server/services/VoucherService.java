@@ -128,7 +128,7 @@ public class VoucherService {
     }
 
     public List<Voucher> filterVouchers(FilterRequest filterRequest) {
-        List<Voucher> voucherList = voucherRepository.filterCoupons(filterRequest.getCategories(),filterRequest.getCompanies(),filterRequest.getAverageRating());
+        List<Voucher> voucherList = voucherRepository.filterCoupons(filterRequest.getCategories(),filterRequest.getCompanies(),filterRequest.getAverageRating(),filterRequest.getIsVerified());
         return sortByTime(voucherList);
     }
 
