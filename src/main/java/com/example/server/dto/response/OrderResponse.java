@@ -12,6 +12,6 @@ public class OrderResponse {
     public Long orderItemId;
     public Date orderDate;
     public String transactionId;
-    private BigDecimal orderPrice;
+    private BigDecimal orderItemPrice;
     public VoucherResponse voucher;
 }

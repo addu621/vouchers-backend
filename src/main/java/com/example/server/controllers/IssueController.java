@@ -1,6 +1,8 @@
 package com.example.server.controllers;
 
 import com.example.server.dto.response.GenericResponse;
+import com.example.server.dto.response.IssueResponse;
+import com.example.server.dto.transformer.IssueTransformer;
 import com.example.server.entities.Issue;
 import com.example.server.services.IssueService;
 import lombok.AllArgsConstructor;
@@ -20,6 +22,9 @@ public class IssueController {
     @Autowired
     public IssueService issueService;
 
+    @Autowired
+    private IssueTransformer issueTransformer;
+
     @PostMapping("/issue/submit")
     public GenericResponse submitIssue(@RequestBody Map<String,String> issue){
         GenericResponse genericResponse = new GenericResponse();
@@ -28,9 +33,9 @@ public class IssueController {
     }
 
     @GetMapping("/getIssues")
-    public List<Issue> getIssues() {
+    public List<IssueResponse> getIssues() {
         List<Issue> allIssues = issueService.getIssues();
-        return allIssues;
+        return issueTransformer.convertEntityListToResponseList(allIssues);
     }
 
     @PutMapping("/issue/{issueId}/is-read")
@@ -47,6 +52,4 @@ public class IssueController {
     public GenericResponse issueDelete(@PathVariable Long issueId) {
         return issueService.issueDeleted(issueId);
     }
-
-
 }
