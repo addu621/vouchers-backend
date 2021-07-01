@@ -58,7 +58,7 @@ public class VoucherController {
     }
 
     @GetMapping(value = "/vouchers/{id}")
-    public VoucherResponse getVoucherById(@PathVariable Long id) {
+    public VoucherResponse getVoucherById(@PathVariable Long id) throws ParseException {
         Voucher voucher = this.voucherService.getVoucherById(id);
         VoucherResponse voucherResponse = this.voucherTransformer.convertEntityToResponse(voucher);
         return voucherResponse;
