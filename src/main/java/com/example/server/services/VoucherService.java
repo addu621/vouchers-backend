@@ -163,17 +163,9 @@ public class VoucherService {
     }
     public CheckoutPageCost getVoucherCostById(Long voucherId){
         Voucher voucher = voucherRepository.findById(voucherId).get();
-        CheckoutPageCost checkoutPageCost = new CheckoutPageCost();
 
         BigDecimal totalPrice = voucher.getSellingPrice();
-        BigDecimal tax = utilityService.calculatePercentage(totalPrice,new BigDecimal(2.5));
-        BigDecimal finalCost = tax.add(totalPrice).setScale(0, RoundingMode.UP);
-        Integer loyaltyCoins = utilityService.calculatePercentage(totalPrice,new BigDecimal(5)).setScale(0, RoundingMode.UP).intValue();
-
-        checkoutPageCost.setItemsValue(totalPrice);
-        checkoutPageCost.setTaxCalculated(tax);
-        checkoutPageCost.setLoyaltyCoins(loyaltyCoins);
-        checkoutPageCost.setFinalCost(finalCost);
+        CheckoutPageCost checkoutPageCost  = utilityService.calculateCheckoutCosts(totalPrice);
 
         return checkoutPageCost;
     }

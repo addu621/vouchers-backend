@@ -106,15 +106,8 @@ public class CartService {
             checkoutPageCost.setItemsValue((totalPrice.add(cartItem.getItemPrice())));
         });
 
-        BigDecimal tax = utilityService.calculatePercentage(checkoutPageCost.getItemsValue(),new BigDecimal(2.5));
-        BigDecimal finalCost = tax.setScale(0, RoundingMode.UP).add(checkoutPageCost.getItemsValue());
-        Integer loyaltyCoins = utilityService.calculatePercentage(checkoutPageCost.getItemsValue(),new BigDecimal(5)).setScale(0, RoundingMode.UP).intValue();
-
-        checkoutPageCost.setTaxCalculated(tax);
-        checkoutPageCost.setLoyaltyCoins(loyaltyCoins);
-        checkoutPageCost.setFinalCost(finalCost);
-
-        return checkoutPageCost;
+        CheckoutPageCost result = utilityService.calculateCheckoutCosts(checkoutPageCost.getItemsValue());
+        return result;
     }
 }
 
