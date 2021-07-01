@@ -14,5 +14,12 @@ import java.util.List;
 @Repository
 public interface PersonRepo extends CrudRepository<Person,Long> {
     public Person findByEmail(String email);
+<<<<<<< HEAD
+=======
+    @Query("Select new com.example.server.dto.response.SellerRatingResponse(r.sellerId,AVG(r.stars)) "+"From SellerRating AS r Group by r.sellerId")
+    List<SellerRatingResponse> ratings();
+
+    List<Person> findBySsnNotNullAndSsnVerifiedFalse();
+>>>>>>> 3ab35618fb880e93081cb4117e07e5932ffd0dab
 }
 

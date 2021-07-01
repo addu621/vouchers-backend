@@ -34,6 +34,23 @@ public class PersonService {
         return oldPerson;
     }
 
+    public boolean verifyUser(long userId){
+        if(personRepository.findById(userId)==null) return false;
+        Person person = personRepository.findById(userId).get();
+        if(person.getSsn()==null) return false;
+        person.setSsnVerified(true);
+        personRepository.save(person);
+        return true;
+    }
+
+    public List<Person> getAllPersons(){
+        return (List<Person>) personRepository.findAll();
+    }
+
+    public List<Person> getAllKycSubmittedPersons(){
+        return personRepository.findBySsnNotNullAndSsnVerifiedFalse();
+    }
+
     public static String[] getNullPropertyNames (Object source) {
         final BeanWrapper src = new BeanWrapperImpl(source);
         java.beans.PropertyDescriptor[] pds = src.getPropertyDescriptors();
