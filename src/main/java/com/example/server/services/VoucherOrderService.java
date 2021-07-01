@@ -75,9 +75,9 @@ public class VoucherOrderService {
     public List<VoucherOrderDetail> getBuyOrders(Long userId){
         List<VoucherOrder> voucherOrders = this.voucherOrderRepository.findByBuyerIdAndOrderStatus(userId, OrderStatus.SUCCESS);
         List<VoucherOrderDetail> voucherOrderDetails = new ArrayList<>();
-        voucherOrders.forEach((VoucherOrder v) -> {
-            voucherOrderDetails.add(voucherOrderDetailRepository.findByOrderId(v.getId()).get(0));
-        });
+        for(VoucherOrder v:voucherOrders){
+            voucherOrderDetails.addAll(voucherOrderDetailRepository.findByOrderId(v.getId()));
+        }
         voucherOrderDetails.sort((x,y)->voucherOrderRepository.findById(y.getOrderId()).get().getOrderDate().compareTo(voucherOrderRepository.findById(y.getOrderId()).get().getOrderDate()));
         return voucherOrderDetails;
     }

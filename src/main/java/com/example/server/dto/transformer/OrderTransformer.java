@@ -10,6 +10,7 @@ import com.example.server.repositories.VoucherOrderRepository;
 import com.example.server.repositories.VoucherRepository;
 import com.example.server.services.TransactionService;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ public class OrderTransformer {
     private final VoucherRepository voucherRepository;
     private final VoucherTransformer voucherTransformer;
 
+    @SneakyThrows
     public OrderResponse convertEntityToResponse(VoucherOrderDetail voucherOrderDetail){
         OrderResponse orderResponse = new OrderResponse();
         copyProperties(voucherOrderDetail,orderResponse);
