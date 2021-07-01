@@ -30,7 +30,7 @@ public class OrderTransformer {
     public OrderResponse convertEntityToResponse(VoucherOrderDetail voucherOrderDetail){
         OrderResponse orderResponse = new OrderResponse();
         copyProperties(voucherOrderDetail,orderResponse);
-        orderResponse.setOrderPrice(voucherOrderDetail.getItemPrice());
+        orderResponse.setOrderItemPrice(voucherOrderDetail.getItemPrice());
         orderResponse.setOrderItemId(voucherOrderDetail.getId());
 
         VoucherOrder voucherOrder = voucherOrderRepository.findById(voucherOrderDetail.getOrderId()).get();
