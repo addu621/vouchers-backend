@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 
@@ -37,7 +39,7 @@ public class IssueController {
     }
 
     @PutMapping("/issue/{issueId}/mark-closed")
-    public GenericResponse issueClosed(@PathVariable Long issueId) {
+    public GenericResponse issueClosed(@PathVariable Long issueId) throws UnsupportedEncodingException, MessagingException {
         return issueService.issueClosed(issueId);
     }
 
