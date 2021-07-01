@@ -3,6 +3,7 @@ package com.example.server.services;
 import com.example.server.dto.request.PersonRequest;
 import com.example.server.dto.response.SellerRatingResponse;
 import com.example.server.entities.Person;
+import com.example.server.entities.SellerRating;
 import com.example.server.repositories.PersonRepo;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static org.springframework.beans.BeanUtils.copyProperties;
@@ -30,6 +32,23 @@ public class PersonService {
         personRepository.save(oldPerson);
 
         return oldPerson;
+    }
+
+    public boolean verifyUser(long userId){
+        if(personRepository.findById(userId)==null) return false;
+        Person person = personRepository.findById(userId).get();
+        if(person.getSsn()==null) return false;
+        person.setSsnVerified(true);
+        personRepository.save(person);
+        return true;
+    }
+
+    public List<Person> getAllPersons(){
+        return (List<Person>) personRepository.findAll();
+    }
+
+    public List<Person> getAllKycSubmittedPersons(){
+        return personRepository.findBySsnNotNullAndSsnVerifiedFalse();
     }
 
     public static String[] getNullPropertyNames (Object source) {
@@ -54,7 +73,5 @@ public class PersonService {
         return personRepository.findById(id).get();
     }
 
-    public SellerRatingResponse getSellerRating(Long sellerId){
-        return personRepository.ratingOfSeller(sellerId);
-    }
+
 }

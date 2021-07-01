@@ -4,6 +4,7 @@ import com.example.server.entities.*;
 import com.example.server.enums.DealStatus;
 import com.example.server.enums.OrderStatus;
 import com.example.server.enums.TransactionType;
+import com.example.server.repositories.TransactionRepository;
 import com.example.server.repositories.VoucherOrderDetailRepository;
 import com.example.server.repositories.VoucherOrderRepository;
 import com.example.server.repositories.VoucherRepository;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -25,14 +27,14 @@ public class VoucherOrderService {
     private final WalletService walletService;
 
     private final VoucherRepository voucherRepository;
+    private final TransactionRepository transactionRepository;
 
-    public VoucherOrder createOrder(Long buyerId,String transactionId){
+    public VoucherOrder createOrder(Long buyerId){
         VoucherOrder voucherOrder = new VoucherOrder();
         voucherOrder.setBuyerId(buyerId);
         voucherOrder.setOrderStatus(OrderStatus.SUCCESS);
         Date date = new Date();
         voucherOrder.setOrderDate(date);
-        voucherOrder.setTransactionId(transactionId);
         return voucherOrderRepository.save(voucherOrder);
     }
 
@@ -55,20 +57,32 @@ public class VoucherOrderService {
         return this.voucherOrderDetailRepository.save(voucherOrderDetail);
     }
 
-    public boolean placeOrder(long orderId){
+    public boolean placeOrder(long orderId, String transactionId){
         if(this.voucherOrderRepository.findById(orderId)==null) return false;
         VoucherOrder voucherOrder = this.voucherOrderRepository.findById(orderId).get();
         voucherOrder.setOrderStatus(OrderStatus.SUCCESS);
         BigDecimal totalPrice = new BigDecimal(0);
-        this.voucherOrderDetailRepository.findByOrderId(voucherOrder.getId()).forEach((VoucherOrderDetail v)->{
-            totalPrice.add(v.getItemPrice());
-        });
+        List<VoucherOrderDetail> orders = this.voucherOrderDetailRepository.findByOrderId(voucherOrder.getId());
+        for(VoucherOrderDetail orderDetail : orders){
+            totalPrice = totalPrice.add(orderDetail.getItemPrice());
+        }
         int coins = totalPrice.intValue()*5/100;
+        transactionService.addTransaction(transactionId,orderId,coins,voucherOrder.getBuyerId(),TransactionType.ORDER_PLACED,totalPrice);
         walletService.addCoinsToWallet(voucherOrder.getBuyerId(),coins);
         return true;
     }
 
-    public VoucherOrder findByTransactionId(String transactionId){
-        return this.voucherOrderRepository.findByTransactionId(transactionId).get(0);
+    public List<VoucherOrderDetail> getBuyOrders(Long userId){
+        List<VoucherOrder> voucherOrders = this.voucherOrderRepository.findByBuyerIdAndOrderStatus(userId, OrderStatus.SUCCESS);
+        List<VoucherOrderDetail> voucherOrderDetails = new ArrayList<>();
+        voucherOrders.forEach((VoucherOrder v) -> {
+            voucherOrderDetails.add(voucherOrderDetailRepository.findByOrderId(v.getId()).get(0));
+        });
+        voucherOrderDetails.sort((x,y)->voucherOrderRepository.findById(y.getOrderId()).get().getOrderDate().compareTo(voucherOrderRepository.findById(y.getOrderId()).get().getOrderDate()));
+        return voucherOrderDetails;
+    }
+
+    public int getNoOfDisputesByUserId(long userId){
+        return 0;
     }
 }

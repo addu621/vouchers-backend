@@ -1,5 +1,6 @@
 package com.example.server.dto.response;
 
+import com.example.server.enums.TransactionStatus;
 import com.example.server.enums.TransactionType;
 import lombok.Data;
 
@@ -13,4 +14,6 @@ public class TransactionResponse {
     private BigDecimal totalPrice;
     private Date transactionDate;
     private TransactionType transactionType;
+    private TransactionStatus transactionStatus;
+    private int coinsAddedToWallet;
 }

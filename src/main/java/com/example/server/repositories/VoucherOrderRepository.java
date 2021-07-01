@@ -14,5 +14,4 @@ public interface VoucherOrderRepository extends CrudRepository<VoucherOrder,Long
     List<VoucherOrder> findByBuyerIdAndOrderStatus(Long buyerId, OrderStatus orderStatus);
     List<VoucherOrder> findByOrderStatus(OrderStatus orderStatus);
     List<VoucherOrder> findByOrderStatusNot(OrderStatus orderStatus);
-    List<VoucherOrder> findByTransactionId(String transactionId);
 }

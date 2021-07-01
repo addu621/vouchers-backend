@@ -27,6 +27,13 @@ public class WalletService {
         return walletRepository.save(wallet);
     }
 
+    public Wallet createWallet(long walletId){
+        Wallet wallet = new Wallet();
+        wallet.setId(walletId);
+        wallet.setCoins(0);
+        return this.walletRepository.save(wallet);
+    }
+
     public Wallet getWalletById(long walletId){
         return this.walletRepository.findById(walletId).get();
     }
