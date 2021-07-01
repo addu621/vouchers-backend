@@ -129,10 +129,10 @@ public class VoucherService {
         return sortByTime(voucherList);
     }
 
-    public List<?> rating() {
-        List<?> voucherList = voucherRepository.ratings();
-        return voucherList;
-    }
+//    public List<?> rating() {
+//        List<?> voucherList = voucherRepository.fi();
+//        return voucherList;
+//    }
 
     public String acceptVoucher(Long voucherId) {
         Voucher voucher = voucherRepository.findById(voucherId).get();

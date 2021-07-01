@@ -1,13 +1,16 @@
 package com.example.server.services;
 
 import com.example.server.dto.request.PersonRequest;
+import com.example.server.dto.response.SellerRatingResponse;
 import com.example.server.entities.Person;
+import com.example.server.entities.SellerRating;
 import com.example.server.repositories.PersonRepo;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,6 +32,15 @@ public class PersonService {
         personRepository.save(oldPerson);
 
         return oldPerson;
+    }
+
+    public boolean verifyUser(long userId){
+        if(personRepository.findById(userId)==null) return false;
+        Person person = personRepository.findById(userId).get();
+        if(person.getSsn()==null) return false;
+        person.setSsnVerified(true);
+        personRepository.save(person);
+        return true;
     }
 
     public List<Person> getAllPersons(){
@@ -60,4 +72,6 @@ public class PersonService {
     public Person findById(Long id){
         return personRepository.findById(id).get();
     }
+
+
 }

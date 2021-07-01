@@ -3,6 +3,7 @@ package com.example.server.controllers;
 import com.example.server.dto.request.PersonRequest;
 import com.example.server.dto.response.GenericResponse;
 import com.example.server.dto.response.PersonResponse;
+import com.example.server.dto.response.SellerRatingResponse;
 import com.example.server.dto.transformer.PersonTransformer;
 import com.example.server.entities.Person;
 import com.example.server.entities.Voucher;
@@ -59,5 +60,16 @@ public class UserController {
     public List<PersonResponse> getAllKycSubmittedUsers(){
         List<Person> persons = personService.getAllKycSubmittedPersons();
         return personTransformer.convertEntityListToResponseList(persons);
+    }
+
+    @GetMapping("/users/{userId}/verify")
+    public GenericResponse verifyUser(@PathVariable long userId){
+        GenericResponse genericResponse = new GenericResponse();
+        boolean isSuccess = this.personService.verifyUser(userId);
+        if(isSuccess){
+            genericResponse.setStatus(400);
+            genericResponse.setMessage("User Verified!");
+        }
+        return genericResponse;
     }
 }
