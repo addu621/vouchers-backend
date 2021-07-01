@@ -34,10 +34,10 @@ public class VoucherController {
     private final VoucherOrderService voucherOrderService;
 
     @PostMapping("/search-voucher")
-    public List<Voucher> searchVoucher(@RequestBody Map<String, String> req) {
+    public List<VoucherResponse> searchVoucher(@RequestBody Map<String, String> req) {
         String searchInput = req.get("input");
         List<Voucher> searchResult =  voucherService.searchVoucher(searchInput);
-        return searchResult;
+        return voucherTransformer.convertEntityListToResponseList(searchResult);
     }
 
     @PostMapping(value = "/vouchers/new")
