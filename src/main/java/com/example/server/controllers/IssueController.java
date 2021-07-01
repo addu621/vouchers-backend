@@ -24,7 +24,7 @@ public class IssueController {
     public GenericResponse submitIssue(@RequestBody Map<String,String> issue){
         GenericResponse genericResponse = new GenericResponse();
         System.out.println(issue);
-        return issueService.submitIssue(issue.get("transactionId"), Long.parseLong(issue.get("orderItemId")), issue.get("comment"));
+        return issueService.submitIssue(Long.parseLong(issue.get("orderItemId")), issue.get("comment"));
     }
 
     @GetMapping("/getIssues")
