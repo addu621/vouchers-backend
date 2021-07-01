@@ -56,6 +56,12 @@ public class UserController {
         return personTransformer.convertEntityListToResponseList(persons);
     }
 
+    @GetMapping("/users/search/{searchKeyword}")
+    public List<PersonResponse> getAllUsers(@PathVariable String searchKeyword){
+        List<Person> persons = personService.getPersonsBySearchKeyword(searchKeyword);
+        return personTransformer.convertEntityListToResponseList(persons);
+    }
+
     @GetMapping("/users/kycSubmitted")
     public List<PersonResponse> getAllKycSubmittedUsers(){
         List<Person> persons = personService.getAllKycSubmittedPersons();

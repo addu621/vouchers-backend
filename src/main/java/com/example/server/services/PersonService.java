@@ -62,6 +62,11 @@ public class PersonService {
         return persons.stream().filter((Person p)->!isUserBlocked(p.getId())).collect(Collectors.toList());
     }
 
+    public List<Person> getPersonsBySearchKeyword(String keyword){
+        List<Person> persons = (List<Person>) personRepository.findByFirstNameContainingIgnoreCaseOrEmailContainingIgnoreCase(keyword,keyword);
+        return persons.stream().filter((Person p)->!isUserBlocked(p.getId())).collect(Collectors.toList());
+    }
+
     public static String[] getNullPropertyNames (Object source) {
         final BeanWrapper src = new BeanWrapperImpl(source);
         java.beans.PropertyDescriptor[] pds = src.getPropertyDescriptors();

@@ -17,5 +17,6 @@ public interface PersonRepo extends CrudRepository<Person,Long> {
 
     List<Person> findBySsnNotNullAndSsnVerifiedFalse();
 
+    List<Person> findByFirstNameContainingIgnoreCaseOrEmailContainingIgnoreCase(String infix1,String infix2);
 }
 
