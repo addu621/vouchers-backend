@@ -8,6 +8,7 @@ import com.example.server.entities.Voucher;
 import com.example.server.entities.VoucherOrderDetail;
 import com.example.server.services.VoucherOrderService;
 import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,6 +17,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
+@CrossOrigin("*")
 public class OrderController {
     private final VoucherOrderService voucherOrderService;
     private final OrderTransformer orderTransformer;

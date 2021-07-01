@@ -30,7 +30,7 @@ public class VoucherTransformer {
     public Voucher convertRequestToEntity(VoucherRequest voucherRequest) throws ParseException {
         Voucher voucher = new Voucher();
         copyProperties(voucherRequest, voucher,"expiryDate");
-        SimpleDateFormat formatter=new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd");
         voucher.setExpiryDate(formatter.parse(voucherRequest.getExpiryDate()));
         String currentDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date());
         voucher.setCreatedOn(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(currentDate));
