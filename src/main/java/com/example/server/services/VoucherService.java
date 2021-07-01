@@ -58,6 +58,11 @@ public class VoucherService {
         return voucherCompanyRepo.findAll();
     }
 
+    public List<VoucherCompany> getCompaniesUnderCategories()
+    {
+        return voucherCompanyRepo.findAll();
+    }
+
     public List<VoucherType> getAllVoucherType()
     {
         return voucherTypeRepo.findAll();
