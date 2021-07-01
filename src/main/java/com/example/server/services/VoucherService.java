@@ -42,7 +42,10 @@ public class VoucherService {
 
     public List<Voucher> searchVoucher(String search){
         List<Voucher> searchResult = voucherRepository.searchVoucher(search);
-        return searchResult;
+
+        return sortByTime(searchResult.stream()
+                .filter((Voucher voucher) -> !isVoucherSold(voucher.getId()))
+                .collect(Collectors.toList()));
     }
 
     public List<VoucherCategory> getAllVoucherCategory()
