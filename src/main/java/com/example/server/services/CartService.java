@@ -102,11 +102,10 @@ public class CartService {
         CheckoutPageCost checkoutPageCost = new CheckoutPageCost();
 
         BigDecimal totalPrice = new BigDecimal(0);
-        cartItemList.forEach((CartItem cartItem)-> {
-            checkoutPageCost.setItemsValue((totalPrice.add(cartItem.getItemPrice())));
-        });
-
-        CheckoutPageCost result = utilityService.calculateCheckoutCosts(checkoutPageCost.getItemsValue());
+        for(CartItem cartItem: cartItemList){
+            totalPrice = totalPrice.add(cartItem.getItemPrice());
+        };
+        CheckoutPageCost result = utilityService.calculateCheckoutCosts(totalPrice);
         return result;
     }
 }
