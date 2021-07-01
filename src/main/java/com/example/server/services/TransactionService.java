@@ -1,5 +1,7 @@
 package com.example.server.services;
 
+import com.example.server.dto.request.TransactionGraphRequest;
+import com.example.server.dto.response.TransactionGraphResponse;
 import com.example.server.entities.Transaction;
 import com.example.server.enums.TransactionStatus;
 import com.example.server.enums.TransactionType;
@@ -8,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -16,6 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 public class TransactionService {
     private final TransactionRepository transactionRepository;
+    private final Utility utilityService;
 
     public Transaction addTransaction(String transactionId, long orderId, int coinsAdded,long userId,TransactionType transactionType,BigDecimal amount){
         Transaction transaction = new Transaction();
@@ -44,5 +48,11 @@ public class TransactionService {
         List<Transaction> transactions =  (List<Transaction>) this.transactionRepository.findByOrderId(orderId);
         if(transactions.isEmpty()) return null;
         return transactions.get(0);
+    }
+
+    public List<?> generateGraph(TransactionGraphRequest transactionGraphRequest) throws ParseException {
+        Date startDate = utilityService.parseDate(transactionGraphRequest.getStartDate());
+        Date endDate = utilityService.parseDate(transactionGraphRequest.getEndDate());
+        return transactionRepository.generateGraph(startDate,endDate);
     }
 }
