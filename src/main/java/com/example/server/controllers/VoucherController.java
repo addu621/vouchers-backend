@@ -99,6 +99,11 @@ public class VoucherController {
         return voucherService.getAllVoucherCompany();
     }
 
+    @GetMapping("/companies/in/category/{categoryId}")
+    public List<VoucherCompany> getCompanyInCategory(@PathVariable Long categoryId) {
+        return companyService.getCompanyInCategory(categoryId);
+    }
+
     @GetMapping("/getVoucherTypes")
     public List<VoucherType> getVoucherTypes() {
         return voucherService.getAllVoucherType();
