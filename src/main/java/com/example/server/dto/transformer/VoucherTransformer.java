@@ -33,19 +33,18 @@ public class VoucherTransformer {
         SimpleDateFormat formatter=new SimpleDateFormat("dd-MM-yyyy");
         voucher.setExpiryDate(formatter.parse(voucherRequest.getExpiryDate()));
         String currentDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date());
-        System.out.println(currentDate);
         voucher.setCreatedOn(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(currentDate));
         voucher.setVerificationStatus(VoucherVerificationStatus.PENDING);
-        System.out.println(voucher);
         return voucher;
     }
 
-    public VoucherResponse convertEntityToResponse(Voucher voucher){
+    public VoucherResponse convertEntityToResponse(Voucher voucher) throws ParseException {
         Person seller = voucher.getSellerId() != null ? this.personService.findById(voucher.getSellerId()):null;
         VoucherCompany voucherCompany = voucher.getCompanyId() != null? this.companyService.getCompanyById(voucher.getCompanyId()):null;
 
         VoucherResponse voucherResponse = new VoucherResponse();
         copyProperties(voucher, voucherResponse);
+        voucherResponse.setExpiryDate(voucher.getExpiryDate().toString());
 
         if(seller!=null){
             PersonResponse personResponse = new PersonResponse();
@@ -63,8 +62,14 @@ public class VoucherTransformer {
 
     public List<VoucherResponse> convertEntityListToResponseList(List<Voucher> vouchers){
         List<VoucherResponse> voucherResponses = new ArrayList<VoucherResponse>();
+
         vouchers.forEach((Voucher v) -> {
-            VoucherResponse voucherResponse = convertEntityToResponse(v);
+            VoucherResponse voucherResponse = null;
+            try {
+                voucherResponse = convertEntityToResponse(v);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
             voucherResponses.add(voucherResponse);
         });
         return voucherResponses;

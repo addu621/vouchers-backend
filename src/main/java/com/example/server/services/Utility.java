@@ -21,6 +21,9 @@ import javax.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -167,5 +170,11 @@ public class Utility {
 
         String[] result = new String[emptyNames.size()];
         return emptyNames.toArray(result);
+    }
+
+    public Date parseDate(String date) throws ParseException {
+        SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd");
+        Date result = formatter.parse(date);
+        return result;
     }
 }

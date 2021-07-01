@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface BlockedUsersRepository extends JpaRepository<BlockedUsers,String> {
+public interface BlockedUsersRepository extends JpaRepository<BlockedUsers,Long> {
     public BlockedUsers findByEmail(String email);
 }

@@ -4,6 +4,7 @@ import com.example.server.dto.request.PersonRequest;
 import com.example.server.dto.response.SellerRatingResponse;
 import com.example.server.entities.Person;
 import com.example.server.entities.SellerRating;
+import com.example.server.repositories.BlockedUsersRepository;
 import com.example.server.repositories.PersonRepo;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
@@ -14,6 +15,7 @@ import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.springframework.beans.BeanUtils.copyProperties;
 
@@ -21,6 +23,9 @@ import static org.springframework.beans.BeanUtils.copyProperties;
 public class PersonService {
     @Autowired
     private PersonRepo personRepository;
+
+    @Autowired
+    private BlockedUsersRepository blockedUsersRepository;
 
     public Person updatePerson(Long userId, PersonRequest personRequest){
         Person oldPerson = personRepository.findById(userId).get();
@@ -43,12 +48,23 @@ public class PersonService {
         return true;
     }
 
+    public boolean isUserBlocked(long userId){
+        return blockedUsersRepository.findById(userId).isPresent();
+    }
+
     public List<Person> getAllPersons(){
-        return (List<Person>) personRepository.findAll();
+        List<Person> persons = (List<Person>) personRepository.findAll();
+        return persons.stream().filter((Person p)->!isUserBlocked(p.getId())).collect(Collectors.toList());
     }
 
     public List<Person> getAllKycSubmittedPersons(){
-        return personRepository.findBySsnNotNullAndSsnVerifiedFalse();
+        List<Person> persons =  personRepository.findBySsnNotNullAndSsnVerifiedFalse();
+        return persons.stream().filter((Person p)->!isUserBlocked(p.getId())).collect(Collectors.toList());
+    }
+
+    public List<Person> getPersonsBySearchKeyword(String keyword){
+        List<Person> persons = (List<Person>) personRepository.findByFirstNameContainingIgnoreCaseOrEmailContainingIgnoreCase(keyword,keyword);
+        return persons.stream().filter((Person p)->!isUserBlocked(p.getId())).collect(Collectors.toList());
     }
 
     public static String[] getNullPropertyNames (Object source) {
@@ -72,6 +88,4 @@ public class PersonService {
     public Person findById(Long id){
         return personRepository.findById(id).get();
     }
-
-
 }
