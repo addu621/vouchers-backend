@@ -49,7 +49,7 @@ public class PersonService {
     }
 
     public boolean isUserBlocked(long userId){
-        return blockedUsersRepository.findById(String.valueOf(userId))!=null;
+        return blockedUsersRepository.findById(userId).isPresent();
     }
 
     public List<Person> getAllPersons(){
