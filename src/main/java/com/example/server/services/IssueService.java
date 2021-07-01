@@ -10,6 +10,8 @@ import com.example.server.repositories.VoucherOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,6 +26,9 @@ public class IssueService {
 
     @Autowired
     private VoucherOrderRepository voucherOrderRepository;
+
+    @Autowired
+    private Utility utility;
 
     public GenericResponse submitIssue(String transactionId,Long orderItemId,String comment) {
 
@@ -79,7 +84,7 @@ public class IssueService {
         return genericResponse;
     }
 
-    public GenericResponse issueClosed(Long issueId) {
+    public GenericResponse issueClosed(Long issueId) throws UnsupportedEncodingException, MessagingException {
         GenericResponse genericResponse = new GenericResponse();
         Issue issue = issueRepo.findByIssueId(issueId);
         if(issue==null){
@@ -91,6 +96,7 @@ public class IssueService {
         issueRepo.save(issue);
         genericResponse.setMessage("Issue Closed!!!");
         genericResponse.setStatus(200);
+        utility.issueClosedMail(issue);
         return genericResponse;
     }
 
