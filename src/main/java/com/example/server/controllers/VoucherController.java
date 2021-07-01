@@ -161,8 +161,4 @@ public class VoucherController {
         return result;
     }
 
-//    @GetMapping("/vouchers/graph")
-//    public boolean graph(@RequestBody ){
-//        return this.voucherService.isVoucherSold(voucherId);
-//    }
 }
