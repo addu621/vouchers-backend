@@ -25,6 +25,7 @@ public class VoucherOrderService {
     private final VoucherOrderDetailRepository voucherOrderDetailRepository;
     private final TransactionService transactionService;
     private final WalletService walletService;
+    private final VoucherService voucherService;
 
     private final VoucherRepository voucherRepository;
     private final TransactionRepository transactionRepository;
@@ -80,6 +81,16 @@ public class VoucherOrderService {
         }
         voucherOrderDetails.sort((x,y)->voucherOrderRepository.findById(y.getOrderId()).get().getOrderDate().compareTo(voucherOrderRepository.findById(y.getOrderId()).get().getOrderDate()));
         return voucherOrderDetails;
+    }
+
+    public List<VoucherOrderDetail> getSellOrders(long userId){
+        List<Voucher> sellVouchers = this.voucherService.getSellVouchers(userId);
+        List<VoucherOrderDetail> sellOrders = new ArrayList<>();
+        sellVouchers.forEach((Voucher v)->{
+            sellOrders.addAll(voucherOrderDetailRepository.findByVoucherId(v.getId()));
+        });
+        sellOrders.sort((x,y)->voucherOrderRepository.findById(y.getOrderId()).get().getOrderDate().compareTo(voucherOrderRepository.findById(y.getOrderId()).get().getOrderDate()));
+        return sellOrders;
     }
 
     public int getNoOfDisputesByUserId(long userId){

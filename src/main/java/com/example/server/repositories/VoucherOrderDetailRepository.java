@@ -10,4 +10,5 @@ import java.util.List;
 public interface VoucherOrderDetailRepository extends CrudRepository<VoucherOrderDetail,Long> {
 
     List<VoucherOrderDetail> findByOrderId(Long orderId);
+    List<VoucherOrderDetail> findByVoucherId(long voucherId);
 }

@@ -26,4 +26,11 @@ public class OrderController {
         List<VoucherOrderDetail> orders = voucherOrderService.getBuyOrders(personDetails.getId());
         return this.orderTransformer.convertEntityListToResponse(orders);
     }
+
+    @GetMapping("/users/sellOrders")
+    public List<OrderResponse> getSellOrders(HttpServletRequest request){
+        Person personDetails = (Person) request.getAttribute("person");
+        List<VoucherOrderDetail> orders = voucherOrderService.getSellOrders(personDetails.getId());
+        return this.orderTransformer.convertEntityListToResponse(orders);
+    }
 }
