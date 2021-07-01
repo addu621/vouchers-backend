@@ -30,7 +30,7 @@ public class IssueService {
     @Autowired
     private Utility utility;
 
-    public GenericResponse submitIssue(String transactionId,Long orderItemId,String comment) {
+    public GenericResponse submitIssue(Long orderItemId,String comment) {
 
         GenericResponse genericResponse = new GenericResponse();
 
@@ -47,7 +47,6 @@ public class IssueService {
 
         Issue issue = new Issue();
         issue.setComment(comment);
-        issue.setTransactionId(transactionId);
         issue.setOrderItemId(orderItemId);
         issueRepo.save(issue);
 
