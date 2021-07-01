@@ -160,4 +160,9 @@ public class VoucherController {
         List<Voucher> result = voucherService.filterVouchers(input);
         return result;
     }
+
+//    @GetMapping("/vouchers/graph")
+//    public boolean graph(@RequestBody ){
+//        return this.voucherService.isVoucherSold(voucherId);
+//    }
 }
