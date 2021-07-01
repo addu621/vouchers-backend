@@ -1,6 +1,9 @@
 package com.example.server.services;
 
 import com.example.server.entities.Person;
+import com.example.server.model.CheckoutPageCost;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -10,6 +13,9 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Service
@@ -20,9 +26,24 @@ public class Utility {
 
     public static final BigDecimal ONE_HUNDRED = new BigDecimal(100);
     public BigDecimal  calculatePercentage(BigDecimal value, BigDecimal percent){
-        return value.multiply(percent).divide(ONE_HUNDRED);
+        return value.multiply(percent).divide(ONE_HUNDRED).setScale(2, RoundingMode.HALF_UP);
     }
 
+    public CheckoutPageCost calculateCheckoutCosts(BigDecimal totalPrice){
+        CheckoutPageCost checkoutPageCost = new CheckoutPageCost();
+
+        BigDecimal tax = calculatePercentage(totalPrice,new BigDecimal(2.5));
+        BigDecimal finalCost = tax.add(totalPrice);
+        finalCost = finalCost.setScale(2, RoundingMode.HALF_UP);
+        Integer loyaltyCoins =calculatePercentage(totalPrice,new BigDecimal(5)).setScale(0, RoundingMode.UP).intValue();
+
+        checkoutPageCost.setItemsValue(totalPrice);
+        checkoutPageCost.setTaxCalculated(tax);
+        checkoutPageCost.setLoyaltyCoins(loyaltyCoins);
+        checkoutPageCost.setFinalCost(finalCost);
+
+        return checkoutPageCost;
+    }
     public void sendMail(Person person, String otp) throws MessagingException, UnsupportedEncodingException {
 
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
@@ -84,5 +105,18 @@ public class Utility {
         mimeMessageHelper.setTo(person.getEmail());
 
         javaMailSender.send(mimeMessage);
+    }
+    public String[] getNullPropertyNames (Object source) {
+        final BeanWrapper src = new BeanWrapperImpl(source);
+        java.beans.PropertyDescriptor[] pds = src.getPropertyDescriptors();
+
+        Set<String> emptyNames = new HashSet<String>();
+        for(java.beans.PropertyDescriptor pd : pds) {
+            Object srcValue = src.getPropertyValue(pd.getName());
+            if (srcValue == null) emptyNames.add(pd.getName());
+        }
+
+        String[] result = new String[emptyNames.size()];
+        return emptyNames.toArray(result);
     }
 }

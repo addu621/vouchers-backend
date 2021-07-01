@@ -34,10 +34,17 @@ public class VoucherController {
     private final VoucherOrderService voucherOrderService;
 
     @PostMapping("/search-voucher")
-    public List<Voucher> searchVoucher(@RequestBody Map<String, String> req) {
+    public List<VoucherResponse> searchVoucher(@RequestBody Map<String, String> req) {
         String searchInput = req.get("input");
-        List<Voucher> searchResult =  voucherService.searchVoucher(searchInput);
-        return searchResult;
+        List<Voucher> searchResult = new ArrayList<>();
+
+        if(searchInput==null || searchInput==""){
+            searchResult = voucherService.getAllVerifiedVouchers();
+        }
+        else{
+            searchResult = voucherService.searchVoucher(searchInput);
+        }
+        return voucherTransformer.convertEntityListToResponseList(searchResult);
     }
 
     @PostMapping(value = "/vouchers/new")
@@ -153,4 +160,9 @@ public class VoucherController {
         List<Voucher> result = voucherService.filterVouchers(input);
         return result;
     }
+
+//    @GetMapping("/vouchers/graph")
+//    public boolean graph(@RequestBody ){
+//        return this.voucherService.isVoucherSold(voucherId);
+//    }
 }

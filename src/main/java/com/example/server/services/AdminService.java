@@ -16,12 +16,6 @@ public class AdminService {
 
     public GenericResponse blockUser(BlockedUsersRequest person) {
         GenericResponse genericResponse = new GenericResponse();
-        if(blockedUsersRepository.getById(person.getId().toString())!=null)
-        {
-            genericResponse.setStatus(404);
-            genericResponse.setMessage("User already blocked!!!");
-            return genericResponse;
-        }
         BlockedUsers newBlockedUser = new BlockedUsers();
         newBlockedUser.setId(person.getId());
         newBlockedUser.setEmail(person.getEmail());
