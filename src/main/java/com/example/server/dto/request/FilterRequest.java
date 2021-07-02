@@ -9,4 +9,5 @@ public class FilterRequest {
     private List<Long>companies;
     private List<Long> categories;
     private Double averageRating;
+    private Boolean isVerified;
 }

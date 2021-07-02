@@ -34,10 +34,17 @@ public class VoucherController {
     private final VoucherOrderService voucherOrderService;
 
     @PostMapping("/search-voucher")
-    public List<Voucher> searchVoucher(@RequestBody Map<String, String> req) {
+    public List<VoucherResponse> searchVoucher(@RequestBody Map<String, String> req) {
         String searchInput = req.get("input");
-        List<Voucher> searchResult =  voucherService.searchVoucher(searchInput);
-        return searchResult;
+        List<Voucher> searchResult = new ArrayList<>();
+
+        if(searchInput==null || searchInput==""){
+            searchResult = voucherService.getAllVerifiedVouchers();
+        }
+        else{
+            searchResult = voucherService.searchVoucher(searchInput);
+        }
+        return voucherTransformer.convertEntityListToResponseList(searchResult);
     }
 
     @PostMapping(value = "/vouchers/new")
@@ -51,7 +58,7 @@ public class VoucherController {
     }
 
     @GetMapping(value = "/vouchers/{id}")
-    public VoucherResponse getVoucherById(@PathVariable Long id) {
+    public VoucherResponse getVoucherById(@PathVariable Long id) throws ParseException {
         Voucher voucher = this.voucherService.getVoucherById(id);
         VoucherResponse voucherResponse = this.voucherTransformer.convertEntityToResponse(voucher);
         return voucherResponse;
@@ -90,6 +97,11 @@ public class VoucherController {
     @GetMapping("/getVoucherCompanies")
     public List<VoucherCompany> getVoucherCompanies() {
         return voucherService.getAllVoucherCompany();
+    }
+
+    @GetMapping("/companies/in/category/{categoryId}")
+    public List<VoucherCompany> getCompanyInCategory(@PathVariable Long categoryId) {
+        return companyService.getCompanyInCategory(categoryId);
     }
 
     @GetMapping("/getVoucherTypes")
@@ -153,4 +165,5 @@ public class VoucherController {
         List<Voucher> result = voucherService.filterVouchers(input);
         return result;
     }
+
 }

@@ -16,11 +16,8 @@ public class Issue {
     @Column(name = "issue_id")
     private Long issueId;
 
-    @Column(name = "transaction_id")
-    private String transactionId;
-
-    @Column(name = "voucher_id")
-    private Long voucherId;
+    @Column(name = "order_item_id")
+    private Long orderItemId;
 
     @Column
     private String comment;

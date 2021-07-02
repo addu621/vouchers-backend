@@ -9,6 +9,7 @@ import javax.persistence.*;
 @Data
 public class VoucherType {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
 }

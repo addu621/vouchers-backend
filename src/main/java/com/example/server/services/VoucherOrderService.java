@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -24,6 +25,7 @@ public class VoucherOrderService {
     private final VoucherOrderDetailRepository voucherOrderDetailRepository;
     private final TransactionService transactionService;
     private final WalletService walletService;
+    private final VoucherService voucherService;
 
     private final VoucherRepository voucherRepository;
     private final TransactionRepository transactionRepository;
@@ -69,6 +71,26 @@ public class VoucherOrderService {
         transactionService.addTransaction(transactionId,orderId,coins,voucherOrder.getBuyerId(),TransactionType.ORDER_PLACED,totalPrice);
         walletService.addCoinsToWallet(voucherOrder.getBuyerId(),coins);
         return true;
+    }
+
+    public List<VoucherOrderDetail> getBuyOrders(Long userId){
+        List<VoucherOrder> voucherOrders = this.voucherOrderRepository.findByBuyerIdAndOrderStatus(userId, OrderStatus.SUCCESS);
+        List<VoucherOrderDetail> voucherOrderDetails = new ArrayList<>();
+        for(VoucherOrder v:voucherOrders){
+            voucherOrderDetails.addAll(voucherOrderDetailRepository.findByOrderId(v.getId()));
+        }
+        voucherOrderDetails.sort((x,y)->voucherOrderRepository.findById(y.getOrderId()).get().getOrderDate().compareTo(voucherOrderRepository.findById(y.getOrderId()).get().getOrderDate()));
+        return voucherOrderDetails;
+    }
+
+    public List<VoucherOrderDetail> getSellOrders(long userId){
+        List<Voucher> sellVouchers = this.voucherService.getSellVouchers(userId);
+        List<VoucherOrderDetail> sellOrders = new ArrayList<>();
+        sellVouchers.forEach((Voucher v)->{
+            sellOrders.addAll(voucherOrderDetailRepository.findByVoucherId(v.getId()));
+        });
+        sellOrders.sort((x,y)->voucherOrderRepository.findById(y.getOrderId()).get().getOrderDate().compareTo(voucherOrderRepository.findById(y.getOrderId()).get().getOrderDate()));
+        return sellOrders;
     }
 
     public int getNoOfDisputesByUserId(long userId){
