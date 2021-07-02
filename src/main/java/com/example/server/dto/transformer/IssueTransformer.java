@@ -28,9 +28,10 @@ public class IssueTransformer {
         copyProperties(issue,issueResponse);
         VoucherOrderDetail voucherOrderDetail = this.voucherOrderDetailRepository.findById(issue.getOrderItemId()).get();
         VoucherOrder voucherOrder = this.voucherOrderRepository.findById(voucherOrderDetail.getOrderId()).get();
-        issueResponse.setReporterId(voucherOrder.getBuyerId());
+        issueResponse.setUserId(voucherOrder.getBuyerId());
         OrderResponse orderResponse = orderTransformer.convertEntityToResponse(voucherOrderDetail);
         issueResponse.setOrder(orderResponse);
+        System.out.println(issueResponse);
         return issueResponse;
     }
 
