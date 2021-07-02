@@ -71,7 +71,7 @@ public class CartService {
         return vouchers;
     }
 
-    public List<Voucher> checkOutCart(long cartId,String transactionId){
+    public List<Voucher> checkOutCart(long cartId,String transactionId, boolean isCoinsReedemed){
         List<CartItem> cartItems = cartItemRepository.findByCartId(cartId);
         List<Voucher> vouchers = new ArrayList<>();
         BigDecimal totalPrice = new BigDecimal(0);
@@ -89,7 +89,7 @@ public class CartService {
             }
         });
 
-        this.voucherOrderService.placeOrder(voucherOrder.getId(),transactionId);
+        this.voucherOrderService.placeOrder(voucherOrder.getId(),transactionId,isCoinsReedemed);
         return vouchers;
     }
 
@@ -100,12 +100,12 @@ public class CartService {
     public CheckoutPageCost getCartValue(Long cartId){
         List<CartItem> cartItemList = cartItemRepository.findByCartId(cartId);
         CheckoutPageCost checkoutPageCost = new CheckoutPageCost();
-
+        Integer coinsInWallet = walletService.getWalletById(cartId).getCoins();
         BigDecimal totalPrice = new BigDecimal(0);
         for(CartItem cartItem: cartItemList){
             totalPrice = totalPrice.add(cartItem.getItemPrice());
         };
-        CheckoutPageCost result = utilityService.calculateCheckoutCosts(totalPrice);
+        CheckoutPageCost result = utilityService.calculateCheckoutCosts(totalPrice,coinsInWallet);
         return result;
     }
 }

@@ -16,4 +16,5 @@ public class TransactionResponse {
     private TransactionType transactionType;
     private TransactionStatus transactionStatus;
     private int coinsAddedToWallet;
+    private int coinsDeductedFromWallet;
 }

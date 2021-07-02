@@ -1,5 +1,6 @@
 package com.example.server.controllers;
 
+import com.example.server.dto.request.PaymentOrderRequest;
 import com.example.server.dto.response.GenericResponse;
 import com.example.server.dto.response.PaymentOrderResponse;
 import com.example.server.entities.Person;
@@ -29,13 +30,22 @@ public class PaymentController {
     VoucherService voucherService;
 
 
-    @GetMapping("/payment/create/cart-order")
-    public PaymentOrderResponse createCartPaymentOrder(HttpServletRequest request) throws RazorpayException {
+    @PostMapping("/payment/create/cart-order")
+    public PaymentOrderResponse createCartPaymentOrder(HttpServletRequest request, @RequestBody PaymentOrderRequest paymentOrderRequest) throws RazorpayException {
         Person personDetails = (Person) request.getAttribute("person");
         Long userId = personDetails.getId();
         CheckoutPageCost checkoutPageCost = cartService.getCartValue(userId);
 
-        Order order = paymentService.createRazorPayOrder( checkoutPageCost.getFinalCost().toString() );
+        // take redeemed cost
+        BigDecimal paymentValue = new BigDecimal(0);
+        if(paymentOrderRequest.getHasRedeemed()){
+            paymentValue = checkoutPageCost.getFinalCostAfterCoinRedeem();
+        }
+        else{
+            paymentValue = checkoutPageCost.getFinalCost();
+        }
+
+        Order order = paymentService.createRazorPayOrder( paymentValue.toString() );
         String orderId = order.get("id");
 
         PaymentOrderResponse paymentOrderResponse = new PaymentOrderResponse();
@@ -43,14 +53,22 @@ public class PaymentController {
         return paymentOrderResponse;
     }
 
-    @GetMapping("/payment/create/voucher-order/{voucherId}")
-    public PaymentOrderResponse createVoucherPaymentOrder(HttpServletRequest request,@PathVariable Long voucherId) throws RazorpayException {
+    @PostMapping("/payment/create/voucher-order/{voucherId}")
+    public PaymentOrderResponse createVoucherPaymentOrder(HttpServletRequest request,@PathVariable Long voucherId, @RequestBody PaymentOrderRequest paymentOrderRequest) throws RazorpayException {
         Person personDetails = (Person) request.getAttribute("person");
-        Long userId = personDetails.getId();
+        Long buyerId = personDetails.getId();
 
-        CheckoutPageCost checkoutPageCost = voucherService.getVoucherCostById(voucherId);
+        CheckoutPageCost checkoutPageCost = voucherService.getVoucherCostById(voucherId,buyerId);
 
-        Order order = paymentService.createRazorPayOrder( checkoutPageCost.getFinalCost().toString() );
+        BigDecimal paymentValue = new BigDecimal(0);
+        if(paymentOrderRequest.getHasRedeemed()){
+            paymentValue = checkoutPageCost.getFinalCostAfterCoinRedeem();
+        }
+        else{
+            paymentValue = checkoutPageCost.getFinalCost();
+        }
+
+        Order order = paymentService.createRazorPayOrder( paymentValue.toString() );
         String orderId = order.get("id");
 
         PaymentOrderResponse paymentOrderResponse = new PaymentOrderResponse();
@@ -60,7 +78,10 @@ public class PaymentController {
 
     @GetMapping("payment/get/voucher-order/{voucherId}")
     public CheckoutPageCost voucherCost(HttpServletRequest request,@PathVariable Long voucherId){
-         CheckoutPageCost checkoutPageCost = voucherService.getVoucherCostById(voucherId);
+        Person personDetails = (Person) request.getAttribute("person");
+        Long buyerId = personDetails.getId();
+
+         CheckoutPageCost checkoutPageCost = voucherService.getVoucherCostById(voucherId,buyerId);
         return checkoutPageCost;
     }
     @GetMapping("payment/get/cart-order/")
