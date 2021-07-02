@@ -161,9 +161,9 @@ public class VoucherController {
     }
 
     @PostMapping("/filter")
-    public List<Voucher> filter(@RequestBody FilterRequest input) {
+    public List<VoucherResponse> filter(@RequestBody FilterRequest input) {
         List<Voucher> result = voucherService.filterVouchers(input);
-        return result;
+        return this.voucherTransformer.convertEntityListToResponseList(result);
     }
 
 }
