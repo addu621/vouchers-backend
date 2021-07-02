@@ -4,6 +4,7 @@ import com.example.server.entities.*;
 import com.example.server.enums.DealStatus;
 import com.example.server.enums.OrderStatus;
 import com.example.server.enums.TransactionType;
+import com.example.server.model.CheckoutPageCost;
 import com.example.server.repositories.TransactionRepository;
 import com.example.server.repositories.VoucherOrderDetailRepository;
 import com.example.server.repositories.VoucherOrderRepository;
@@ -26,6 +27,7 @@ public class VoucherOrderService {
     private final TransactionService transactionService;
     private final WalletService walletService;
     private final VoucherService voucherService;
+    private final Utility utility;
 
     private final VoucherRepository voucherRepository;
     private final TransactionRepository transactionRepository;
@@ -67,7 +69,9 @@ public class VoucherOrderService {
         for(VoucherOrderDetail orderDetail : orders){
             totalPrice = totalPrice.add(orderDetail.getItemPrice());
         }
-        int coins = totalPrice.intValue()*5/100;
+        int coins = (int) Math.ceil(totalPrice.intValue()*5/100);
+        Wallet wallet = walletService.getWalletById(voucherOrder.getBuyerId());
+        //CheckoutPageCost checkoutPageCost = utility.calculateCheckoutCosts(totalPrice);
         transactionService.addTransaction(transactionId,orderId,coins,voucherOrder.getBuyerId(),TransactionType.ORDER_PLACED,totalPrice);
         walletService.addCoinsToWallet(voucherOrder.getBuyerId(),coins);
         return true;
