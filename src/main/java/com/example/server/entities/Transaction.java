@@ -30,7 +30,10 @@ public class Transaction {
     private Long userId;
 
     @Column(name = "coins_added")
-    private int coinsAddedToWallet = 0;
+    private int coinsAddedToWallet;
+
+    @Column(name = "coins_deducted")
+    private int coinsDeductedFromWallet;
 
     @Column(name = "transaction_type")
     private TransactionType transactionType;

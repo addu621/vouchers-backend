@@ -6,10 +6,10 @@ import java.util.Date;
 
 @Data
 public class TransactionGraphResponse {
-    private Date date;
+    private String date;
     private Long transactionCount;
 
-    public TransactionGraphResponse(Date date, Long transactionCount) {
+    public TransactionGraphResponse(String date, Long transactionCount) {
         this.date = date;
         this.transactionCount = transactionCount;
     }

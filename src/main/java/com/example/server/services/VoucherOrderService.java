@@ -4,6 +4,7 @@ import com.example.server.entities.*;
 import com.example.server.enums.DealStatus;
 import com.example.server.enums.OrderStatus;
 import com.example.server.enums.TransactionType;
+import com.example.server.model.CheckoutPageCost;
 import com.example.server.repositories.TransactionRepository;
 import com.example.server.repositories.VoucherOrderDetailRepository;
 import com.example.server.repositories.VoucherOrderRepository;
@@ -26,6 +27,7 @@ public class VoucherOrderService {
     private final TransactionService transactionService;
     private final WalletService walletService;
     private final VoucherService voucherService;
+    private final Utility utility;
 
     private final VoucherRepository voucherRepository;
     private final TransactionRepository transactionRepository;
@@ -58,7 +60,7 @@ public class VoucherOrderService {
         return this.voucherOrderDetailRepository.save(voucherOrderDetail);
     }
 
-    public boolean placeOrder(long orderId, String transactionId){
+    public boolean placeOrder(long orderId, String transactionId, boolean isCoinsRedeemed){
         if(this.voucherOrderRepository.findById(orderId)==null) return false;
         VoucherOrder voucherOrder = this.voucherOrderRepository.findById(orderId).get();
         voucherOrder.setOrderStatus(OrderStatus.SUCCESS);
@@ -67,9 +69,22 @@ public class VoucherOrderService {
         for(VoucherOrderDetail orderDetail : orders){
             totalPrice = totalPrice.add(orderDetail.getItemPrice());
         }
-        int coins = totalPrice.intValue()*5/100;
-        transactionService.addTransaction(transactionId,orderId,coins,voucherOrder.getBuyerId(),TransactionType.ORDER_PLACED,totalPrice);
-        walletService.addCoinsToWallet(voucherOrder.getBuyerId(),coins);
+        Wallet wallet = walletService.getWalletById(voucherOrder.getBuyerId());
+        CheckoutPageCost checkoutPageCost = utility.calculateCheckoutCosts(totalPrice,wallet.getCoins());
+        int coinsAdded = checkoutPageCost.getLoyaltyCoinsEarned();
+        int coinsDeducted  = 0;
+        if(isCoinsRedeemed){
+            coinsDeducted  = checkoutPageCost.getLoyaltyCoinsInWallet()-checkoutPageCost.getCoinBalanceAfterRedemption();
+            System.out.println("coins deducted inside order function:"+coinsDeducted);
+
+            walletService.setCoinsInWallet(wallet.getId(),checkoutPageCost.getCoinBalanceAfterRedemption());
+            transactionService.addTransaction(transactionId,orderId,coinsAdded, coinsDeducted,voucherOrder.getBuyerId(),TransactionType.ORDER_PLACED,checkoutPageCost.getFinalCostAfterCoinRedeem());
+        }else{
+            walletService.addCoinsToWallet(wallet.getId(),coinsAdded);
+            System.out.println("coins deducted inside order function:"+coinsDeducted);
+
+            transactionService.addTransaction(transactionId,orderId,coinsAdded, 0,voucherOrder.getBuyerId(),TransactionType.ORDER_PLACED,checkoutPageCost.getFinalCost());
+        }
         return true;
     }
 
