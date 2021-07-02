@@ -15,7 +15,7 @@ public interface VoucherCompanyRepo extends JpaRepository<VoucherCompany,Long> {
 //    @Query(value = "select count(*) from voucher_company where name=?1")
     public VoucherCompany findByName(String company);
 
-    @Query("SELECT vc from VoucherCompany as vc Right Join CategoryCompany as cc on vc.id = cc.companyId and cc.categoryId = :category")
+    @Query("SELECT vc from VoucherCompany as vc Inner Join CategoryCompany as cc on vc.id = cc.companyId and cc.categoryId = :category")
     List<VoucherCompany> companiesInCategory(@Param("category") Long categoryId);
 
 }

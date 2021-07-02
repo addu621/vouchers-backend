@@ -48,18 +48,27 @@ public class Utility {
         return value.multiply(percent).divide(ONE_HUNDRED).setScale(2, RoundingMode.HALF_UP);
     }
 
-    public CheckoutPageCost calculateCheckoutCosts(BigDecimal totalPrice){
+    public CheckoutPageCost calculateCheckoutCosts(BigDecimal totalPrice,Integer loyaltyCoinsInWallet){
         CheckoutPageCost checkoutPageCost = new CheckoutPageCost();
 
         BigDecimal tax = calculatePercentage(totalPrice,new BigDecimal(2.5));
         BigDecimal finalCost = tax.add(totalPrice);
         finalCost = finalCost.setScale(2, RoundingMode.HALF_UP);
-        Integer loyaltyCoins =calculatePercentage(totalPrice,new BigDecimal(5)).setScale(0, RoundingMode.UP).intValue();
+
+        Integer loyaltyCoinsEarned =calculatePercentage(totalPrice,new BigDecimal(5)).setScale(0, RoundingMode.UP).intValue();
+        Integer existingLoyaltyCoinsValue = loyaltyCoinsInWallet/2;
+        Integer maxCoinsRedeemedValue = Math.min(totalPrice.intValue(),existingLoyaltyCoinsValue);
+        BigDecimal finalCostAfterCoinRedeem = finalCost.subtract(new BigDecimal(maxCoinsRedeemedValue)).max(new BigDecimal(0.50));
+        Integer remainingCoins = loyaltyCoinsInWallet - maxCoinsRedeemedValue*2;
 
         checkoutPageCost.setItemsValue(totalPrice);
         checkoutPageCost.setTaxCalculated(tax);
-        checkoutPageCost.setLoyaltyCoins(loyaltyCoins);
+        checkoutPageCost.setLoyaltyCoinsInWallet(loyaltyCoinsInWallet);
+        checkoutPageCost.setLoyaltyCoinsEarned(loyaltyCoinsEarned);
+        checkoutPageCost.setExistingLoyaltyCoinsValue(existingLoyaltyCoinsValue);
         checkoutPageCost.setFinalCost(finalCost);
+        checkoutPageCost.setFinalCostAfterCoinRedeem(finalCostAfterCoinRedeem);
+        checkoutPageCost.setCoinBalanceAfterRedemption(remainingCoins);
 
         return checkoutPageCost;
     }

@@ -30,6 +30,7 @@ public class VoucherService {
     private final VoucherDealRepository voucherDealRepository;
     private final VoucherOrderRepository voucherOrderRepository;
     private final VoucherOrderDetailRepository voucherOrderDetailRepository;
+    private final WalletService walletService;
     private final Utility utilityService;
 
     public Voucher saveVoucher(Voucher voucher) {
@@ -166,11 +167,11 @@ public class VoucherService {
         Voucher voucher = voucherRepository.findById(voucherId).get();
         return voucher.getSellerId();
     }
-    public CheckoutPageCost getVoucherCostById(Long voucherId){
+    public CheckoutPageCost getVoucherCostById(Long voucherId,Long buyerId){
         Voucher voucher = voucherRepository.findById(voucherId).get();
-
         BigDecimal totalPrice = voucher.getSellingPrice();
-        CheckoutPageCost checkoutPageCost  = utilityService.calculateCheckoutCosts(totalPrice);
+        Integer existingCoins = walletService.getWalletById(buyerId).getCoins();
+        CheckoutPageCost checkoutPageCost  = utilityService.calculateCheckoutCosts(totalPrice,existingCoins);
 
         return checkoutPageCost;
     }
