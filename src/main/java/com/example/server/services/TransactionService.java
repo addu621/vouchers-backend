@@ -53,6 +53,6 @@ public class TransactionService {
     public List<?> generateGraph(TransactionGraphRequest transactionGraphRequest) throws ParseException {
         Date startDate = utilityService.parseDate(transactionGraphRequest.getStartDate());
         Date endDate = utilityService.parseDate(transactionGraphRequest.getEndDate());
-        return transactionRepository.generateGraph(startDate,endDate);
+        return transactionRepository.generateGraph(transactionGraphRequest.getStartDate(),transactionGraphRequest.getEndDate());
     }
 }
