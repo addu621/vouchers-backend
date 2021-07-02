@@ -21,8 +21,9 @@ public class TransactionService {
     private final TransactionRepository transactionRepository;
     private final Utility utilityService;
 
-    public Transaction addTransaction(String transactionId, long orderId, int coinsAdded,long userId,TransactionType transactionType,BigDecimal amount){
+    public Transaction addTransaction(String transactionId, long orderId, int coinsAdded, int coinsDeducted,long userId,TransactionType transactionType,BigDecimal amount){
         Transaction transaction = new Transaction();
+        System.out.println("coins deducted inside transaction function:"+coinsDeducted);
         transaction.setUserId(userId);
         transaction.setTransactionDate(new Date());
         transaction.setTransactionType(transactionType);
@@ -30,6 +31,7 @@ public class TransactionService {
         transaction.setId(transactionId);
         transaction.setOrderId(orderId);
         transaction.setCoinsAddedToWallet(coinsAdded);
+        transaction.setCoinsDeductedFromWallet(coinsDeducted);
         transaction.setTransactionStatus(TransactionStatus.SUCCESS);
         return this.transactionRepository.save(transaction);
     }
