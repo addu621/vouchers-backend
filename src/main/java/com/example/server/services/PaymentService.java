@@ -13,8 +13,8 @@ import java.math.RoundingMode;
 public class PaymentService {
 
     private RazorpayClient client;
-    private static final String SECRET_ID = "rzp_test_GzrhvNLe2iV1nR";
-    private static final String SECRET_KEY = "sT6YURpowW9ZvOaqAsyvNDKr";
+    private static final String SECRET_ID = "rzp_test_739cyzNZMGyUcF";
+    private static final String SECRET_KEY = "t8uajrG9wq8h0ZiDbtKgtf81";
 
     PaymentService() throws RazorpayException {
         this.client =  new RazorpayClient(SECRET_ID, SECRET_KEY);
