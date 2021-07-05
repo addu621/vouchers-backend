@@ -1,6 +1,7 @@
 package com.example.server.services;
 
 import com.example.server.dto.request.FilterRequest;
+import com.example.server.dto.response.GenericResponse;
 import com.example.server.dto.response.SellerRatingResponse;
 import com.example.server.dto.response.VoucherResponse;
 import com.example.server.entities.*;
@@ -33,8 +34,17 @@ public class VoucherService {
     private final WalletService walletService;
     private final Utility utilityService;
 
-    public Voucher saveVoucher(Voucher voucher) {
-        return voucherRepository.save(voucher);
+    public GenericResponse saveVoucher(Voucher voucher) {
+        GenericResponse genericResponse = new GenericResponse();
+        if(!voucherRepository.findByCategoryIdAndVoucherCode(voucher.getCategoryId(),voucher.getVoucherCode()).isEmpty()){
+            genericResponse.setMessage("A voucher with same code already exist!");
+            genericResponse.setStatus(409);
+            return genericResponse;
+        }
+        voucherRepository.save(voucher);
+        genericResponse.setMessage("Voucher Added Successfully!");
+        genericResponse.setStatus(201);
+        return genericResponse;
     }
 
     public Voucher getVoucherById(Long id) {
