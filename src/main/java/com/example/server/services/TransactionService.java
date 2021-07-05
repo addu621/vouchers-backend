@@ -52,6 +52,10 @@ public class TransactionService {
         return transactions.get(0);
     }
 
+    public List<Transaction> getAllTransactionsByUserId(long userId){
+        return this.transactionRepository.findByUserId(userId);
+    }
+
     public List<?> generateGraph(TransactionGraphRequest transactionGraphRequest) throws ParseException {
         Date startDate = utilityService.parseDate(transactionGraphRequest.getStartDate());
         Date endDate = utilityService.parseDate(transactionGraphRequest.getEndDate());

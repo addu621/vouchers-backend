@@ -3,6 +3,7 @@ package com.example.server.controllers;
 import com.example.server.dto.request.TransactionGraphRequest;
 import com.example.server.dto.response.TransactionGraphResponse;
 import com.example.server.dto.response.TransactionResponse;
+import com.example.server.dto.transformer.TransactionTransformer;
 import com.example.server.entities.Transaction;
 import com.example.server.services.TransactionService;
 import lombok.AllArgsConstructor;
@@ -19,11 +20,17 @@ import java.util.List;
 @CrossOrigin("*")
 public class TransactionController {
 
-    @Autowired
-    TransactionService transactionService;
+    private final TransactionService transactionService;
+    private final TransactionTransformer transactionTransformer;
 
-        @PostMapping("/vouchers/graph")
-        public List<?> graph(@RequestBody TransactionGraphRequest transactionGraphRequest) throws Exception{
-            return transactionService.generateGraph(transactionGraphRequest);
+    @PostMapping("/vouchers/graph")
+    public List<?> graph(@RequestBody TransactionGraphRequest transactionGraphRequest) throws Exception{
+        return transactionService.generateGraph(transactionGraphRequest);
+    }
+
+    @GetMapping("/users/{userId}/transactions")
+    public List<TransactionResponse> getAllTransactionsByUserId(@PathVariable Long userId){
+        List<Transaction> transactions = transactionService.getAllTransactionsByUserId(userId);
+        return transactionTransformer.convertEntityListToResponseList(transactions);
     }
 }
