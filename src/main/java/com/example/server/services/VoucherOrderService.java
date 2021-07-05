@@ -17,6 +17,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -106,6 +107,10 @@ public class VoucherOrderService {
         });
         sellOrders.sort((x,y)->voucherOrderRepository.findById(y.getOrderId()).get().getOrderDate().compareTo(voucherOrderRepository.findById(y.getOrderId()).get().getOrderDate()));
         return sellOrders;
+    }
+
+    public List<VoucherOrderDetail> getBuyOrdersByOrderId(Long orderId){
+        return voucherOrderDetailRepository.findByOrderId(orderId);
     }
 
     public int getNoOfDisputesByUserId(long userId){
