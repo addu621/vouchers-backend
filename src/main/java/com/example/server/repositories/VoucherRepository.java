@@ -28,5 +28,5 @@ public interface VoucherRepository extends JpaRepository<Voucher,Long> {
 
     List<Voucher> findBySellerId(Long sellerId);
 
-    List<Voucher> findByCategoryIdAndVoucherCode(long categoryId,String voucherCode);
+    List<Voucher> findByBrandIdAndVoucherCode(long brandId,String voucherCode);
 }

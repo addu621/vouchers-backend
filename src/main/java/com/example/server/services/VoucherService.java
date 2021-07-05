@@ -36,7 +36,7 @@ public class VoucherService {
 
     public GenericResponse saveVoucher(Voucher voucher) {
         GenericResponse genericResponse = new GenericResponse();
-        if(!voucherRepository.findByCategoryIdAndVoucherCode(voucher.getCategoryId(),voucher.getVoucherCode()).isEmpty()){
+        if(!voucherRepository.findByBrandIdAndVoucherCode(voucher.getCompanyId(),voucher.getVoucherCode()).isEmpty()){
             genericResponse.setMessage("A voucher with same code already exist!");
             genericResponse.setStatus(409);
             return genericResponse;
