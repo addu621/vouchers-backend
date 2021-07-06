@@ -190,6 +190,36 @@ public class Utility {
         javaMailSender.send(mimeMessage);
 
     }
+
+
+    public void voucherRejected(Voucher voucher) throws MessagingException, UnsupportedEncodingException {
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage,true);
+
+        Person person = personRepo.findById(voucher.getSellerId()).get();
+
+        String mailSubject="Voucher Rejected Email";
+        String mailContent="<div style=\"margin-left: 10%; \">" +
+                "<h1 style=\"color: purple\">Voucher Rejected Email</h1>" +
+                "<div>" +
+                "<p>" +
+                "Hi "+person.getFirstName()+",<br>" +
+                "Sorry!!! Your Voucher - "+ voucher.getTitle() +" has been rejected by the admin team.<br>" +
+                "We have decided to remove your voucher from our website because it does not have sufficient proofs for verification!!!.<br>" +
+                "You can feel free to re-upload the voucher with sufficient supporting details for the verification." +
+                "</p>" +
+                "</div>" +
+                "</div>";
+
+//        mimeMessageHelper.setFrom("studiocars2021@gmail.com","Voucher Money");
+        mimeMessageHelper.setSubject(mailSubject);
+        mimeMessageHelper.setText(mailContent,true);
+        mimeMessageHelper.setTo(person.getEmail());
+
+        javaMailSender.send(mimeMessage);
+
+    }
+
     public String[] getNullPropertyNames (Object source) {
         final BeanWrapper src = new BeanWrapperImpl(source);
         java.beans.PropertyDescriptor[] pds = src.getPropertyDescriptors();

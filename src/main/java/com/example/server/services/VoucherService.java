@@ -178,7 +178,7 @@ public class VoucherService {
         return "Voucher verified";
     }
 
-    public String rejectVoucher(Long voucherId) {
+    public String rejectVoucher(Long voucherId) throws UnsupportedEncodingException, MessagingException {
         Voucher voucher = voucherRepository.findById(voucherId).get();
         if(voucher==null) {
             return "Voucher not found!!!";
@@ -194,6 +194,9 @@ public class VoucherService {
         notification.setTitle("Voucher Rejected");
         notification.setDescription("Your Voucher: "+ voucher.getTitle() + " has been rejected by admin");
         notificationService.createNewNotification(notification);
+
+        utilityService.voucherRejected(voucher);
+
         return "Voucher rejected";
 
     }
