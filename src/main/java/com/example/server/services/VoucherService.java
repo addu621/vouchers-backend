@@ -6,6 +6,7 @@ import com.example.server.dto.response.SellerRatingResponse;
 import com.example.server.dto.response.VoucherResponse;
 import com.example.server.entities.*;
 import com.example.server.enums.DealStatus;
+import com.example.server.enums.NotificationType;
 import com.example.server.enums.OrderStatus;
 import com.example.server.enums.VoucherVerificationStatus;
 import com.example.server.model.CheckoutPageCost;
@@ -15,6 +16,8 @@ import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
@@ -33,7 +36,7 @@ public class VoucherService {
     private final VoucherOrderDetailRepository voucherOrderDetailRepository;
     private final WalletService walletService;
     private final Utility utilityService;
-
+    private final NotificationService notificationService;
     public GenericResponse saveVoucher(Voucher voucher) {
         GenericResponse genericResponse = new GenericResponse();
         if(!voucherRepository.findByCompanyIdAndVoucherCode(voucher.getCompanyId(),voucher.getVoucherCode()).isEmpty()){
@@ -153,23 +156,47 @@ public class VoucherService {
 //        return voucherList;
 //    }
 
-    public String acceptVoucher(Long voucherId) {
+    public String acceptVoucher(Long voucherId) throws UnsupportedEncodingException, MessagingException {
         Voucher voucher = voucherRepository.findById(voucherId).get();
         if(voucher==null) {
             return "Voucher not found!!!";
         }
         voucher.setVerificationStatus(VoucherVerificationStatus.VERIFIED);
         voucherRepository.save(voucher);
+
+        Notification notification = new Notification();
+        notification.setNotificationType(NotificationType.VOUCHER_APPROVED);
+        notification.setVoucherId(voucherId);
+        notification.setSellerId(voucher.getSellerId());
+        notification.setReceiverId(voucher.getSellerId());
+        notification.setTitle("Listing Approved");
+        notification.setDescription("Your Listing "+ voucher.getTitle() + " has been approved by our team");
+        notificationService.createNewNotification(notification);
+
+        utilityService.voucherAccepted(voucher);
+
         return "Voucher verified";
     }
 
-    public String rejectVoucher(Long voucherId) {
+    public String rejectVoucher(Long voucherId) throws UnsupportedEncodingException, MessagingException {
         Voucher voucher = voucherRepository.findById(voucherId).get();
         if(voucher==null) {
             return "Voucher not found!!!";
         }
         voucher.setVerificationStatus(VoucherVerificationStatus.REJECTED);
         voucherRepository.save(voucher);
+
+        Notification notification = new Notification();
+        notification.setNotificationType(NotificationType.VOUCHER_REJECTED);
+        notification.setVoucherId(voucherId);
+        notification.setSellerId(voucher.getSellerId());
+        notification.setReceiverId(voucher.getSellerId());
+        notification.setTitle("Listing Rejected");
+        notification.setDescription("Your Listing "+ voucher.getTitle() + " has been rejected our team");
+        notificationService.createNewNotification(notification);
+
+        utilityService.voucherRejected(voucher);
+
         return "Voucher rejected";
 
     }
