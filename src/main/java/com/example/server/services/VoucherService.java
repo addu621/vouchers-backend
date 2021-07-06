@@ -187,7 +187,7 @@ public class VoucherService {
         notification.setVoucherId(voucherId);
         notification.setSellerId(voucher.getSellerId());
         notification.setReceiverId(voucher.getSellerId());
-        notification.setTitle("Vouche Rejected");
+        notification.setTitle("Voucher Rejected");
         notification.setDescription("Your Voucher: "+ voucher.getTitle() + " has been rejected by admin");
         notificationService.createNewNotification(notification);
         return "Voucher rejected";
