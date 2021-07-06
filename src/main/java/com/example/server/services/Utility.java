@@ -87,7 +87,7 @@ public class Utility {
                 "</div>" +
                 "</div>";
 
-        mimeMessageHelper.setFrom("studiocars2021@gmail.com","Voucher Money");
+        mimeMessageHelper.setFrom("vouchermoneycontactus@gmail.com","Voucher Money");
         mimeMessageHelper.setSubject(mailSubject);
         mimeMessageHelper.setText(mailContent,true);
         mimeMessageHelper.setTo(person.getEmail());
@@ -124,7 +124,7 @@ public class Utility {
                 "</div>" +
                 "</div>";
 
-        mimeMessageHelper.setFrom("studiocars2021@gmail.com","Voucher Money");
+        mimeMessageHelper.setFrom("vouchermoneycontactus@gmail.com","Voucher Money");
         mimeMessageHelper.setSubject(mailSubject);
         mimeMessageHelper.setText(mailContent,true);
         mimeMessageHelper.setTo(person.getEmail());
@@ -156,7 +156,7 @@ public class Utility {
                 "</div>" +
                 "</div>";
 
-        mimeMessageHelper.setFrom("studiocars2021@gmail.com","Voucher Money");
+        mimeMessageHelper.setFrom("vouchermoneycontactus@gmail.com","Voucher Money");
         mimeMessageHelper.setSubject(mailSubject);
         mimeMessageHelper.setText(mailContent,true);
         mimeMessageHelper.setTo(person.getEmail());
@@ -182,7 +182,7 @@ public class Utility {
                 "</div>" +
                 "</div>";
 
-//        mimeMessageHelper.setFrom("studiocars2021@gmail.com","Voucher Money");
+        mimeMessageHelper.setFrom("vouchermoneycontactus@gmail.com","Voucher Money");
         mimeMessageHelper.setSubject(mailSubject);
         mimeMessageHelper.setText(mailContent,true);
         mimeMessageHelper.setTo(person.getEmail());
@@ -211,7 +211,7 @@ public class Utility {
                 "</div>" +
                 "</div>";
 
-//        mimeMessageHelper.setFrom("studiocars2021@gmail.com","Voucher Money");
+        mimeMessageHelper.setFrom("vouchermoneycontactus@gmail.com","Voucher Money");
         mimeMessageHelper.setSubject(mailSubject);
         mimeMessageHelper.setText(mailContent,true);
         mimeMessageHelper.setTo(person.getEmail());
