@@ -30,6 +30,9 @@ public class IssueService {
     @Autowired
     private Utility utility;
 
+    @Autowired
+    private ChatService chatService;
+
     public GenericResponse submitIssue(Long orderItemId,String comment) {
 
         GenericResponse genericResponse = new GenericResponse();
