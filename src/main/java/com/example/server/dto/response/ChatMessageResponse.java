@@ -10,7 +10,6 @@ import java.util.Date;
 
 @Data
 public class ChatMessageResponse {
-
     private long id;
     private long senderId;
     private long chatId;

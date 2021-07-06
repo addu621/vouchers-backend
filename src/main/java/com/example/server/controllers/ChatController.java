@@ -24,9 +24,10 @@ public class ChatController {
     private ChatTransformer chatTransformer;
 
     @GetMapping("/issues/{issueId}/chat")
-    public ChatResponse getChatByIssueId(@PathVariable long issueId){
+    public ChatResponse getChatByIssueId(HttpServletRequest request,@PathVariable long issueId){
         Chat chat = chatService.getChatById(issueId);
-        return chatTransformer.convertEntityToResponse(chat);
+        Person personDetails = (Person) request.getAttribute("person");
+        return chatTransformer.convertEntityToResponse(chat,personDetails);
     }
 
     @PostMapping("/newMessage")
@@ -37,6 +38,20 @@ public class ChatController {
         GenericResponse genericResponse = new GenericResponse();
         genericResponse.setStatus(201);
         genericResponse.setMessage("Message Added Succesfully!");
+        return genericResponse;
+    }
+
+    @PostMapping("/chats/{chatId}/markSeen")
+    public GenericResponse markChatSeen(HttpServletRequest request,@PathVariable long chatId){
+        Person personDetails = (Person) request.getAttribute("person");
+        if(personDetails.getIsAdmin()){
+            chatService.markChatSeenForAdmin(chatId);
+        }else{
+            chatService.markChatSeenForUser(chatId);
+        }
+        GenericResponse genericResponse = new GenericResponse();
+        genericResponse.setStatus(201);
+        genericResponse.setMessage("Marked chat as seen for current user!");
         return genericResponse;
     }
 }

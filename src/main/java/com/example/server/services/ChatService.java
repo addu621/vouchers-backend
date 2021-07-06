@@ -3,12 +3,14 @@ package com.example.server.services;
 import com.example.server.dto.response.GenericResponse;
 import com.example.server.entities.Chat;
 import com.example.server.entities.ChatMessage;
+import com.example.server.entities.Person;
 import com.example.server.repositories.ChatMessageRepository;
 import com.example.server.repositories.ChatRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -20,6 +22,9 @@ public class ChatService {
 
     @Autowired
     private ChatMessageRepository chatMessageRepository;
+
+    @Autowired
+    private PersonService personService;
 
     public List<ChatMessage> getAllChatMessagesByChatId(long chatId){
         return (List<ChatMessage>) chatMessageRepository.findByChatId(chatId);
@@ -47,7 +52,43 @@ public class ChatService {
         chatMessage.setSenderId(senderId);
         chatMessage.setChatId(chatId);
         setLastUpdated(chatId);
+        Person person = personService.findById(senderId);
+        if(person.getIsAdmin()){
+            markChatSeenForAdmin(chatId);
+            markChatUnSeenForUser(chatId);
+        }else{
+            markChatSeenForUser(chatId);
+            markChatUnSeenForAdmin(chatId);
+        }
         return chatMessageRepository.save(chatMessage);
+    }
+
+    public boolean markChatSeenForUser(long chatId){
+        Chat chat = chatRepository.findById(chatId).get();
+        chat.setSeenByUser(true);
+        chatRepository.save(chat);
+        return true;
+    }
+
+    public boolean markChatUnSeenForUser(long chatId){
+        Chat chat = chatRepository.findById(chatId).get();
+        chat.setSeenByUser(false);
+        chatRepository.save(chat);
+        return true;
+    }
+
+    public boolean markChatUnSeenForAdmin(long chatId){
+        Chat chat = chatRepository.findById(chatId).get();
+        chat.setSeenByAdmin(false);
+        chatRepository.save(chat);
+        return true;
+    }
+
+    public boolean markChatSeenForAdmin(long chatId){
+        Chat chat = chatRepository.findById(chatId).get();
+        chat.setSeenByAdmin(true);
+        chatRepository.save(chat);
+        return true;
     }
 
     public Chat createChatForIssue(long issueId){
