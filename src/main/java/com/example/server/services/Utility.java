@@ -69,6 +69,31 @@ public class Utility {
 
         return checkoutPageCost;
     }
+    public CheckoutPageCost calculateCheckoutCosts(BigDecimal totalPrice,Integer loyaltyCoinsInWallet,Integer coinsToBeRedeemed){
+        CheckoutPageCost checkoutPageCost = new CheckoutPageCost();
+
+        BigDecimal tax = calculatePercentage(totalPrice,new BigDecimal(2.5));
+        BigDecimal finalCost = tax.add(totalPrice);
+        finalCost = finalCost.setScale(2, RoundingMode.HALF_UP);
+
+        Integer loyaltyCoinsEarned =calculatePercentage(totalPrice,new BigDecimal(5)).setScale(0, RoundingMode.UP).intValue();
+        Integer existingLoyaltyCoinsValue = loyaltyCoinsInWallet/2;
+        Integer maxCoinsRedeemedValue = Math.min(totalPrice.intValue(),coinsToBeRedeemed/2);
+        BigDecimal finalCostAfterCoinRedeem = finalCost.subtract(new BigDecimal(maxCoinsRedeemedValue)).max(new BigDecimal(0.50));
+        Integer remainingCoins = loyaltyCoinsInWallet - maxCoinsRedeemedValue*2;
+
+        checkoutPageCost.setItemsValue(totalPrice);
+        checkoutPageCost.setTaxCalculated(tax);
+        checkoutPageCost.setLoyaltyCoinsInWallet(loyaltyCoinsInWallet);
+        checkoutPageCost.setLoyaltyCoinsEarned(loyaltyCoinsEarned);
+        checkoutPageCost.setExistingLoyaltyCoinsValue(existingLoyaltyCoinsValue);
+        checkoutPageCost.setFinalCost(finalCost);
+        checkoutPageCost.setFinalCostAfterCoinRedeem(finalCostAfterCoinRedeem);
+        checkoutPageCost.setCoinBalanceAfterRedemption(remainingCoins);
+
+        return checkoutPageCost;
+    }
+
     public void sendMail(Person person, String otp) throws MessagingException, UnsupportedEncodingException {
 
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();

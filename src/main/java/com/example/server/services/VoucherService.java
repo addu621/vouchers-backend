@@ -212,4 +212,13 @@ public class VoucherService {
 
         return checkoutPageCost;
     }
+
+    public CheckoutPageCost getVoucherCostById(Long voucherId,Long buyerId,Integer coinsToBeRedeemed){
+        Voucher voucher = voucherRepository.findById(voucherId).get();
+        BigDecimal totalPrice = voucher.getSellingPrice();
+        Integer existingCoins = walletService.getWalletById(buyerId).getCoins();
+        CheckoutPageCost checkoutPageCost  = utilityService.calculateCheckoutCosts(totalPrice,existingCoins,coinsToBeRedeemed);
+
+        return checkoutPageCost;
+    }
 }
