@@ -6,6 +6,7 @@ import com.example.server.dto.response.SellerRatingResponse;
 import com.example.server.dto.response.VoucherResponse;
 import com.example.server.entities.*;
 import com.example.server.enums.DealStatus;
+import com.example.server.enums.NotificationType;
 import com.example.server.enums.OrderStatus;
 import com.example.server.enums.VoucherVerificationStatus;
 import com.example.server.model.CheckoutPageCost;
@@ -33,7 +34,7 @@ public class VoucherService {
     private final VoucherOrderDetailRepository voucherOrderDetailRepository;
     private final WalletService walletService;
     private final Utility utilityService;
-
+    private final NotificationService notificationService;
     public GenericResponse saveVoucher(Voucher voucher) {
         GenericResponse genericResponse = new GenericResponse();
         if(!voucherRepository.findByCategoryIdAndVoucherCode(voucher.getCategoryId(),voucher.getVoucherCode()).isEmpty()){
@@ -160,6 +161,16 @@ public class VoucherService {
         }
         voucher.setVerificationStatus(VoucherVerificationStatus.VERIFIED);
         voucherRepository.save(voucher);
+
+        Notification notification = new Notification();
+        notification.setNotificationType(NotificationType.VOUCHER_APPROVED);
+        notification.setVoucherId(voucherId);
+        notification.setSellerId(voucher.getSellerId());
+        notification.setReceiverId(voucher.getSellerId());
+        notification.setTitle("Voucher Approved");
+        notification.setDescription("Your Voucher: "+ voucher.getTitle() + " has been approved by admin");
+        notificationService.createNewNotification(notification);
+
         return "Voucher verified";
     }
 
@@ -170,6 +181,15 @@ public class VoucherService {
         }
         voucher.setVerificationStatus(VoucherVerificationStatus.REJECTED);
         voucherRepository.save(voucher);
+
+        Notification notification = new Notification();
+        notification.setNotificationType(NotificationType.VOUCHER_REJECTED);
+        notification.setVoucherId(voucherId);
+        notification.setSellerId(voucher.getSellerId());
+        notification.setReceiverId(voucher.getSellerId());
+        notification.setTitle("Vouche Rejected");
+        notification.setDescription("Your Voucher: "+ voucher.getTitle() + " has been rejected by admin");
+        notificationService.createNewNotification(notification);
         return "Voucher rejected";
 
     }
