@@ -27,4 +27,6 @@ public interface VoucherRepository extends JpaRepository<Voucher,Long> {
     List<Voucher> findByVerificationStatus(VoucherVerificationStatus voucherVerificationStatus);
 
     List<Voucher> findBySellerId(Long sellerId);
+
+    List<Voucher> findByCompanyIdAndVoucherCode(long brandId,String voucherCode);
 }

@@ -48,13 +48,11 @@ public class VoucherController {
     }
 
     @PostMapping(value = "/vouchers/new")
-    public VoucherResponse postVoucher(HttpServletRequest request,@RequestBody VoucherRequest voucherRequest) throws ParseException {
+    public GenericResponse postVoucher(HttpServletRequest request,@RequestBody VoucherRequest voucherRequest) throws ParseException {
         Person personDetails = (Person) request.getAttribute("person");
         voucherRequest.setSellerId(personDetails.getId());
         Voucher voucher = voucherTransformer.convertRequestToEntity(voucherRequest);
-        voucher = voucherService.saveVoucher(voucher);
-        VoucherResponse voucherResponse = this.voucherTransformer.convertEntityToResponse(voucher);
-        return voucherResponse;
+        return voucherService.saveVoucher(voucher);
     }
 
     @GetMapping(value = "/vouchers/{id}")

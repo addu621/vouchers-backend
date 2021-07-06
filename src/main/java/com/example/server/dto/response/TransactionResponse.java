@@ -6,6 +6,7 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class TransactionResponse {
@@ -17,4 +18,5 @@ public class TransactionResponse {
     private TransactionStatus transactionStatus;
     private int coinsAddedToWallet;
     private int coinsDeductedFromWallet;
+    private List<OrderResponse> orders;
 }

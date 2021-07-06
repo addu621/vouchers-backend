@@ -16,6 +16,7 @@ import java.util.List;
 public interface TransactionRepository extends CrudRepository<Transaction,String> {
     List<Transaction> findByUserId(long userId);
     List<Transaction> findByOrderId(long orderId);
+    List<Transaction> findByIdAndOrderId(String transactionId,long orderId);
 
     @Query("Select new com.example.server.dto.response.TransactionGraphResponse(TO_CHAR(t.transactionDate,'YYYY-MM-DD'), Count(t.transactionDate)) "+
             "from Transaction as t where TO_CHAR(t.transactionDate,'YYYY-MM-DD') >= :startDate and  TO_CHAR(t.transactionDate,'YYYY-MM-DD') <= :endDate group by TO_CHAR(t.transactionDate,'YYYY-MM-DD')")

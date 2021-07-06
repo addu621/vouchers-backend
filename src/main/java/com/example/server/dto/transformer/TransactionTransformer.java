@@ -1,8 +1,11 @@
 package com.example.server.dto.transformer;
 
+import com.example.server.dto.response.OrderResponse;
 import com.example.server.dto.response.TransactionResponse;
 import com.example.server.entities.Transaction;
 import com.example.server.entities.VoucherOrder;
+import com.example.server.entities.VoucherOrderDetail;
+import com.example.server.repositories.VoucherOrderRepository;
 import com.example.server.services.TransactionService;
 import com.example.server.services.VoucherOrderService;
 import lombok.AllArgsConstructor;
@@ -18,10 +21,15 @@ import static org.springframework.beans.BeanUtils.copyProperties;
 public class TransactionTransformer {
     private final TransactionService transactionService;
     private final VoucherOrderService voucherOrderService;
+    private final VoucherOrderRepository voucherOrderRepository;
+    private final OrderTransformer orderTransformer;
 
     public TransactionResponse convertEntityToResponse(Transaction transaction){
         TransactionResponse transactionResponse = new TransactionResponse();
         copyProperties(transaction,transactionResponse);
+        List<VoucherOrderDetail> orders = voucherOrderService.getBuyOrdersByOrderId(transaction.getOrderId());
+        List<OrderResponse> orderResponses = orderTransformer.convertEntityListToResponse(orders);
+        transactionResponse.setOrders(orderResponses);
         return transactionResponse;
     }
 
