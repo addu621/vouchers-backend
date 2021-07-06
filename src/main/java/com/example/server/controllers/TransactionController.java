@@ -22,8 +22,16 @@ public class TransactionController {
     @Autowired
     TransactionService transactionService;
 
-        @PostMapping("/vouchers/graph")
-        public List<?> graph(@RequestBody TransactionGraphRequest transactionGraphRequest) throws Exception{
-            return transactionService.generateGraph(transactionGraphRequest);
+    @PostMapping("/vouchers/graph")
+    public List<?> graph(@RequestBody TransactionGraphRequest transactionGraphRequest) throws Exception{
+        return transactionService.generateGraph(transactionGraphRequest);
+    }
+    @PostMapping("/vouchers/graph/month")
+    public List<?> graphMonth(@RequestBody TransactionGraphRequest transactionGraphRequest) throws Exception{
+        return transactionService.generateGraphByMonth(transactionGraphRequest);
+    }
+    @PostMapping("/vouchers/graph/year")
+    public List<?> graphYear(@RequestBody TransactionGraphRequest transactionGraphRequest) throws Exception{
+        return transactionService.generateGraphByYear(transactionGraphRequest);
     }
 }

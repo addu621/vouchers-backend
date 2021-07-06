@@ -57,4 +57,15 @@ public class TransactionService {
         Date endDate = utilityService.parseDate(transactionGraphRequest.getEndDate());
         return transactionRepository.generateGraph(transactionGraphRequest.getStartDate(),transactionGraphRequest.getEndDate());
     }
+
+    public List<?> generateGraphByMonth(TransactionGraphRequest transactionGraphRequest) throws ParseException {
+        Date startDate = utilityService.parseDate(transactionGraphRequest.getStartDate());
+        Date endDate = utilityService.parseDate(transactionGraphRequest.getEndDate());
+        return transactionRepository.generateGraphByMonth(transactionGraphRequest.getStartDate(),transactionGraphRequest.getEndDate());
+    }
+    public List<?> generateGraphByYear(TransactionGraphRequest transactionGraphRequest) throws ParseException {
+        Date startDate = utilityService.parseDate(transactionGraphRequest.getStartDate());
+        Date endDate = utilityService.parseDate(transactionGraphRequest.getEndDate());
+        return transactionRepository.generateGraphByYears(transactionGraphRequest.getStartDate(),transactionGraphRequest.getEndDate());
+    }
 }
