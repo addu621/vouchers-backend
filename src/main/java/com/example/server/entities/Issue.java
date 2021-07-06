@@ -30,5 +30,4 @@ public class Issue {
 
     @CreationTimestamp
     private Date createdDate;
-
 }

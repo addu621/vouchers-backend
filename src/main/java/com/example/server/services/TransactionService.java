@@ -1,6 +1,7 @@
 package com.example.server.services;
 
 import com.example.server.dto.request.TransactionGraphRequest;
+import com.example.server.dto.response.PieChartResponse;
 import com.example.server.dto.response.TransactionGraphResponse;
 import com.example.server.entities.Transaction;
 import com.example.server.enums.TransactionStatus;
@@ -56,9 +57,38 @@ public class TransactionService {
         return this.transactionRepository.findByUserId(userId);
     }
 
-//    public List<?> generateGraph(TransactionGraphRequest transactionGraphRequest) throws ParseException {
-//        Date startDate = utilityService.parseDate(transactionGraphRequest.getStartDate());
-//        Date endDate = utilityService.parseDate(transactionGraphRequest.getEndDate());
-//        return transactionRepository.generateGraph(transactionGraphRequest.getStartDate(),transactionGraphRequest.getEndDate());
-//    }
+    public List<?> generateGraph(TransactionGraphRequest transactionGraphRequest) throws ParseException {
+        Date startDate = utilityService.parseDate(transactionGraphRequest.getStartDate());
+        Date endDate = utilityService.parseDate(transactionGraphRequest.getEndDate());
+        return transactionRepository.generateGraph(transactionGraphRequest.getStartDate(),transactionGraphRequest.getEndDate());
+    }
+
+    public List<?> generateGraphByMonth(TransactionGraphRequest transactionGraphRequest) throws ParseException {
+        Date startDate = utilityService.parseDate(transactionGraphRequest.getStartDate());
+        Date endDate = utilityService.parseDate(transactionGraphRequest.getEndDate());
+        return transactionRepository.generateGraphByMonth(transactionGraphRequest.getStartDate(),transactionGraphRequest.getEndDate());
+    }
+    public List<?> generateGraphByYear(TransactionGraphRequest transactionGraphRequest) throws ParseException {
+        Date startDate = utilityService.parseDate(transactionGraphRequest.getStartDate());
+        Date endDate = utilityService.parseDate(transactionGraphRequest.getEndDate());
+        return transactionRepository.generateGraphByYears(transactionGraphRequest.getStartDate(),transactionGraphRequest.getEndDate());
+    }
+
+    public PieChartResponse createPie(TransactionGraphRequest transactionGraphRequest) throws ParseException{
+        Date startDate = utilityService.parseDate(transactionGraphRequest.getStartDate());
+        Date endDate = utilityService.parseDate(transactionGraphRequest.getEndDate());
+        return transactionRepository.generatePie(transactionGraphRequest.getStartDate(),transactionGraphRequest.getEndDate());
+    }
+
+    public PieChartResponse createPieByMonth(TransactionGraphRequest transactionGraphRequest) throws ParseException{
+        Date startDate = utilityService.parseDate(transactionGraphRequest.getStartDate());
+        Date endDate = utilityService.parseDate(transactionGraphRequest.getEndDate());
+        return transactionRepository.generatePieByMonth(transactionGraphRequest.getStartDate(),transactionGraphRequest.getEndDate());
+    }
+
+    public PieChartResponse createPieByYear(TransactionGraphRequest transactionGraphRequest) throws ParseException{
+        Date startDate = utilityService.parseDate(transactionGraphRequest.getStartDate());
+        Date endDate = utilityService.parseDate(transactionGraphRequest.getEndDate());
+        return transactionRepository.generatePieByYear(transactionGraphRequest.getStartDate(),transactionGraphRequest.getEndDate());
+    }
 }
