@@ -169,8 +169,8 @@ public class VoucherService {
         notification.setVoucherId(voucherId);
         notification.setSellerId(voucher.getSellerId());
         notification.setReceiverId(voucher.getSellerId());
-        notification.setTitle("Voucher Approved");
-        notification.setDescription("Your Voucher: "+ voucher.getTitle() + " has been approved by admin");
+        notification.setTitle("Listing Approved");
+        notification.setDescription("Your Listing "+ voucher.getTitle() + " has been approved by our team");
         notificationService.createNewNotification(notification);
 
         utilityService.voucherAccepted(voucher);
@@ -191,8 +191,8 @@ public class VoucherService {
         notification.setVoucherId(voucherId);
         notification.setSellerId(voucher.getSellerId());
         notification.setReceiverId(voucher.getSellerId());
-        notification.setTitle("Voucher Rejected");
-        notification.setDescription("Your Voucher: "+ voucher.getTitle() + " has been rejected by admin");
+        notification.setTitle("Listing Rejected");
+        notification.setDescription("Your Listing "+ voucher.getTitle() + " has been rejected our team");
         notificationService.createNewNotification(notification);
 
         utilityService.voucherRejected(voucher);
