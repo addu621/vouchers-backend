@@ -1,6 +1,7 @@
 package com.example.server.controllers;
 
 import com.example.server.dto.request.TransactionGraphRequest;
+import com.example.server.dto.response.PieChartResponse;
 import com.example.server.dto.response.TransactionGraphResponse;
 import com.example.server.dto.response.TransactionResponse;
 import com.example.server.entities.Transaction;
@@ -33,5 +34,18 @@ public class TransactionController {
     @PostMapping("/vouchers/graph/year")
     public List<?> graphYear(@RequestBody TransactionGraphRequest transactionGraphRequest) throws Exception{
         return transactionService.generateGraphByYear(transactionGraphRequest);
+    }
+
+    @PostMapping("/vouchers/pie")
+    public PieChartResponse createPie(@RequestBody TransactionGraphRequest transactionGraphRequest)throws Exception{
+        return transactionService.createPie(transactionGraphRequest);
+    }
+    @PostMapping("/vouchers/pie/month")
+    public PieChartResponse createPieByMonth(@RequestBody TransactionGraphRequest transactionGraphRequest)throws Exception{
+        return transactionService.createPieByMonth(transactionGraphRequest);
+    }
+    @PostMapping("/vouchers/pie/year")
+    public PieChartResponse createPieByYear(@RequestBody TransactionGraphRequest transactionGraphRequest)throws Exception{
+        return transactionService.createPieByYear(transactionGraphRequest);
     }
 }
