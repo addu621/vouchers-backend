@@ -155,6 +155,8 @@ public class UserService implements UserDetailsService {
             System.out.println(person.getPassword());
             person.setPassword(bcryptEncoder.encode(newPassword));
             System.out.println(person.getPassword());
+            if(!person.getIsOtpVerified())
+                person.setIsOtpVerified(true);
             personRepo.save(person);
         }
         else {

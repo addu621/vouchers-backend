@@ -72,6 +72,12 @@ public class JwtController {
 
         if(person==null) {
             mp.put("error", "Invalid Credentials");
+            return mp;
+        }
+
+        if(!person.getIsOtpVerified()){
+            mp.put("Error","This user Email is not verified");
+            return mp;
         }
 
         mp.put("token", token);

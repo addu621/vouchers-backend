@@ -16,7 +16,9 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -113,12 +115,12 @@ public class VoucherController {
     }
 
     @PutMapping("/vouchers/acceptVoucher/{voucherId}")
-    public String acceptVoucher(@PathVariable Long voucherId){
+    public String acceptVoucher(@PathVariable Long voucherId) throws UnsupportedEncodingException, MessagingException {
         return voucherService.acceptVoucher(voucherId);
     }
 
     @PutMapping("/vouchers/rejectVoucher/{voucherId}")
-    public String rejectVoucher(@PathVariable Long voucherId){
+    public String rejectVoucher(@PathVariable Long voucherId) throws UnsupportedEncodingException, MessagingException {
         return voucherService.rejectVoucher(voucherId);
     }
 
