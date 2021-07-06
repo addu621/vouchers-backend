@@ -1,9 +1,6 @@
 package com.example.server.services;
 
-import com.example.server.entities.Issue;
-import com.example.server.entities.Person;
-import com.example.server.entities.VoucherOrder;
-import com.example.server.entities.VoucherOrderDetail;
+import com.example.server.entities.*;
 import com.example.server.model.CheckoutPageCost;
 import com.example.server.repositories.PersonRepo;
 import com.example.server.repositories.VoucherOrderDetailRepository;
@@ -167,6 +164,32 @@ public class Utility {
         javaMailSender.send(mimeMessage);
     }
 
+    public void voucherAccepted(Voucher voucher) throws MessagingException, UnsupportedEncodingException {
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage,true);
+
+        Person person = personRepo.findById(voucher.getSellerId()).get();
+
+        String mailSubject="Voucher Accepted Email";
+        String mailContent="<div style=\"margin-left: 10%; \">" +
+                "<h1 style=\"color: purple\">Voucher Accepted Email</h1>" +
+                "<div>" +
+                "<p>" +
+                "Hi "+person.getFirstName()+",<br>" +
+                "Congratulations!!! Your Voucher - "+ voucher.getTitle() +" has been approved by the admin team.<br>" +
+                "Your voucher is up on our website, and you will be notified whenever someone quotes a price or want to buy your voucher." +
+                "</p>" +
+                "</div>" +
+                "</div>";
+
+//        mimeMessageHelper.setFrom("studiocars2021@gmail.com","Voucher Money");
+        mimeMessageHelper.setSubject(mailSubject);
+        mimeMessageHelper.setText(mailContent,true);
+        mimeMessageHelper.setTo(person.getEmail());
+
+        javaMailSender.send(mimeMessage);
+
+    }
     public String[] getNullPropertyNames (Object source) {
         final BeanWrapper src = new BeanWrapperImpl(source);
         java.beans.PropertyDescriptor[] pds = src.getPropertyDescriptors();

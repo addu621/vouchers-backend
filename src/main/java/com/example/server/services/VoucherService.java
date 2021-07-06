@@ -16,6 +16,8 @@ import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
@@ -154,7 +156,7 @@ public class VoucherService {
 //        return voucherList;
 //    }
 
-    public String acceptVoucher(Long voucherId) {
+    public String acceptVoucher(Long voucherId) throws UnsupportedEncodingException, MessagingException {
         Voucher voucher = voucherRepository.findById(voucherId).get();
         if(voucher==null) {
             return "Voucher not found!!!";
@@ -170,6 +172,8 @@ public class VoucherService {
         notification.setTitle("Voucher Approved");
         notification.setDescription("Your Voucher: "+ voucher.getTitle() + " has been approved by admin");
         notificationService.createNewNotification(notification);
+
+        utilityService.voucherAccepted(voucher);
 
         return "Voucher verified";
     }
