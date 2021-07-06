@@ -23,10 +23,10 @@ public class TransactionController {
     private final TransactionService transactionService;
     private final TransactionTransformer transactionTransformer;
 
-    @PostMapping("/vouchers/graph")
-    public List<?> graph(@RequestBody TransactionGraphRequest transactionGraphRequest) throws Exception{
-        return transactionService.generateGraph(transactionGraphRequest);
-    }
+//    @PostMapping("/vouchers/graph")
+//    public List<?> graph(@RequestBody TransactionGraphRequest transactionGraphRequest) throws Exception{
+//        return transactionService.generateGraph(transactionGraphRequest);
+//    }
 
     @GetMapping("/users/{userId}/transactions")
     public List<TransactionResponse> getAllTransactionsByUserId(@PathVariable Long userId){

@@ -56,9 +56,9 @@ public class TransactionService {
         return this.transactionRepository.findByUserId(userId);
     }
 
-    public List<?> generateGraph(TransactionGraphRequest transactionGraphRequest) throws ParseException {
-        Date startDate = utilityService.parseDate(transactionGraphRequest.getStartDate());
-        Date endDate = utilityService.parseDate(transactionGraphRequest.getEndDate());
-        return transactionRepository.generateGraph(transactionGraphRequest.getStartDate(),transactionGraphRequest.getEndDate());
-    }
+//    public List<?> generateGraph(TransactionGraphRequest transactionGraphRequest) throws ParseException {
+//        Date startDate = utilityService.parseDate(transactionGraphRequest.getStartDate());
+//        Date endDate = utilityService.parseDate(transactionGraphRequest.getEndDate());
+//        return transactionRepository.generateGraph(transactionGraphRequest.getStartDate(),transactionGraphRequest.getEndDate());
+//    }
 }
