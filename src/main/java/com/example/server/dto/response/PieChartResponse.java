@@ -6,15 +6,13 @@ import java.math.BigDecimal;
 
 @Data
 public class PieChartResponse {
-    private BigDecimal totalTransactionSum;
-    private long coinsValueEarnedByBuyer;
-    private long coinsValueRedeemedByBuyer;
-    private Double commission;
+    private BigDecimal buyerAmountSum;
+    private BigDecimal sellerAmountSum;
+    private BigDecimal commissionSum;
 
-    public PieChartResponse(BigDecimal totalTransactionSum, long coinsValueEarnedByBuyer, long coinsValueRedeemedByBuyer, Double commission) {
-        this.totalTransactionSum = totalTransactionSum;
-        this.coinsValueEarnedByBuyer = coinsValueEarnedByBuyer;
-        this.coinsValueRedeemedByBuyer = coinsValueRedeemedByBuyer;
-        this.commission = commission;
+    public PieChartResponse(BigDecimal buyerAmountSum, BigDecimal sellerAmountSum, BigDecimal commissionSum) {
+        this.buyerAmountSum = buyerAmountSum;
+        this.sellerAmountSum = sellerAmountSum;
+        this.commissionSum = commissionSum;
     }
 }
