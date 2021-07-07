@@ -92,12 +92,4 @@ public class PaymentController {
         return checkoutPageCost;
     }
 
-//    @GetMapping("payment/disburse/seller")
-//    public String disbursePaymentToSeller(HttpServletRequest request){
-//        Person personDetails = (Person) request.getAttribute("person");
-//        Long userId = personDetails.getId();
-//        CheckoutPageCost checkoutPageCost = cartService.getCartValue(userId);
-//        return checkoutPageCost;
-//    }
-
 }
