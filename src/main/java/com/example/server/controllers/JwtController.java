@@ -101,7 +101,7 @@ public class JwtController {
             person.setImageUrl(googleRequest.getPhotoUrl());
             person.setIsAdmin(false);
             person.setPassword(bCryptPasswordEncoder.encode(""));
-            personRepo.save(person);
+            userService.save(person);
         }
         authenticate(googleRequest.getEmail(),"");
 
