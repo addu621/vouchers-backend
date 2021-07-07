@@ -1,5 +1,6 @@
 package com.example.server.dto.response;
 
+import com.example.server.entities.Person;
 import lombok.Data;
 
 import javax.persistence.Column;
@@ -12,6 +13,7 @@ import java.util.Date;
 public class ChatMessageResponse {
     private long id;
     private long senderId;
+    private Person sender;
     private long chatId;
     private String message;
     private Date sentOn;

@@ -4,6 +4,7 @@ import com.example.server.dto.response.GenericResponse;
 import com.example.server.dto.response.IssueResponse;
 import com.example.server.dto.transformer.IssueTransformer;
 import com.example.server.entities.Issue;
+import com.example.server.entities.Person;
 import com.example.server.services.IssueService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
@@ -33,9 +35,10 @@ public class IssueController {
     }
 
     @GetMapping("/getIssues")
-    public List<IssueResponse> getIssues() {
+    public List<IssueResponse> getIssues(HttpServletRequest request) {
+        Person personDetails = (Person) request.getAttribute("person");
         List<Issue> allIssues = issueService.getIssues();
-        return issueTransformer.convertEntityListToResponseList(allIssues);
+        return issueTransformer.convertEntityListToResponseList(allIssues,personDetails);
     }
 
     @PutMapping("/issue/{issueId}/is-read")
