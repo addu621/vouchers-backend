@@ -24,6 +24,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import static java.lang.Math.min;
+
 
 @Service
 public class Utility {
@@ -54,7 +56,7 @@ public class Utility {
 
         Integer loyaltyCoinsEarned =calculatePercentage(totalPrice,new BigDecimal(5)).setScale(0, RoundingMode.UP).intValue();
         Integer existingLoyaltyCoinsValue = loyaltyCoinsInWallet/2;
-        Integer maxCoinsRedeemedValue = Math.min(totalPrice.intValue(),existingLoyaltyCoinsValue);
+        Integer maxCoinsRedeemedValue = min(totalPrice.intValue(),existingLoyaltyCoinsValue);
         BigDecimal finalCostAfterCoinRedeem = finalCost.subtract(new BigDecimal(maxCoinsRedeemedValue)).max(new BigDecimal(0.50));
         Integer remainingCoins = loyaltyCoinsInWallet - maxCoinsRedeemedValue*2;
 
@@ -77,8 +79,8 @@ public class Utility {
         finalCost = finalCost.setScale(2, RoundingMode.HALF_UP);
 
         Integer loyaltyCoinsEarned =calculatePercentage(totalPrice,new BigDecimal(5)).setScale(0, RoundingMode.UP).intValue();
-        Integer existingLoyaltyCoinsValue = loyaltyCoinsInWallet/2;
-        Integer maxCoinsRedeemedValue = Math.min(totalPrice.intValue(),coinsToBeRedeemed/2);
+        Integer existingLoyaltyCoinsValue = min(loyaltyCoinsInWallet/2,coinsToBeRedeemed/2);
+        Integer maxCoinsRedeemedValue = min(totalPrice.intValue(),existingLoyaltyCoinsValue);
         BigDecimal finalCostAfterCoinRedeem = finalCost.subtract(new BigDecimal(maxCoinsRedeemedValue)).max(new BigDecimal(0.50));
         Integer remainingCoins = loyaltyCoinsInWallet - maxCoinsRedeemedValue*2;
 
