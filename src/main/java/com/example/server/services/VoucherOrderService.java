@@ -62,7 +62,7 @@ public class VoucherOrderService {
         return this.voucherOrderDetailRepository.save(voucherOrderDetail);
     }
 
-    public boolean placeOrder(long orderId, String transactionId, boolean isCoinsRedeemed){
+    public boolean placeOrder(long orderId, String transactionId, int noOfCoinsReedemed){
         if(this.voucherOrderRepository.findById(orderId)==null) return false;
         VoucherOrder voucherOrder = this.voucherOrderRepository.findById(orderId).get();
         voucherOrder.setOrderStatus(OrderStatus.SUCCESS);
@@ -72,13 +72,13 @@ public class VoucherOrderService {
             totalPrice = totalPrice.add(orderDetail.getItemPrice());
         }
         Wallet wallet = walletService.getWalletById(voucherOrder.getBuyerId());
-        CheckoutPageCost checkoutPageCost = utility.calculateCheckoutCosts(totalPrice,wallet.getCoins());
+        CheckoutPageCost checkoutPageCost = utility.calculateCheckoutCosts(totalPrice,noOfCoinsReedemed);
         int coinsAdded = checkoutPageCost.getLoyaltyCoinsEarned();
         int coinsDeducted  = 0;
         BigDecimal finalCost = new BigDecimal(0);
         int walletCoins = wallet.getCoins();
 
-        if(isCoinsRedeemed){
+        if(noOfCoinsReedemed>0){
             coinsDeducted  = checkoutPageCost.getLoyaltyCoinsInWallet()-checkoutPageCost.getCoinBalanceAfterRedemption();
             finalCost = checkoutPageCost.getFinalCostAfterCoinRedeem();
             walletCoins = checkoutPageCost.getCoinBalanceAfterRedemption();

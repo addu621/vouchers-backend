@@ -71,7 +71,7 @@ public class CartService {
         return vouchers;
     }
 
-    public List<Voucher> checkOutCart(long cartId,String transactionId, boolean isCoinsReedemed){
+    public List<Voucher> checkOutCart(long cartId,String transactionId, int noOfCoinsReedemed){
         List<CartItem> cartItems = cartItemRepository.findByCartId(cartId);
         List<Voucher> vouchers = new ArrayList<>();
         BigDecimal totalPrice = new BigDecimal(0);
@@ -89,7 +89,7 @@ public class CartService {
             }
         });
 
-        this.voucherOrderService.placeOrder(voucherOrder.getId(),transactionId,isCoinsReedemed);
+        this.voucherOrderService.placeOrder(voucherOrder.getId(),transactionId,noOfCoinsReedemed);
         return vouchers;
     }
 
