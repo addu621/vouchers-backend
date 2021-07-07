@@ -2,9 +2,11 @@ package com.example.server.entities;
 
 import com.example.server.enums.AmountTransferStatus;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Date;
 
 @Data
 @Entity
@@ -33,4 +35,7 @@ public class AmountTransfer {
 
     @Column(name = "amount_transfer_status")
     private AmountTransferStatus amountTransferStatus;
+
+    @CreationTimestamp
+    private Date createdDate;
 }
