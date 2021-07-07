@@ -16,4 +16,10 @@ public class Chat {
 
     @Column(name = "last_updated")
     private Date lastUpdated;
+
+    @Column(name = "is_seen_by_user")
+    private boolean isSeenByUser;
+
+    @Column(name = "is_seen_by_admin")
+    private boolean isSeenByAdmin;
 }

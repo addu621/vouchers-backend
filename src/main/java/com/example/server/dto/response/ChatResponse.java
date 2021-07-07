@@ -10,7 +10,7 @@ import java.util.List;
 
 @Data
 public class ChatResponse {
-
     private long id;
+    private boolean isSeen;
     private List<ChatMessageResponse> messages;
 }

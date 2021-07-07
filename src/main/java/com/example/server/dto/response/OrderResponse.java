@@ -14,4 +14,6 @@ public class OrderResponse {
     public String transactionId;
     private BigDecimal orderItemPrice;
     public VoucherResponse voucher;
+    public long issueId;
+    public Boolean isChatUnSeen;
 }

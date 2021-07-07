@@ -6,6 +6,7 @@ import com.example.server.dto.response.TransactionGraphResponse;
 import com.example.server.entities.Transaction;
 import com.example.server.enums.TransactionStatus;
 import com.example.server.enums.TransactionType;
+import com.example.server.repositories.AmountTransferRepository;
 import com.example.server.repositories.TransactionRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import java.util.List;
 @AllArgsConstructor
 public class TransactionService {
     private final TransactionRepository transactionRepository;
+    private final AmountTransferRepository amountTransferRepository;
     private final Utility utilityService;
 
     public Transaction addTransaction(String transactionId, long orderId, int coinsAdded, int coinsDeducted,long userId,TransactionType transactionType,BigDecimal amount){
@@ -77,18 +79,18 @@ public class TransactionService {
     public PieChartResponse createPie(TransactionGraphRequest transactionGraphRequest) throws ParseException{
         Date startDate = utilityService.parseDate(transactionGraphRequest.getStartDate());
         Date endDate = utilityService.parseDate(transactionGraphRequest.getEndDate());
-        return transactionRepository.generatePie(transactionGraphRequest.getStartDate(),transactionGraphRequest.getEndDate());
+        return amountTransferRepository.getRevenueByDay(transactionGraphRequest.getStartDate(),transactionGraphRequest.getEndDate());
     }
 
     public PieChartResponse createPieByMonth(TransactionGraphRequest transactionGraphRequest) throws ParseException{
         Date startDate = utilityService.parseDate(transactionGraphRequest.getStartDate());
         Date endDate = utilityService.parseDate(transactionGraphRequest.getEndDate());
-        return transactionRepository.generatePieByMonth(transactionGraphRequest.getStartDate(),transactionGraphRequest.getEndDate());
+        return amountTransferRepository.getRevenueByMonth(transactionGraphRequest.getStartDate(),transactionGraphRequest.getEndDate());
     }
 
     public PieChartResponse createPieByYear(TransactionGraphRequest transactionGraphRequest) throws ParseException{
         Date startDate = utilityService.parseDate(transactionGraphRequest.getStartDate());
         Date endDate = utilityService.parseDate(transactionGraphRequest.getEndDate());
-        return transactionRepository.generatePieByYear(transactionGraphRequest.getStartDate(),transactionGraphRequest.getEndDate());
+        return amountTransferRepository.getRevenueByYear(transactionGraphRequest.getStartDate(),transactionGraphRequest.getEndDate());
     }
 }

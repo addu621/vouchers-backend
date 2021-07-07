@@ -78,7 +78,7 @@ public class UserService implements UserDetailsService {
             Person oldPerson = personRepo.findByEmail(person.getEmail());
             if(oldPerson!=null)
             {
-                throw new Exception("User with this Email Id already exists!!!");
+                throw new Exception("User with this email Id already exists!!!");
             }
 
             person.setPassword(bcryptEncoder.encode(person.getPassword()));
