@@ -57,4 +57,12 @@ public class CartController {
         List<Voucher> vouchers = cartService.checkOutCart(personDetails.getId(),transactionId,noOfCoinsReedemed);
         return this.voucherTransformer.convertEntityListToResponseList(vouchers);
     }
+    @GetMapping("/can-add/to-cart/{voucherId}")
+    public Boolean canAddToCart(HttpServletRequest request,@PathVariable Long voucherId) {
+        Person personDetails = (Person) request.getAttribute("person");
+        Long buyerId = personDetails.getId();
+
+        return cartService.canAddToCart(buyerId,voucherId);
+    }
+
 }
