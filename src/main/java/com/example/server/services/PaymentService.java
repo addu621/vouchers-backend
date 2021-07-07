@@ -25,7 +25,7 @@ public class PaymentService {
 
         JSONObject options = new JSONObject();
         options.put("amount", convertRupeeToPaise(amount));
-        options.put("currency", "INR");
+        options.put("currency", "USD");
         options.put("receipt", "txn_123456");
         options.put("payment_capture", 1); // You can enable this if you want to do Auto Capture.
         return client.Orders.create(options);

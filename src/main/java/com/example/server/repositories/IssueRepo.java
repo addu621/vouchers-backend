@@ -14,6 +14,8 @@ public interface IssueRepo extends JpaRepository<Issue,String> {
 
     public Issue findByIssueId(Long issueId);
 
+    public Issue findByOrderItemId(long orderItemId);
+
     /*@Query("select i from Issue i where orderItemId in (select orderItemId from VoucherOrderDetail vd inner join VoucherOrder vo on vd.orderId=vo.id and vo.buyerId=:userId)")
     public List<Issue> findIssuesByUserId(@Param("userId") long userId);*/
 

@@ -34,11 +34,11 @@ public class PaymentController {
     public PaymentOrderResponse createCartPaymentOrder(HttpServletRequest request, @RequestBody PaymentOrderRequest paymentOrderRequest) throws RazorpayException {
         Person personDetails = (Person) request.getAttribute("person");
         Long userId = personDetails.getId();
-        CheckoutPageCost checkoutPageCost = cartService.getCartValue(userId);
+        CheckoutPageCost checkoutPageCost = cartService.getCartValue(userId,paymentOrderRequest.getRedeemedCoins());
 
         // take redeemed cost
         BigDecimal paymentValue = new BigDecimal(0);
-        if(paymentOrderRequest.getHasRedeemed()){
+        if(paymentOrderRequest.getRedeemedCoins()>0){
             paymentValue = checkoutPageCost.getFinalCostAfterCoinRedeem();
         }
         else{
@@ -58,10 +58,10 @@ public class PaymentController {
         Person personDetails = (Person) request.getAttribute("person");
         Long buyerId = personDetails.getId();
 
-        CheckoutPageCost checkoutPageCost = voucherService.getVoucherCostById(voucherId,buyerId);
+        CheckoutPageCost checkoutPageCost = voucherService.getVoucherCostById(voucherId,buyerId,paymentOrderRequest.getRedeemedCoins());
 
         BigDecimal paymentValue = new BigDecimal(0);
-        if(paymentOrderRequest.getHasRedeemed()){
+        if(paymentOrderRequest.getRedeemedCoins()>0){
             paymentValue = checkoutPageCost.getFinalCostAfterCoinRedeem();
         }
         else{
@@ -81,7 +81,7 @@ public class PaymentController {
         Person personDetails = (Person) request.getAttribute("person");
         Long buyerId = personDetails.getId();
 
-         CheckoutPageCost checkoutPageCost = voucherService.getVoucherCostById(voucherId,buyerId);
+        CheckoutPageCost checkoutPageCost = voucherService.getVoucherCostById(voucherId,buyerId);
         return checkoutPageCost;
     }
     @GetMapping("payment/get/cart-order/")
@@ -91,5 +91,29 @@ public class PaymentController {
         CheckoutPageCost checkoutPageCost = cartService.getCartValue(userId);
         return checkoutPageCost;
     }
+
+    @GetMapping("payment/get/voucher-order/{voucherId}/redeem/{redeemCoins}")
+    public CheckoutPageCost voucherCostByVoucherId(HttpServletRequest request,@PathVariable Long voucherId,@PathVariable Integer redeemCoins){
+        Person personDetails = (Person) request.getAttribute("person");
+        Long buyerId = personDetails.getId();
+
+         CheckoutPageCost checkoutPageCost = voucherService.getVoucherCostById(voucherId,buyerId,redeemCoins);
+        return checkoutPageCost;
+    }
+    @GetMapping("payment/get/cart-order/{redeemCoins}")
+    public CheckoutPageCost voucherCostByCartId(HttpServletRequest request,@PathVariable Integer redeemCoins){
+        Person personDetails = (Person) request.getAttribute("person");
+        Long userId = personDetails.getId();
+        CheckoutPageCost checkoutPageCost = cartService.getCartValue(userId,redeemCoins);
+        return checkoutPageCost;
+    }
+
+//    @GetMapping("payment/disburse/seller")
+//    public String disbursePaymentToSeller(HttpServletRequest request){
+//        Person personDetails = (Person) request.getAttribute("person");
+//        Long userId = personDetails.getId();
+//        CheckoutPageCost checkoutPageCost = cartService.getCartValue(userId);
+//        return checkoutPageCost;
+//    }
 
 }

@@ -33,6 +33,7 @@ public class IssueService {
     @Autowired
     private ChatService chatService;
 
+
     public GenericResponse submitIssue(Long orderItemId,String comment) {
 
         GenericResponse genericResponse = new GenericResponse();
@@ -51,7 +52,8 @@ public class IssueService {
         Issue issue = new Issue();
         issue.setComment(comment);
         issue.setOrderItemId(orderItemId);
-        issueRepo.save(issue);
+        Issue savedIssue = issueRepo.save(issue);
+        chatService.createChatForIssue(savedIssue.getIssueId());
 
         genericResponse.setMessage("Issue submitted successfully!!!");
         genericResponse.setStatus(200);

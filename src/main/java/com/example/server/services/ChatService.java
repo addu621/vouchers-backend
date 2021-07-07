@@ -6,6 +6,7 @@ import com.example.server.entities.ChatMessage;
 import com.example.server.entities.Person;
 import com.example.server.repositories.ChatMessageRepository;
 import com.example.server.repositories.ChatRepository;
+import com.example.server.repositories.PersonRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -63,6 +64,15 @@ public class ChatService {
         return chatMessageRepository.save(chatMessage);
     }
 
+    public boolean isChatUnseenForUser(long issueId,long userId){
+        Person person = personService.findById(userId);
+        Chat chat = chatRepository.findById(issueId).get();
+        if(person.getIsAdmin()){
+            return chat.isSeenByAdmin();
+        }
+        return chat.isSeenByUser();
+    }
+
     public boolean markChatSeenForUser(long chatId){
         Chat chat = chatRepository.findById(chatId).get();
         chat.setSeenByUser(true);
@@ -94,6 +104,8 @@ public class ChatService {
     public Chat createChatForIssue(long issueId){
         Chat chat = new Chat();
         chat.setId(issueId);
+        chat.setSeenByAdmin(true);
+        chat.setSeenByUser(true);
         return chatRepository.save(chat);
     }
 }
