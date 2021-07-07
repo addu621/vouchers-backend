@@ -28,8 +28,15 @@ public class CartService {
     private final TransactionService transactionService;
     private final Utility utilityService;
     private final WalletService walletService;
+    private final VoucherService voucherService;
 
-
+    public boolean isItemInBuyerCart(Long buyerId,Long voucherId){
+        List<CartItem> cartItemList = cartItemRepository.findByCartIdAndVoucherId(buyerId,voucherId);
+        if(cartItemList.size()==0){
+            return false;
+        }
+        return true;
+    }
     public boolean addItemToCart(long cartId,long voucherId){
         CartItem cartItem = new CartItem();
         cartItem.setCartId(cartId);
@@ -119,6 +126,25 @@ public class CartService {
         };
         CheckoutPageCost result = utilityService.calculateCheckoutCosts(totalPrice,coinsInWallet,coinsToBeRedeemed);
         return result;
+    }
+
+    public Boolean canAddToCart(Long buyerId,Long voucherId){
+        Long sellerId = voucherService.getSellerIdByVoucherId(voucherId);
+
+        // check if current buyer is not seller
+        if(sellerId==buyerId){
+            return false;
+        }
+
+        // check if current voucher is already sold
+        if(voucherService.isVoucherSold(voucherId)){
+            return false;
+        }
+
+        if(!isItemInBuyerCart(buyerId,voucherId)){
+            return true;
+        }
+        return false;
     }
 }
 

@@ -166,4 +166,13 @@ public class VoucherController {
         return this.voucherTransformer.convertEntityListToResponseList(result);
     }
 
+    @GetMapping("/can-quote/{voucherId}")
+    public Boolean canQuote(HttpServletRequest request,@PathVariable Long voucherId) {
+        Person personDetails = (Person) request.getAttribute("person");
+        Long buyerId = personDetails.getId();
+
+        return voucherService.canQuote(buyerId,voucherId);
+    }
+
+
 }

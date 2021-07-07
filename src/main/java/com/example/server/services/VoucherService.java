@@ -37,6 +37,9 @@ public class VoucherService {
     private final WalletService walletService;
     private final Utility utilityService;
     private final NotificationService notificationService;
+
+
+
     public GenericResponse saveVoucher(Voucher voucher) {
         GenericResponse genericResponse = new GenericResponse();
         if(!voucherRepository.findByCompanyIdAndVoucherCode(voucher.getCompanyId(),voucher.getVoucherCode()).isEmpty()){
@@ -221,4 +224,33 @@ public class VoucherService {
 
         return checkoutPageCost;
     }
+
+    public Boolean canQuote(Long buyerId,Long voucherId){
+        Long sellerId = getSellerIdByVoucherId(voucherId);
+
+        // check if current buyer is not seller
+        if(sellerId==buyerId){
+            return false;
+        }
+
+        // check if voucher is already sold
+        if(isVoucherSold(voucherId)){
+            return false;
+        }
+
+        List<VoucherDeal> alreadyQuotedList = voucherDealRepository.findByVoucherIdAndBuyerId(voucherId,buyerId);
+        // if current voucher is not already quoted
+        if(alreadyQuotedList.size()==0) {
+            return true;
+        }
+
+        // check status of already quoted voucher
+        VoucherDeal alreadyQuoted = alreadyQuotedList.get(0);
+        if(alreadyQuoted.getDealStatus()==DealStatus.REJECTED || alreadyQuoted.getDealStatus()==DealStatus.NONE){
+            return true;
+        }
+        return false;
+    }
+
+
 }
