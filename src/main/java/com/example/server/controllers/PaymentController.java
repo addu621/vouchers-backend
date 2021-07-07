@@ -76,6 +76,22 @@ public class PaymentController {
         return paymentOrderResponse;
     }
 
+    @GetMapping("payment/get/voucher-order/{voucherId}")
+    public CheckoutPageCost voucherCost(HttpServletRequest request,@PathVariable Long voucherId){
+        Person personDetails = (Person) request.getAttribute("person");
+        Long buyerId = personDetails.getId();
+
+        CheckoutPageCost checkoutPageCost = voucherService.getVoucherCostById(voucherId,buyerId);
+        return checkoutPageCost;
+    }
+    @GetMapping("payment/get/cart-order/")
+    public CheckoutPageCost voucherCost(HttpServletRequest request){
+        Person personDetails = (Person) request.getAttribute("person");
+        Long userId = personDetails.getId();
+        CheckoutPageCost checkoutPageCost = cartService.getCartValue(userId);
+        return checkoutPageCost;
+    }
+
     @GetMapping("payment/get/voucher-order/{voucherId}/redeem/{redeemCoins}")
     public CheckoutPageCost voucherCostByVoucherId(HttpServletRequest request,@PathVariable Long voucherId,@PathVariable Integer redeemCoins){
         Person personDetails = (Person) request.getAttribute("person");
