@@ -22,7 +22,7 @@ public class ChatMessageTransformer {
     public ChatMessageResponse convertEntityToResponse(ChatMessage chatMessage){
         ChatMessageResponse chatMessageResponse = new ChatMessageResponse();
         copyProperties(chatMessage,chatMessageResponse);
-        Person person = personRepo.findById(chatMessage.getChatId()).get();
+        Person person = personRepo.findById(chatMessage.getSenderId()).get();
         chatMessageResponse.setSender(person);
         return chatMessageResponse;
     }

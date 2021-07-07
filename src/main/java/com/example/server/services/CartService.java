@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static org.springframework.beans.BeanUtils.copyProperties;
+
 @Service
 @AllArgsConstructor
 @Transactional
@@ -65,8 +67,10 @@ public class CartService {
         List<Voucher> vouchers = new ArrayList<>();
         cartItems.forEach((CartItem cartItem)->{
             Voucher voucher = voucherRepository.findById(cartItem.getVoucherId()).get();
-            voucher.setSellingPrice(cartItem.getItemPrice());
-            vouchers.add(voucher);
+            Voucher voucher1 = new Voucher();
+            copyProperties(voucher,voucher1);
+            voucher1.setSellingPrice(cartItem.getItemPrice());
+            vouchers.add(voucher1);
         });
         return vouchers;
     }
