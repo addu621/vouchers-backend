@@ -79,9 +79,9 @@ public class VoucherOrderService {
         int walletCoins = wallet.getCoins();
 
         if(noOfCoinsReedemed>0){
-            coinsDeducted  = checkoutPageCost.getLoyaltyCoinsInWallet()-checkoutPageCost.getCoinBalanceAfterRedemption();
+            coinsDeducted  = noOfCoinsReedemed;
             finalCost = checkoutPageCost.getFinalCostAfterCoinRedeem();
-            walletCoins = checkoutPageCost.getCoinBalanceAfterRedemption();
+            walletCoins = walletCoins+coinsAdded-noOfCoinsReedemed;
         }else{
             coinsDeducted = 0;
             walletCoins = walletCoins+coinsAdded;
