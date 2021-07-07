@@ -13,5 +13,6 @@ public class IssueResponse {
     private Boolean isRead = false;
     private Boolean isClosed = false;
     private Date createdDate;
+    private Boolean isChatUnseen;
     private OrderResponse order;
 }

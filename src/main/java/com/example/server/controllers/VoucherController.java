@@ -138,14 +138,14 @@ public class VoucherController {
         return this.voucherTransformer.convertEntityListToResponseList(vouchers);
     }
 
-    @PostMapping("/buy/voucher/{voucherId}/{transactionId}/{isCoinsReedemed}")
-    public GenericResponse buyVoucher(HttpServletRequest request,@PathVariable Long voucherId,@PathVariable String transactionId,@PathVariable boolean isCoinsReedemed ){
+    @PostMapping("/buy/voucher/{voucherId}/{transactionId}/{noOfCoinsReedemed}")
+    public GenericResponse buyVoucher(HttpServletRequest request,@PathVariable Long voucherId,@PathVariable String transactionId,@PathVariable int noOfCoinsReedemed ){
         Person personDetails = (Person) request.getAttribute("person");
         Long buyerId = personDetails.getId();
 
         VoucherOrder voucherOrder = voucherOrderService.createOrder(buyerId);
         VoucherOrderDetail voucherOrderItem = voucherOrderService.addOrderItem(voucherOrder.getId(),voucherId);
-        voucherOrderService.placeOrder(voucherOrder.getId(),transactionId,isCoinsReedemed);
+        voucherOrderService.placeOrder(voucherOrder.getId(),transactionId,noOfCoinsReedemed);
 
         GenericResponse genericResponse= new GenericResponse();
         if(voucherOrderItem!=null){

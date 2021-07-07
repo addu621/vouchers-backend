@@ -62,7 +62,7 @@ public class VoucherOrderService {
         return this.voucherOrderDetailRepository.save(voucherOrderDetail);
     }
 
-    public boolean placeOrder(long orderId, String transactionId, boolean isCoinsRedeemed){
+    public boolean placeOrder(long orderId, String transactionId, int noOfCoinsReedemed){
         if(this.voucherOrderRepository.findById(orderId)==null) return false;
         VoucherOrder voucherOrder = this.voucherOrderRepository.findById(orderId).get();
         voucherOrder.setOrderStatus(OrderStatus.SUCCESS);
@@ -72,21 +72,16 @@ public class VoucherOrderService {
             totalPrice = totalPrice.add(orderDetail.getItemPrice());
         }
         Wallet wallet = walletService.getWalletById(voucherOrder.getBuyerId());
-        CheckoutPageCost checkoutPageCost = utility.calculateCheckoutCosts(totalPrice,wallet.getCoins());
+        CheckoutPageCost checkoutPageCost = utility.calculateCheckoutCosts(totalPrice, wallet.getCoins(),noOfCoinsReedemed);
         int coinsAdded = checkoutPageCost.getLoyaltyCoinsEarned();
         int coinsDeducted  = 0;
         BigDecimal finalCost = new BigDecimal(0);
         int walletCoins = wallet.getCoins();
 
-        if(isCoinsRedeemed){
-            coinsDeducted  = checkoutPageCost.getLoyaltyCoinsInWallet()-checkoutPageCost.getCoinBalanceAfterRedemption();
-            finalCost = checkoutPageCost.getFinalCostAfterCoinRedeem();
-            walletCoins = checkoutPageCost.getCoinBalanceAfterRedemption();
-        }else{
-            coinsDeducted = 0;
-            walletCoins = walletCoins+coinsAdded;
-            finalCost = checkoutPageCost.getFinalCost();
-        }
+        coinsDeducted  = noOfCoinsReedemed;
+        finalCost = checkoutPageCost.getFinalCostAfterCoinRedeem();
+        walletCoins = checkoutPageCost.getCoinBalanceAfterRedemption();
+
         walletService.setCoinsInWallet(wallet.getId(),walletCoins);
         transactionService.addTransaction(transactionId,orderId,coinsAdded, coinsDeducted,voucherOrder.getBuyerId(),TransactionType.DEBIT,finalCost);
         amountTransferService.addAmountTransfersForOrder(orderId,transactionId);
