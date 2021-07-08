@@ -10,6 +10,7 @@ import com.example.server.repositories.PersonRepo;
 import com.example.server.services.AdminService;
 import com.example.server.services.CartService;
 import com.example.server.services.UserService;
+import com.example.server.services.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -41,6 +42,9 @@ public class JwtController {
 
     @Autowired
     private CartService cartService;
+
+    @Autowired
+    private WalletService walletService;
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -101,7 +105,9 @@ public class JwtController {
             person.setImageUrl(googleRequest.getPhotoUrl());
             person.setIsAdmin(false);
             person.setPassword(bCryptPasswordEncoder.encode(""));
-            userService.save(person);
+            Person person1 = personRepo.save(person);
+            cartService.createCart(person1.getId());
+            walletService.createWallet(person1.getId());
         }
         authenticate(googleRequest.getEmail(),"");
 
