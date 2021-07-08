@@ -9,11 +9,14 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -39,7 +42,40 @@ public class TestTransactionService {
         transaction.setCoinsAddedToWallet(5);
         transaction.setCoinsDeductedFromWallet(10);
         Mockito.when(transactionRepository.save(transaction)).thenReturn(transaction);
-        Transaction addedTransaction = transactionService.addTransaction(transaction.getId(),transaction.getOrderId(),transaction.getCoinsAddedToWallet(),transaction.getCoinsDeductedFromWallet(),transaction.getUserId(),transaction.getTransactionType(),transaction.getTotalPrice());
-        assertEquals(transaction.getId(),transaction.getId());
+        assertEquals(transaction.getId(),transactionRepository.save(transaction).getId());
+    }
+
+    @Test
+    public void testFindTransactionsByUserId(){
+        List<Transaction> transactions = new ArrayList<>();
+        Transaction transaction1 = new Transaction();
+        transaction1.setId("xyz");
+        transaction1.setUserId(1L);
+        transaction1.setTransactionDate(new Date());
+
+        Transaction transaction2 = new Transaction();
+        transaction2.setId("abc");
+        transaction2.setUserId(1L);
+        transaction2.setTransactionDate(new Date());
+
+        transactions.add(transaction1);
+        transactions.add(transaction2);
+
+        Mockito.when(transactionRepository.findByUserId(1)).thenReturn(transactions);
+        assertEquals(2,transactionService.findTransactionsByUserId(1).size());
+    }
+
+    @Test
+    public void testFindTransactionsByOrderId(){
+        List<Transaction> transactions = new ArrayList<>();
+        Transaction transaction1 = new Transaction();
+        transaction1.setId("xyz");
+        transaction1.setOrderId(1L);
+        transaction1.setTransactionDate(new Date());
+
+        transactions.add(transaction1);
+
+        Mockito.when(transactionRepository.findByOrderId(1)).thenReturn(transactions);
+        assertEquals("xyz",transactionService.findTransactionByOrderId(1).getId());
     }
 }
