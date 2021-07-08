@@ -60,4 +60,34 @@ public class NotificationTests {
 
         assertEquals(3,notificationService.getNotifications(1L).size());
     }
+
+    @Test
+    public void notificationSeenTest(){
+        Notification notification = new Notification();
+
+        notification.setTitle("Test Voucher1");
+        notification.setDescription("Voucher Approved");
+        notification.setNotificationType(NotificationType.VOUCHER_APPROVED);
+        notification.setReceiverId(1L);
+        notification.setIsSeen(true);
+
+        when(notificationRepo.save(notification)).thenReturn(notification);
+
+        assertEquals(notification,notificationService.createNewNotification(notification));
+    }
+
+    @Test
+    public void notificationCompletedTest(){
+        Notification notification = new Notification();
+
+        notification.setTitle("Test Voucher1");
+        notification.setDescription("Voucher Approved");
+        notification.setNotificationType(NotificationType.VOUCHER_APPROVED);
+        notification.setReceiverId(1L);
+        notification.setIsComplete(true);
+
+        when(notificationRepo.save(notification)).thenReturn(notification);
+
+        assertEquals(notification,notificationService.createNewNotification(notification));
+    }
 }
