@@ -72,17 +72,17 @@ public class VoucherOrderService {
             totalPrice = totalPrice.add(orderDetail.getItemPrice());
         }
         Wallet wallet = walletService.getWalletById(voucherOrder.getBuyerId());
+
         CheckoutPageCost checkoutPageCost = utility.calculateCheckoutCosts(totalPrice, wallet.getCoins(),noOfCoinsReedemed);
+
         int coinsAdded = checkoutPageCost.getLoyaltyCoinsEarned();
-        int coinsDeducted  = 0;
-        BigDecimal finalCost = new BigDecimal(0);
-        int walletCoins = wallet.getCoins();
+        int coinsDeducted  = noOfCoinsReedemed;
+        BigDecimal finalCost = checkoutPageCost.getFinalCostAfterCoinRedeem();
+        int walletCoins = checkoutPageCost.getCoinBalanceAfterRedemption();
 
-        coinsDeducted  = noOfCoinsReedemed;
-        finalCost = checkoutPageCost.getFinalCostAfterCoinRedeem();
-        walletCoins = checkoutPageCost.getCoinBalanceAfterRedemption();
+        System.out.println(checkoutPageCost);
 
-        walletService.setCoinsInWallet(wallet.getId(),walletCoins);
+        walletService.setCoinsInWallet(wallet.getId(),walletCoins+coinsAdded);
         transactionService.addTransaction(transactionId,orderId,coinsAdded, coinsDeducted,voucherOrder.getBuyerId(),TransactionType.DEBIT,finalCost);
         amountTransferService.addAmountTransfersForOrder(orderId,transactionId);
         return true;

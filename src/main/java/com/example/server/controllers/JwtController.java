@@ -76,7 +76,7 @@ public class JwtController {
         }
 
         if(!person.getIsOtpVerified()){
-            mp.put("Error","This user Email is not verified");
+            mp.put("error","This user Email is not verified");
             return mp;
         }
 
