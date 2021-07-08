@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-public class TestUserService {
+public class LoginTests {
 
     @MockBean
     private PersonRepo personRepo;
@@ -57,7 +57,7 @@ public class TestUserService {
         assertEquals(mp,userService.save(person));
     }
 
-    //login
+    // user and admin login
     @Test
     public void loadUserByUsernameTest_notFound(){
         String userName = "potatoShit@gmail.com";
