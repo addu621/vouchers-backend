@@ -1,10 +1,8 @@
 package com.example.server.services;
 
-import com.example.server.entities.AmountTransfer;
-import com.example.server.entities.Voucher;
-import com.example.server.entities.VoucherOrder;
-import com.example.server.entities.VoucherOrderDetail;
+import com.example.server.entities.*;
 import com.example.server.enums.AmountTransferStatus;
+import com.example.server.enums.NotificationType;
 import com.example.server.enums.TransactionType;
 import com.example.server.repositories.AmountTransferRepository;
 import com.example.server.repositories.VoucherOrderDetailRepository;
@@ -27,6 +25,7 @@ public class AmountTransferService {
     private final VoucherOrderDetailRepository voucherOrderDetailRepository;
     private final VoucherRepository voucherRepository;
     private final Utility utility;
+    private final NotificationService notificationService;
 
     public AmountTransfer addAmountTransfer(long orderItemId, String transactionId, BigDecimal buyerAmount){
         AmountTransfer amountTransfer = new AmountTransfer();
@@ -56,8 +55,19 @@ public class AmountTransferService {
         AmountTransfer amountTransfer = transferRepository.findById(amountTransferId).get();
         VoucherOrderDetail voucherOrderDetail = voucherOrderDetailRepository.findById(amountTransfer.getOrderItemId()).get();
         Voucher voucher = voucherRepository.findById(voucherOrderDetail.getVoucherId()).get();
+        Long sellerId = voucher.getSellerId();
         transactionService.addTransaction(transactionId,voucherOrderDetail.getOrderId(),0,0,voucher.getSellerId(), TransactionType.CREDIT,amountTransfer.getSellerAmount());
         amountTransfer.setAmountTransferStatus(AmountTransferStatus.SENT_TO_SELLER);
         transferRepository.save(amountTransfer);
+        BigDecimal transferredAmount = amountTransfer.getSellerAmount();
+
+        Notification notification = new Notification();
+        notification.setNotificationType(NotificationType.AMOUNT_CREDITED_TO_SELLER);
+        notification.setTitle("Payment received");
+        notification.setDescription("Congratulations! You have received payment of $"+transferredAmount+" for the Listing ID "+voucher.getId());
+        notification.setReceiverId(sellerId);
+        notification.setSellerId(sellerId);
+        notification.setVoucherId(voucher.getId());
+        notificationService.createNewNotification(notification);
     }
 }
