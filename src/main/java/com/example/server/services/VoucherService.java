@@ -38,8 +38,6 @@ public class VoucherService {
     private final Utility utilityService;
     private final NotificationService notificationService;
 
-
-
     public GenericResponse saveVoucher(Voucher voucher) {
         GenericResponse genericResponse = new GenericResponse();
         if(!voucherRepository.findByCompanyIdAndVoucherCode(voucher.getCompanyId(),voucher.getVoucherCode()).isEmpty()){
@@ -153,11 +151,6 @@ public class VoucherService {
         List<Voucher> voucherList = voucherRepository.filterCoupons(filterRequest.getCategories(),filterRequest.getCompanies(),filterRequest.getAverageRating(),filterRequest.getIsVerified());
         return sortByTime(voucherList);
     }
-
-//    public List<?> rating() {
-//        List<?> voucherList = voucherRepository.fi();
-//        return voucherList;
-//    }
 
     public String acceptVoucher(Long voucherId) throws UnsupportedEncodingException, MessagingException {
         Voucher voucher = voucherRepository.findById(voucherId).get();
