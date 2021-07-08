@@ -1,5 +1,6 @@
 package com.example.server.dto.response;
 
+import com.example.server.entities.Issue;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -14,6 +15,6 @@ public class OrderResponse {
     public String transactionId;
     private BigDecimal orderItemPrice;
     public VoucherResponse voucher;
-    public long issueId;
+    public Issue issue;
     public Boolean isChatUnSeen;
 }

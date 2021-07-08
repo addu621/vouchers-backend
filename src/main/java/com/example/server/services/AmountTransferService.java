@@ -56,7 +56,7 @@ public class AmountTransferService {
         AmountTransfer amountTransfer = transferRepository.findById(amountTransferId).get();
         VoucherOrderDetail voucherOrderDetail = voucherOrderDetailRepository.findById(amountTransfer.getOrderItemId()).get();
         Voucher voucher = voucherRepository.findById(voucherOrderDetail.getVoucherId()).get();
-        transactionService.addTransaction(transactionId,voucherOrderDetail.getOrderId(),0,0,voucher.getSellerId(), TransactionType.CREDIT,voucherOrderDetail.getItemPrice());
+        transactionService.addTransaction(transactionId,voucherOrderDetail.getOrderId(),0,0,voucher.getSellerId(), TransactionType.CREDIT,amountTransfer.getSellerAmount());
         amountTransfer.setAmountTransferStatus(AmountTransferStatus.SENT_TO_SELLER);
         transferRepository.save(amountTransfer);
     }

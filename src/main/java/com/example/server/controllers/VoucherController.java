@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
+import javax.servlet.Filter;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
@@ -104,6 +105,11 @@ public class VoucherController {
         return companyService.getCompanyInCategory(categoryId);
     }
 
+    @PostMapping("/companies/in/category")
+    public List<VoucherCompany> getCompanyInCategory(@RequestBody FilterRequest filterRequest) {
+        return companyService.getCompanyInCategories(filterRequest.getCategories());
+    }
+
     @GetMapping("/getVoucherTypes")
     public List<VoucherType> getVoucherTypes() {
         return voucherService.getAllVoucherType();
@@ -165,5 +171,14 @@ public class VoucherController {
         List<Voucher> result = voucherService.filterVouchers(input);
         return this.voucherTransformer.convertEntityListToResponseList(result);
     }
+
+    @GetMapping("/can-quote/{voucherId}")
+    public Boolean canQuote(HttpServletRequest request,@PathVariable Long voucherId) {
+        Person personDetails = (Person) request.getAttribute("person");
+        Long buyerId = personDetails.getId();
+
+        return voucherService.canQuote(buyerId,voucherId);
+    }
+
 
 }

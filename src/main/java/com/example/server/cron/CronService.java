@@ -43,6 +43,7 @@ public class CronService {
     @Scheduled(cron = " 1 * * * * *")
     //@Scheduled(cron = "2 2 */2 * *")
     public void checkAmountTransfer(){
+        System.out.println("CRON job triggered!");
         List<AmountTransfer> amountTransfers = amountTransferService.getAllTransfersByStatus(AmountTransferStatus.RECEIVED_FROM_BUYER);
         for(AmountTransfer amountTransfer : amountTransfers){
             Date orderDate  = getOrderDateByAmountTransferId(amountTransfer.getId());

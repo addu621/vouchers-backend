@@ -36,7 +36,7 @@ public class OrderTransformer {
 
         Issue issue = issueRepo.findByOrderItemId(orderResponse.getOrderItemId());
         if(issue!=null){
-            orderResponse.setIssueId(issue.getIssueId());
+            orderResponse.setIssue(issue);
             boolean isSeen = chatService.isChatUnseenForUser(issue.getIssueId(),person.getId());
             orderResponse.setIsChatUnSeen(isSeen);
         }

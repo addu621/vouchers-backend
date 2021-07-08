@@ -31,27 +31,6 @@ public class VoucherDealService {
 
     @Autowired
     NotificationService notificationService;
-//    public VoucherDeal buyVoucher(Long buyerId, Long voucherId){
-//
-//        VoucherDeal voucherDeal = new VoucherDeal();
-//        voucherDeal.setVoucherId(voucherId);
-//        Voucher voucher = voucherRepository.findById(voucherId).get();
-//
-//        // check if voucher exists already in the deals table
-//        List<VoucherDeal> voucherDeals = voucherDealRepository.findByVoucherIdAndDealStatus(voucherId, DealStatus.BOUGHT);
-//        if(voucherDeals.size()==0){
-//            // voucher is not bought yet
-//            // buy the voucher
-//            voucherDeal.setBuyerId(buyerId);
-//            voucherDeal.setBoughtPrice(voucher.getSellingPrice());
-//            voucherDeal.setDealStatus(DealStatus.BOUGHT);
-//            Date date = new Date();
-//            voucherDeal.setBoughtOn(date.toString());
-//            return voucherDealRepository.save(voucherDeal);
-//        }
-//
-//        return null;
-//    }
 
     public GenericResponse quotePrice(Long buyerId, Long voucherId, BigDecimal quotedPrice){
 
@@ -59,12 +38,12 @@ public class VoucherDealService {
         Long sellerId = voucherService.getSellerIdByVoucherId(voucherId);
         if(voucherId==null|| quotedPrice==null){
             genericResponse.setStatus(404);
-            genericResponse.setMessage("voucher Id or quoted price missing");
+            genericResponse.setMessage("Listing Id or quoted price missing");
             return genericResponse;
         }
         if(voucherService.isVoucherSold(voucherId)){
             genericResponse.setStatus(404);
-            genericResponse.setMessage("Coupon is already sold, you cannot bid now!!");
+            genericResponse.setMessage("Listing is already sold, you cannot bid now!!");
             return genericResponse;
         }
         List<VoucherDeal> alreadyExists = voucherDealRepository.findByVoucherIdAndBuyerId(voucherId,buyerId);
@@ -76,7 +55,7 @@ public class VoucherDealService {
             voucherDeal.setVoucherId(voucherId);
             voucherDeal.setDealStatus(DealStatus.QUOTED);
             VoucherDeal savedVoucher = voucherDealRepository.save(voucherDeal);
-            genericResponse.setMessage("You have placed bid for this coupon");
+            genericResponse.setMessage("You have placed bid for this listing");
             genericResponse.setStatus(200);
 
             Notification notification = new Notification();
@@ -86,7 +65,7 @@ public class VoucherDealService {
             notification.setSellerId(sellerId);
             notification.setReceiverId(sellerId);
             notification.setTitle("New Price Quoted");
-            notification.setDescription("Someone quoted "+ quotedPrice + " for your coupon");
+            notification.setDescription("Someone quoted "+ quotedPrice + " for your listing");
             notificationService.createNewNotification(notification);
 
         }
@@ -98,7 +77,7 @@ public class VoucherDealService {
             oldDeal.setVoucherId(voucherId);
             oldDeal.setDealStatus(DealStatus.QUOTED);
             VoucherDeal savedVoucher = voucherDealRepository.save(oldDeal);
-            genericResponse.setMessage("Your new bid has been placed bid for this coupon");
+            genericResponse.setMessage("Your new bid has been placed bid for this listing");
             genericResponse.setStatus(200);
 
             Notification notification = new Notification();
@@ -108,7 +87,7 @@ public class VoucherDealService {
             notification.setSellerId(sellerId);
             notification.setReceiverId(sellerId);
             notification.setTitle("Quoted Price Updated");
-            notification.setDescription("Someone quoted " + quotedPrice + " for your coupon");
+            notification.setDescription("Someone quoted " + quotedPrice + " for your listing");
             notificationService.createNewNotification(notification);
         }
     return genericResponse;
@@ -122,7 +101,7 @@ public class VoucherDealService {
 
         if(voucherService.isVoucherSold(voucherId)){
             genericResponse.setStatus(404);
-            genericResponse.setMessage("Coupon is already sold, you cannot accept now!!");
+            genericResponse.setMessage("listing is already sold, you cannot accept now!!");
         }
         if(isVoucherQuotePriceAccepted(voucherId)){
             genericResponse.setStatus(404);
@@ -132,7 +111,7 @@ public class VoucherDealService {
         List<VoucherDeal> voucherDealList = voucherDealRepository.findByVoucherIdAndBuyerId(voucherId,buyerId);
         if(voucherDealList.size()==0){
             genericResponse.setStatus(404);
-            genericResponse.setMessage("voucher or buyer not found !!");
+            genericResponse.setMessage("listing or buyer not found !!");
             return genericResponse;
         }
 
@@ -171,7 +150,7 @@ public class VoucherDealService {
         List<VoucherDeal>voucherDealList = voucherDealRepository.findByVoucherIdAndBuyerId(voucherId,buyerId);
         if(voucherDealList.size()==0){
             genericResponse.setStatus(404);
-            genericResponse.setMessage("voucher or buyer not found !!");
+            genericResponse.setMessage("listing or buyer not found !!");
             return genericResponse;
         }
 

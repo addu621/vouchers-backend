@@ -21,5 +21,9 @@ public class CompanyService {
     public List<VoucherCompany> getCompanyInCategory(Long categoryId){
         return voucherCompanyRepo.companiesInCategory(categoryId);
     }
+    public List<VoucherCompany> getCompanyInCategories(List<Long> categoryIdList){
+        return voucherCompanyRepo.companiesInCategories(categoryIdList);
+    }
+
 
 }
