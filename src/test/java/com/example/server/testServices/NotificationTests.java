@@ -90,4 +90,20 @@ public class NotificationTests {
 
         assertEquals(notification,notificationService.createNewNotification(notification));
     }
+
+    @Test
+    public void createNewNotification(){
+        Notification notification = new Notification();
+
+        notification.setTitle("Test Voucher1");
+        notification.setDescription("Voucher Approved");
+        notification.setNotificationType(NotificationType.VOUCHER_APPROVED);
+        notification.setReceiverId(1L);
+        notification.setIsComplete(true);
+
+        when(notificationRepo.save(notification)).thenReturn(notification);
+
+        assertEquals(notification,notificationService.createNewNotification(notification));
+
+    }
 }
