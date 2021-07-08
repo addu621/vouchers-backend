@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
+import javax.servlet.Filter;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
@@ -102,6 +103,11 @@ public class VoucherController {
     @GetMapping("/companies/in/category/{categoryId}")
     public List<VoucherCompany> getCompanyInCategory(@PathVariable Long categoryId) {
         return companyService.getCompanyInCategory(categoryId);
+    }
+
+    @PostMapping("/companies/in/category")
+    public List<VoucherCompany> getCompanyInCategory(@RequestBody FilterRequest filterRequest) {
+        return companyService.getCompanyInCategories(filterRequest.getCategories());
     }
 
     @GetMapping("/getVoucherTypes")

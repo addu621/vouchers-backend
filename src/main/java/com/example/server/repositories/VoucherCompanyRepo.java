@@ -18,4 +18,6 @@ public interface VoucherCompanyRepo extends JpaRepository<VoucherCompany,Long> {
     @Query("SELECT vc from VoucherCompany as vc Inner Join CategoryCompany as cc on vc.id = cc.companyId and cc.categoryId = :category")
     List<VoucherCompany> companiesInCategory(@Param("category") Long categoryId);
 
+    @Query("SELECT vc from VoucherCompany as vc Inner Join CategoryCompany as cc on vc.id = cc.companyId and cc.categoryId in (:category)")
+    List<VoucherCompany> companiesInCategories(@Param("category") List<Long> categoryIdList);
 }
