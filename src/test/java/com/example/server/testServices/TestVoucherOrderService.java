@@ -7,6 +7,7 @@ import com.example.server.enums.OrderStatus;
 import com.example.server.repositories.VoucherOrderDetailRepository;
 import com.example.server.repositories.VoucherOrderRepository;
 import com.example.server.services.VoucherOrderService;
+import com.example.server.services.VoucherService;
 import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -23,14 +25,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest
 public class TestVoucherOrderService {
 
+    @InjectMocks
+    private VoucherOrderService voucherOrderService;
+
     @Mock
     private VoucherOrderDetailRepository voucherOrderDetailRepository;
 
     @Mock
     private VoucherOrderRepository voucherOrderRepository;
 
-    @Autowired
-    private VoucherOrderService voucherOrderService;
+    @Mock
+    private VoucherService voucherService;
 
     @Test
     public void testCreateOrder(){
@@ -49,10 +54,11 @@ public class TestVoucherOrderService {
     }
 
     @Test
-    public void getBuyOrders(){
+    public void testGetBuyOrders(){
         VoucherOrder voucherOrder = new VoucherOrder();
         voucherOrder.setId(1L);
         voucherOrder.setBuyerId(5L);
+        voucherOrder.setOrderDate(new Date());
 
         List<VoucherOrder> voucherOrderList = new ArrayList<>();
         voucherOrderList.add(voucherOrder);
@@ -74,6 +80,7 @@ public class TestVoucherOrderService {
 
         Mockito.when(voucherOrderRepository.findByBuyerIdAndOrderStatus(5L, OrderStatus.SUCCESS)).thenReturn(voucherOrderList);
         Mockito.when(voucherOrderDetailRepository.findByOrderId(1L)).thenReturn(voucherOrderDetailList);
+        Mockito.when(voucherOrderRepository.findById(1L)).thenReturn(java.util.Optional.of(voucherOrder));
 
         assertEquals(3,voucherOrderService.getBuyOrders(5L).size());
         assertEquals(2,voucherOrderService.getBuyOrders(5L).get(0).getVoucherId());
