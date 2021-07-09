@@ -30,7 +30,7 @@ public class CronService {
         long diffMinutes = diff / (60 * 1000) % 60;
         long diffHours = diff / (60 * 60 * 1000);
         int diffInDays = (int) ((new Date().getTime() - orderDate.getTime()) / (1000 * 60 * 60 * 24));
-        return diffInDays>=2;
+        return diffMinutes>=2;
     }
 
     public Date getOrderDateByAmountTransferId(long id){
